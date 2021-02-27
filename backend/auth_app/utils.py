@@ -1,11 +1,10 @@
 from knox.models import AuthToken
 from rest_framework import serializers
-from rest_auth.serializers import UserDetailsSerializer
-
+from .serializers import UserSerializer
 
 class KnoxSerializer(serializers.Serializer):
     token = serializers.CharField()
-    user = UserDetailsSerializer()
+    user = UserSerializer()
 
 def create_knox_token(token_model, user, serializer):
     token = AuthToken.objects.create(user=user)

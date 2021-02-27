@@ -118,26 +118,26 @@ REST_FRAMEWORK = {
     )
 }
 
-# Knox Token
-REST_KNOX = {
-  'SECURE_HASH_ALGORITHM': 'cryptography.hazmat.primitives.hashes.SHA512',
-  'TOKEN_TTL': timedelta(hours=0.5),
-  'USER_SERIALIZER': 'auth_app.serializers.UserSerializer',
-  'TOKEN_LIMIT_PER_USER': 1,
-}
-
 # Django rest-auth settings
 REST_AUTH_TOKEN_MODEL = 'knox.models.AuthToken'
 REST_AUTH_TOKEN_CREATOR = 'auth_app.utils.create_knox_token'
 REST_SESSION_LOGIN = False
 REST_AUTH_SERIALIZERS = {
     'TOKEN_SERIALIZER': 'auth_app.utils.KnoxSerializer',
+    'USER_DETAILS_SERIALIZER': 'auth_app.serializers.UserSerializer',
 }
 OLD_PASSWORD_FIELD_ENABLED = True
 
 # Allauth setting
 ACCOUNT_EMAIL_REQUIRED=True
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
+
+# Knox Token
+REST_KNOX = {
+  'SECURE_HASH_ALGORITHM': 'cryptography.hazmat.primitives.hashes.SHA512',
+  'TOKEN_TTL': timedelta(hours=0.5),
+  'TOKEN_LIMIT_PER_USER': 1,
+}
 
 
 

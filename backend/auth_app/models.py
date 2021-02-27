@@ -28,7 +28,7 @@ class CustomUserManager(BaseUserManager):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
         extra_fields.setdefault('is_active', True)
-        extra_fields.setdefault('role', "Admin")
+        extra_fields.setdefault('role', 'Admin')
 
         if extra_fields.get('is_staff') is not True:
             raise ValueError(_('Superuser must have is_staff=True.'))
@@ -53,3 +53,6 @@ class AppUser(AbstractUser):
 
 	def __str__(self):
 		return "{} - {}".format(self.username, self.email)
+
+	def has_role(self, *roles):
+		return bool(self.role in roles)

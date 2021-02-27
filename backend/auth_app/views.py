@@ -9,7 +9,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from .models import AppUser
 from .serializers import UserSerializer
-from .permissions import AdminPermission
+from .permissions import DefaultRolePermission
 
 class LoginView(RestAuthLoginView):
 
@@ -42,7 +42,7 @@ class UserDetailsView(RestUserDetailsView):
     serializer_class = UserSerializer
 
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
-    permission_classes = (AdminPermission,)
+    permission_classes = (DefaultRolePermission,)
     queryset = AppUser.objects.all()
     serializer_class = UserSerializer
     pagination_class = None
