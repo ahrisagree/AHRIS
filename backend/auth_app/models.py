@@ -44,10 +44,10 @@ class AppUser(AbstractUser):
 		max_length=150, unique=True, blank=True, null=True, default=None,
 		verbose_name='username')
 	email = models.EmailField(_('email address'), unique=True)
-	role = models.CharField(max_length=20, null=True, blank=True, default='Guest')
+	role = models.CharField(max_length=20, default='Guest' )
 
 	USERNAME_FIELD = 'email'
-	REQUIRED_FIELDS = []
+	REQUIRED_FIELDS = ['role']
 
 	objects = CustomUserManager()
 

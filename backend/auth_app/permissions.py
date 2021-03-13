@@ -10,7 +10,7 @@ class AdminPermission(permissions.BasePermission):
 class IsOwner(permissions.BasePermission):
 
     def has_object_permission(self, request, view, obj):
-        return obj == request.user
+        return obj.owner == request.user
 
 class DefaultRolePermission(permissions.BasePermission):
 

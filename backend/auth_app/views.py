@@ -9,7 +9,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from .models import AppUser
 from .serializers import UserSerializer
-from .permissions import DefaultRolePermission
+from .permissions import DefaultRolePermission, IsOwner, AdminPermission
 
 class LoginView(RestAuthLoginView):
 
@@ -21,6 +21,7 @@ class LoginView(RestAuthLoginView):
 
 
 class RegisterView(RestAuthRegisterView):
+    permission_classes = (IsAuthenticated, AdminPermission)
 
     def get_response_data(self, user):
         return KnoxSerializer({'user': user, 'token': self.token[-1]}).data
@@ -46,4 +47,3 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = AppUser.objects.all()
     serializer_class = UserSerializer
     pagination_class = None
-    # http_method_names = ['get', 'put', 'patch', 'head', 'options', 'trace']

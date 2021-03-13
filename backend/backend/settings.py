@@ -126,6 +126,9 @@ REST_AUTH_SERIALIZERS = {
     'TOKEN_SERIALIZER': 'auth_app.utils.KnoxSerializer',
     'USER_DETAILS_SERIALIZER': 'auth_app.serializers.UserSerializer',
 }
+REST_AUTH_REGISTER_SERIALIZERS = {
+    'REGISTER_SERIALIZER': 'auth_app.serializers.RegisterSerializer'
+}
 OLD_PASSWORD_FIELD_ENABLED = True
 
 # Allauth setting
@@ -135,7 +138,7 @@ ACCOUNT_AUTHENTICATION_METHOD = 'email'
 # Knox Token
 REST_KNOX = {
   'SECURE_HASH_ALGORITHM': 'cryptography.hazmat.primitives.hashes.SHA512',
-  'TOKEN_TTL': timedelta(hours=0.5),
+  'TOKEN_TTL': timedelta(hours=48), # token expiration
   'TOKEN_LIMIT_PER_USER': 1,
 }
 
