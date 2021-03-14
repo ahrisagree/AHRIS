@@ -7,11 +7,16 @@ from .roles import roles
 from .models import AppUser
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
-
   class Meta:
     model = AppUser
     fields = ('pk', 'username', 'email', 'role')
+    read_only_fields = ('email', 'role')
 
+class UserEditSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = AppUser
+        fields = ('pk', 'username', 'email', 'role')
+        read_only_fields = ('email',)
 
 class RegisterSerializer(RestRegisterSerializer):
 	role = serializers.CharField(max_length=20, required=True)

@@ -1,4 +1,4 @@
-from rest_framework import status, generics, viewsets
+from rest_framework import status, generics, viewsets, mixins
 from rest_auth.registration.views import RegisterView as RestAuthRegisterView
 from rest_auth.views import LoginView as RestAuthLoginView
 from rest_auth.views import UserDetailsView as RestUserDetailsView
@@ -8,8 +8,12 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
 from .models import AppUser
-from .serializers import UserSerializer
-from .permissions import DefaultRolePermission, IsOwner, AdminPermission
+from .serializers import UserSerializer, UserEditSerializer
+from .permissions import (
+    DefaultRolePermission, 
+    IsOwner, 
+    AdminPermission,
+    AdminEditPermission)
 
 class LoginView(RestAuthLoginView):
 
@@ -40,10 +44,13 @@ class AccountPasswordChangeView(PasswordChangeView):
         return super(AccountPasswordChangeView, self).post(request, *args, **kwargs)
 
 class UserDetailsView(RestUserDetailsView):
+    http_method_names = ('get', 'patch')
     serializer_class = UserSerializer
 
-class UserViewSet(viewsets.ReadOnlyModelViewSet):
-    permission_classes = (DefaultRolePermission,)
+class UserViewSet(mixins.UpdateModelMixin, viewsets.ReadOnlyModelViewSet):
+    permission_classes = (DefaultRolePermission, AdminEditPermission)
     queryset = AppUser.objects.all()
-    serializer_class = UserSerializer
+    serializer_class = UserEditSerializer
+    http_method_names = ('get', 'patch')
     pagination_class = None
+
