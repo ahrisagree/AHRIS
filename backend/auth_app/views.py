@@ -6,14 +6,11 @@ from rest_auth.views import PasswordChangeView
 from auth_app.utils import create_knox_token, KnoxSerializer
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from backend.utils import QueryBuilder
 
-from .models import AppUser
-from .serializers import UserSerializer, UserEditSerializer
-from .permissions import (
-    DefaultRolePermission, 
-    IsOwner, 
-    AdminPermission,
-    AdminEditPermission)
+from .models import AppUser, Division
+from .serializers import *
+from .permissions import *
 
 class LoginView(RestAuthLoginView):
 
@@ -48,9 +45,27 @@ class UserDetailsView(RestUserDetailsView):
     serializer_class = UserSerializer
 
 class UserViewSet(mixins.UpdateModelMixin, viewsets.ReadOnlyModelViewSet):
-    permission_classes = (DefaultRolePermission, AdminEditPermission)
-    queryset = AppUser.objects.all()
-    serializer_class = UserEditSerializer
+    permission_classes = (IsAuthenticated, DefaultRolePermission, AdminEditPermission)
     http_method_names = ('get', 'patch')
     pagination_class = None
 
+    def get_queryset(self):
+        q_divisi = self.request.query_params.get('divisi')
+        q_nama = self.request.query_params.get('nama')
+        q_role = self.request.query_params.get('role')
+        filter = (QueryBuilder()
+            ._('divisi__nama_divisi__in', q_divisi, True)
+            ._('username__icontains', q_nama)
+            ._('role__in', q_role, True))
+        return AppUser.objects.filter(**filter.build()).distinct()
+
+    def get_serializer_class(self):
+        if self.request.user.has_role('Admin'):
+            return UserEditSerializer
+        return UserListSerializer
+
+
+class DivisiViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Division.objects.all()
+    pagination_class = None
+    serializer_class = DivisionSerializer

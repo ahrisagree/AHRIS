@@ -4,6 +4,13 @@ from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.utils.translation import ugettext_lazy as _
 
+"""
+in this file:
+- CustomUserManager
+- Model Divisi
+- Model User
+"""
+
 class CustomUserManager(BaseUserManager):
     """
     Custom user model manager where email is the unique identifiers
@@ -36,6 +43,11 @@ class CustomUserManager(BaseUserManager):
             raise ValueError(_('Superuser must have is_superuser=True.'))
         return self.create_user(email, password, **extra_fields)
 
+class Division(models.Model):
+    nama_divisi = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.nama_divisi
 
 class AppUser(AbstractUser):
 	username = models.CharField(
@@ -44,7 +56,9 @@ class AppUser(AbstractUser):
 		max_length=150, unique=True, blank=True, null=True, default=None,
 		verbose_name='username')
 	email = models.EmailField(_('email address'), unique=True)
-	role = models.CharField(max_length=20, default='Guest' )
+	role = models.CharField(max_length=20, default='Guest')
+	divisi = models.ManyToManyField(Division)
+	gaji = models.IntegerField(default=0)
 
 	USERNAME_FIELD = 'email'
 	REQUIRED_FIELDS = ['role']
@@ -52,7 +66,7 @@ class AppUser(AbstractUser):
 	objects = CustomUserManager()
 
 	def __str__(self):
-		return "{} - {}".format(self.username, self.email)
+		return "{} - {} | {}".format(self.username, self.email, self.role)
 
 	def has_role(self, *roles):
 		return bool(self.role in roles)

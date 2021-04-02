@@ -1,9 +1,10 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from .models import AppUser
+from .models import AppUser, Division
 
 admin.site.register(AppUser)
+admin.site.register(Division)
 
 class CustomUserAdmin(UserAdmin):
     model = AppUser
