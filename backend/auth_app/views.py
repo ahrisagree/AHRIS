@@ -44,9 +44,12 @@ class UserDetailsView(RestUserDetailsView):
     http_method_names = ('get', 'patch')
     serializer_class = UserSerializer
 
-class UserViewSet(mixins.UpdateModelMixin, viewsets.ReadOnlyModelViewSet):
+class UserViewSet(
+        mixins.UpdateModelMixin,
+        mixins.DestroyModelMixin,
+        viewsets.ReadOnlyModelViewSet):
     permission_classes = (IsAuthenticated, DefaultRolePermission, AdminEditPermission)
-    http_method_names = ('get', 'patch')
+    http_method_names = ('get', 'patch', 'delete')
     pagination_class = None
 
     def get_queryset(self):
