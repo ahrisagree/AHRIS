@@ -52,6 +52,7 @@ INSTALLED_APPS = [
 
     # Apps
     'auth_app',
+    'borang'
 ]
 
 MIDDLEWARE = [
