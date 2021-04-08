@@ -52,7 +52,8 @@ INSTALLED_APPS = [
 
     # Apps
     'auth_app',
-    'borang'
+    'borang',
+    'jawaban'
 ]
 
 MIDDLEWARE = [
