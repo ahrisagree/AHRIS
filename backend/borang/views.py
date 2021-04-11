@@ -4,7 +4,11 @@ from .models import *
 from .serializers import *
 from auth_app.permissions import *
 
-
+"""
+in this file:
+- KategoriViewSet
+- PaketPertanyaanViewSet
+"""
 class KategoriViewSet(viewsets.ReadOnlyModelViewSet):
   queryset = KategoriPertanyaan.objects.all()
   pagination_class = None
