@@ -9,27 +9,11 @@ in this file Serializer:
 - AspekJawaban
 - PaketJawaban
 """
-# class AssignRespondenSerializer(serializers.Serializer):
-#   list_penilai = 
 
 class JawabanSerializer(serializers.ModelSerializer):
-  def validate_pertanyaan(self, pertanyaan):
-    try:
-      pertanyaan_obj = Pertanyaan.objects.get(**pertanyaan)
-    except:
-      raise serializers.ValidationError(_("Fail get Pertanyaan"))
-    return pertanyaan_obj
-
-  def create(self, validated_data):
-    pertanyaan = validated_data.pop('pertanyaan')
-    new_jawaban = super().create(validated_data)
-    new_jawaban.pertanyaan = pertanyaan
-    return new_jawaban
-
   class Meta:
     model = Jawaban
-    fields = ('jawaban', 'pertanyaan')
-    depth = 1
+    fields = ('jawaban', 'pertanyaan', 'tipe')
 
 class AspekJawabanSerializer(serializers.ModelSerializer):
   list_jawaban = JawabanSerializer(many=True)
@@ -48,18 +32,11 @@ class AspekJawabanSerializer(serializers.ModelSerializer):
     fields = ('nama', 'list_jawaban')
 
 class PaketJawabanSerializer(serializers.ModelSerializer):
-  def validate_assignment(self, assignment):
-    try:
-      assignment_obj = Assignment.objects.get(**assignment)
-    except:
-      raise serializers.ValidationError(_("Fail get Assignment"))
-    return assignment_obj
+  list_aspek = AspekJawabanSerializer(many=True)
 
   def create(self, validated_data):
-    assignment_data = validated_data.pop('assignment')
     list_aspek_data = validated_data.pop('list_aspek')
     new_paket = super().create(validated_data)
-    new_paket.assignment = assignment_data
     for aspek_data in list_aspek_data:
       aspek = AspekJawabanSerializer(data = aspek_data)
       if aspek.is_valid(raise_exception=True):
@@ -69,3 +46,4 @@ class PaketJawabanSerializer(serializers.ModelSerializer):
   class Meta:
     model = PaketJawaban
     fields = '__all__'
+    extra_kwargs = {'paket_pertanyaan': {'required': True}}

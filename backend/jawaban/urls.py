@@ -1,16 +1,11 @@
 from django.urls import include, path
-from borang.views import *
+from .views import *
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
 router.register(
-  prefix='kategori',
-  viewset=KategoriViewSet,
-  basename='kategori',
-)
-router.register(
   prefix='',
-  viewset=PaketPertanyaanViewSet,
-  basename='paket'
+  viewset=PaketJawabanViewSet,
+  basename='jawaban'
 )
 urlpatterns = router.urls

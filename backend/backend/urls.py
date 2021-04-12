@@ -21,5 +21,7 @@ urlpatterns = [
     path('auth/', include('auth_app.urls.auth')),
     path('user/', include('auth_app.urls.user')),
     path('divisi/', include('auth_app.urls.divisi')),
-    path('evaluation/', include('borang.urls')),
+    path('evaluation/pertanyaan/', include('borang.urls')),
+    path('evaluation/assign/', include('assign.urls')),
+    path('evaluation/jawaban/', include('jawaban.urls')),
 ]
