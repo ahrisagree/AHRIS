@@ -14,11 +14,7 @@ class AssignmentView(viewsets.ReadOnlyModelViewSet, mixins.CreateModelMixin):
   serializer_class = AssignmentSerializer
   filter_class = AssignmentFilter
   filterset_fields = ['user_dinilai', 'user_penilai', 'paket_pertanyaan']
-  search_fields = [
-    'user_dinilai__username'
-    'user_dinilai__username',
-    'list_paket_pertanyaan__nama'
-    ]
+  search_fields = ['list_paket_pertanyaan__nama']
 
   def perform_create(self, serializer):
     return serializer.save()
@@ -33,7 +29,6 @@ class AssignmentView(viewsets.ReadOnlyModelViewSet, mixins.CreateModelMixin):
   
   """Karyawan Get own Assignment, Admin get all Assignment"""
   def retrieve(self, request, *args, **kwargs):
-    print("WHOHO")
     self.serializer_class = AssignmentDetailSerializer
     if not request.user.has_role('Admin'):
       self.queryset = Assignment.objects.filter(user_penilai=request.user)
@@ -41,7 +36,6 @@ class AssignmentView(viewsets.ReadOnlyModelViewSet, mixins.CreateModelMixin):
   
   """Karyawan List own Assignment, Admin list all Assignment"""
   def list(self, request, *args, **kwargs):
-    print("LIST")
     if not request.user.has_role('Admin'):
       self.queryset = Assignment.objects.filter(user_penilai=request.user)
     return super().list(request, *args, **kwargs)

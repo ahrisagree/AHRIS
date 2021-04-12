@@ -18,6 +18,9 @@ class PaketJawaban(models.Model):
   assignment = models.ForeignKey(Assignment,
           on_delete=models.CASCADE,
           related_name='list_paket_jawaban')
+  paket_pertanyaan = models.ForeignKey(PaketPertanyaan,
+          on_delete=models.SET_NULL,
+          null=True)
 
   def __str__(self):
     return self.nama
@@ -25,8 +28,7 @@ class PaketJawaban(models.Model):
 class AspekJawaban(models.Model):
   nama = models.CharField(max_length=100)
   paket = models.ForeignKey(PaketJawaban,
-          on_delete=models.SET_NULL,
-          null=True,
+          on_delete=models.CASCADE,
           related_name='list_aspek')
 
   def __str__(self):
@@ -36,11 +38,9 @@ class Jawaban(models.Model):
   jawaban = models.CharField(max_length=255)
   tipe = models.IntegerField()
   aspek = models.ForeignKey(AspekJawaban,
-            on_delete=models.SET_NULL,
-            null=True,
+            on_delete=models.CASCADE,
             related_name='list_jawaban')
-  pertanyaan = models.ForeignKey(Pertanyaan,
-            on_delete=models.CASCADE)
+  pertanyaan = models.CharField(max_length=255)
   
   def __str__(self):
     return "{} - {}".format(self.pertanyaan, self.jawaban)
