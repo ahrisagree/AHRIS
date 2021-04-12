@@ -36,3 +36,9 @@ class BorangFilter(FilterSet):
     lookup_expr='in'
   )
   jenis = filters.CharFilter()
+
+class AssignmentFilter(FilterSet):
+  user_dinilai = filters.NumberFilter(field_name='user_dinilai__id')
+  user_penilai = filters.NumberFilter(field_name='user_penilai__id')
+  periode = filters.DateFilter()
+  paket_pertanyaan = filters.NumberFilter(field_name='list_paket_pertanyaan__id')

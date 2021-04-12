@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from .models import *
 from .serializers import *
 from auth_app.permissions import *
+from backend.filters import AssignmentFilter
 
 class AssignmentView(viewsets.ReadOnlyModelViewSet, mixins.CreateModelMixin):
   permission_classes = (IsAuthenticated, DefaultRolePermission, AdminEditPermission)
@@ -11,6 +12,13 @@ class AssignmentView(viewsets.ReadOnlyModelViewSet, mixins.CreateModelMixin):
   http_methods = ('get', 'post')
   queryset = Assignment.objects.all()
   serializer_class = AssignmentSerializer
+  filter_class = AssignmentFilter
+  filterset_fields = ['user_dinilai', 'user_penilai', 'paket_pertanyaan']
+  search_fields = [
+    'user_dinilai__username'
+    'user_dinilai__username',
+    'list_paket_pertanyaan__nama'
+    ]
 
   def perform_create(self, serializer):
     return serializer.save()
