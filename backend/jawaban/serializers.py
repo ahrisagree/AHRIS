@@ -9,8 +9,6 @@ in this file Serializer:
 - AspekJawaban
 - PaketJawaban
 """
-# class AssignRespondenSerializer(serializers.Serializer):
-#   list_penilai = 
 
 class JawabanSerializer(serializers.ModelSerializer):
   def validate_pertanyaan(self, pertanyaan):
