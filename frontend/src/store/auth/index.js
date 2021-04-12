@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { setupAuthToken } from "api/setup";
 import { loginThunk, logoutThunk } from "thunk/auth";
 
 const formSlice = createSlice({
@@ -19,6 +20,7 @@ const formSlice = createSlice({
       const { data } = action.payload;
       state.token = data.token;
       state.user = data.user;
+      setupAuthToken(data.token);
     },
     [loginThunk.rejected]: (state, error) => {
       state.loading = false;
@@ -29,7 +31,9 @@ const formSlice = createSlice({
       state.user = null;
       state.loading = false;
       state.error = {};
-    }
+    },
+    [logoutThunk.fulfilled]: () => setupAuthToken(null),
+    [logoutThunk.rejected]: () => setupAuthToken(null),
   }
 })
 
