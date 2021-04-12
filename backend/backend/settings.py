@@ -51,11 +51,13 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'knox',
+    'django_filters',
 
     # Apps
     'auth_app',
     'borang',
-    'jawaban'
+    'jawaban',
+    'assign'
 ]
 
 MIDDLEWARE = [
@@ -124,7 +126,11 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
-    )
+    ),
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend',
+        'rest_framework.filters.SearchFilter',
+    ]
 }
 
 # Django rest-auth settings

@@ -7,7 +7,7 @@ from auth_app.utils import create_knox_token, KnoxSerializer
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from backend.utils import QueryBuilder
-
+from backend.filters import UserFilter
 from .models import AppUser, Division
 from .serializers import *
 from .permissions import *
@@ -51,16 +51,24 @@ class UserViewSet(
     permission_classes = (IsAuthenticated, DefaultRolePermission, AdminEditPermission)
     http_method_names = ('get', 'patch', 'delete')
     pagination_class = None
+    queryset = AppUser.objects.all()
+    filter_class = UserFilter
+    filterset_fields = ['divisi', 'role']
+    search_fields = ['username']
 
-    def get_queryset(self):
-        q_divisi = self.request.query_params.get('divisi')
-        q_nama = self.request.query_params.get('nama')
-        q_role = self.request.query_params.get('role')
-        filter = (QueryBuilder()
-            ._('divisi__nama_divisi__in', q_divisi, True)
-            ._('username__icontains', q_nama)
-            ._('role__in', q_role, True))
-        return AppUser.objects.filter(**filter.build()).distinct()
+    # def filter_queryset(self, queryset):
+    #     q_divisi = self.request.query_params.get('divisi')
+    #     queryset.filter('divisi__nama_divisi__in', q_divisi)
+    #     return super().filter_queryset(queryset)
+    # def get_queryset(self):
+    #     q_divisi = self.request.query_params.get('divisi')
+    #     q_nama = self.request.query_params.get('nama')
+    #     q_role = self.request.query_params.get('role')
+    #     filter = (QueryBuilder()
+    #         ._('divisi__nama_divisi__in', q_divisi, True)
+    #         ._('username__icontains', q_nama)
+    #         ._('role__in', q_role, True))
+    #     return AppUser.objects.filter(**filter.build()).distinct()
 
     def get_serializer_class(self):
         if self.request.user.has_role('Admin'):
