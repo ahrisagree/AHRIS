@@ -20,6 +20,7 @@ from auth_app.models import AppUser
 #     fields = ('role', 'divisi')
 
 class CharMultipleFilter(filters.BaseInFilter, filters.CharFilter):
+  # This allow filter multiple with comma (,) separation
   pass
 
 class UserFilter(FilterSet):
