@@ -4,16 +4,16 @@ import {
   Route,
 } from "react-router-dom";
 import { Provider } from 'react-redux';
-import store, { history } from './store';
+import store, { history, persistor } from './store';
 import routes from './routes';
 import './App.css';
 import { ConnectedRouter } from 'connected-react-router';
-// import { PersistGate } from 'redux-persist/integration/react';
+import { PersistGate } from 'redux-persist/integration/react';
 
 function App() {
   return (
     <Provider store={store}>
-      {/* <PersistGate loading={null} persistor={persistor}> */}
+      <PersistGate loading={null} persistor={persistor}>
         <ConnectedRouter history={history}>
           <Switch>
             {routes.map(routeProps => (
@@ -21,7 +21,7 @@ function App() {
             ))}
           </Switch>
         </ConnectedRouter>
-      {/* </PersistGate> */}
+      </PersistGate>
     </Provider>
   );
 }
