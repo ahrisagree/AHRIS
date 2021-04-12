@@ -2,6 +2,7 @@ import React from 'react';
 import { makeStyles, Paper, Grid, TextField, Button } from '@material-ui/core';
 import AHRIS from 'images/agree.png';
 import logo from 'images/logo.png';
+import Breadcrumbs from 'components/Breadcrumbs';
 
 const useStyles = makeStyles(theme => ({
     root: {
