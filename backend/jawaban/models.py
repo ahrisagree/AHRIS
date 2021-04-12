@@ -1,6 +1,7 @@
 from django.db import models
 from borang.models import Pertanyaan, PaketPertanyaan
 from auth_app.models import AppUser
+from assign.models import Assignment
 
 """
 in this file model:
@@ -9,16 +10,6 @@ in this file model:
 - AspekJawaban
 - Jawaban 
 """
-class Assignment(models.Model):
-  user_dinilai = models.ForeignKey(AppUser,
-          on_delete=models.CASCADE,
-          related_name='user_dinilai')
-  user_penilai = models.ForeignKey(AppUser, 
-          on_delete=models.CASCADE,
-          related_name='user_penilai')
-  list_paket_pertanyaan = models.ManyToManyField(PaketPertanyaan,
-          related_name='list_assignment')
-  periode = models.DateField()
 
 class PaketJawaban(models.Model):
   nama = models.CharField(max_length=100)
