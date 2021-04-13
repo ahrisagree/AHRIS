@@ -76,7 +76,7 @@
   }
 
   .btnBlueOutline {
-    background-color: transparent;
+    background-color: var(--white);
     border: 2px solid var(--blue);
     color: var(--blue);
     border-radius: 25.8612px;
