@@ -38,4 +38,4 @@ const CustomButton = withStyles({
   },
 })(Button);
 
-export default CustomButton;
+export default CustomButton

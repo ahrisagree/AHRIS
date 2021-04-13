@@ -97,6 +97,7 @@ const Home = props => {
             margin: "1rem",
           }}
         >INI CUSTOM</CustomButton>
+
       </div>
 
       <div className="m-7 p-2">
@@ -117,4 +118,6 @@ const Home = props => {
   )
 };
 
-export default Home;                                                                                                                                                                                
+export default Home;  
+
+// export default Home;                                                                                                                                                                                
