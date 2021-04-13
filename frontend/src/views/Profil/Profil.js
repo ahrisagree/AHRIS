@@ -2,6 +2,7 @@
 
 import React from "react";
 import {
+  withStyles,
   makeStyles,
   Paper,
   Grid,
@@ -11,6 +12,8 @@ import {
   Divider,
 } from '@material-ui/core';
 import Button  from "components/Button";
+import CustomTextField from 'components/CustomTextField';
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -29,8 +32,10 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: 1000,
     height:  '100%',
     minHeight: 500,
-    alignItems:"flex-end",
     backgroundColor: '#0A3142',
+    // diplay: 'flex',
+    // justify: 'space-between',
+    
   },
   paper2: {
     padding: theme.spacing(5),
@@ -38,14 +43,8 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: 1000, 
     height:  '100%',
     minHeight: 500,
+
     },
-  profil: {
-   backgroundColor: '#0A3142',
-  },
-  profill: {
-    margin: 'auto',
-    alignItems: "left",
-   },
   image: {
     width: 128,
     height: 128,
@@ -68,18 +67,17 @@ const Profil = props => {
         {/* yg warna biru */}
         <Grid item xs={3}>
           <Paper className={classes.paper1}>
-          <Grid container spacing={2} display='flex' justify="space-between" direction='column'>
-            <Grid item xs={12} container>
+          <Grid container spacing={2} margin='auto' display='flex' justifyContent="space-between" direction='column'>
             <Grid item xs={12}>
-            <Typography gutterBottom variant="subtitle1">
-                      Nama
-            </Typography>
-            <Typography variant="body2" color="textPrimary">
+            <Typography style={{ color:"#fdfdfd", textAlign:'center', fontFamily: 'IBM Plex Sans', fontWeight:600, variant:'body1'}} >
                       Email
-                    </Typography>
+            </Typography>
+            <Typography style={{ color:"#fdfdfd", textAlign:'center', fontFamily: 'IBM Plex Sans', fontWeight:300, variant:'body2'}} >
+                      a05@propensi.com
+            </Typography>
             </Grid>
-               <Grid item xs={12}>
-                  <Button
+               <Grid item xs={12} alignItems="flex-end">
+                  <Button 
                     onClick={() => {
                       console.log("You Clicked on Me!");
                     }}
@@ -90,7 +88,6 @@ const Profil = props => {
                     Logout
                   </Button>               
                 </Grid>
-            </Grid>
           </Grid>
           </Paper>
         </Grid>
@@ -101,25 +98,28 @@ const Profil = props => {
           <Grid container spacing={1} direction='row'>
             <Grid item xs={12} container>
                <Grid item xs={5}>
-                  <Typography gutterBottom variant="subtitle1">
+                  <Typography style={{ fontWeight: 600 }} gutterBottom variant="subtitle1">
                       Nama
                     </Typography>
                     <Typography variant="body2" color="textSecondary">
                       Set nama
                     </Typography>
-                    <Typography gutterBottom variant="subtitle1">
+                    <br></br>
+                    <Typography style={{ fontWeight: 600 }} gutterBottom variant="subtitle1">
                       Role
                     </Typography>
                     <Typography variant="body2" color="textSecondary">
                       Set role
                     </Typography>
-                    <Typography gutterBottom variant="subtitle1">
+                    <br></br>
+                    <Typography style={{ fontWeight: 600 }} gutterBottom variant="subtitle1">
                       Divisi
                     </Typography>
                     <Typography variant="body2" color="textSecondary">
                       Set divisi
                     </Typography>
-                    <Typography gutterBottom variant="subtitle1">
+                    <br></br>
+                    <Typography style={{ fontWeight: 600 }} gutterBottom variant="subtitle1">
                       Gaji
                     </Typography>
                     <Typography variant="body2" color="textSecondary">
@@ -133,7 +133,7 @@ const Profil = props => {
                     <Grid container spacing={2} direction='row'>
                       <Grid item xs={12} container>
                         <Grid item xs={12}>
-                        <Typography variant="subtitle1">Change Password</Typography>
+                        <Typography style={{ fontWeight: 600 }} variant="subtitle1">Change Password</Typography>
                         </Grid>
                         <Grid item xs={12}>
                           <TextField 
@@ -192,6 +192,7 @@ const Profil = props => {
   
   );
 }
+
 
 
 export default Profil;
