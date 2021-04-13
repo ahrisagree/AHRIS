@@ -15,7 +15,7 @@ import Breadcrumbs from 'components/Breadcrumbs';
 import CustomButton from 'components/CustomButton';
 import CustomTextField from 'components/CustomTextField';
 
-const Home = props => {
+const Home = ({logoutThunk}) => {
   const dataTable = [
     {
       name: 'Frozen yoghurt',
@@ -89,6 +89,17 @@ const Home = props => {
           }}
           >
           Login
+        </Button>
+        <Button 
+          variant="contained" 
+          style={{
+            boxShadow: "black 2px 2px",
+            margin: "1rem",
+            backgroundColor: "#FF0000"
+          }}
+          onClick={() => logoutThunk()}
+          >
+          Logout
         </Button>
 
         <Button

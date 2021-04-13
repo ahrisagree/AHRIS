@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles, Paper, Grid, TextField, Button } from '@material-ui/core';
 import AHRIS from 'images/agree.png';
 import logo from 'images/logo.png';
@@ -23,8 +23,24 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const Login = props => {
+const Login = ({
+    loading,
+    error,
+    token,
+    history,
+    loginThunk
+}) => {
     const classes = useStyles();
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+
+    useEffect(()=>{
+        if (token!=null) history.push('/')
+    },[history, token])
+    
+    const goLogin = () => {
+        loginThunk({email, password});
+    }
 
     return (
         <div className={classes.root}>
@@ -48,6 +64,9 @@ const Login = props => {
                               shrink: true,
                             }}
                             variant="outlined"
+                            value={email}
+                            onChange={(e)=>setEmail(e.target.value)}
+                            error={error.email}
                         />
                     </div>
                     
@@ -61,12 +80,17 @@ const Login = props => {
                             InputLabelProps={{
                               shrink: true,
                             }}
+                            type="password"
+                            value={password}
+                            onChange={(e)=>setPassword(e.target.value)}
                             variant="outlined"
+                            error={error.password}
+                            // bikin formcontrol buat error nanti di component -leo
                         />
                     </div>
 
                     <div className="m-7 p-2" style={{ textAlign: "center" }}>
-                    <Button variant="contained" style={{  borderRadius: 23, color: "#FFFF", background: "#0A3142", boxShadow: "3.67797px 4.20339px 8.9322px rgba(0, 0, 0, 0.25)" }}>
+                    <Button onClick={goLogin} variant="contained" style={{  borderRadius: 23, color: "#FFFF", background: "#0A3142", boxShadow: "3.67797px 4.20339px 8.9322px rgba(0, 0, 0, 0.25)" }}>
                             Login
                     </Button>
                     </div>
