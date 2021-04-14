@@ -1,5 +1,5 @@
 // import { connect } from 'react-redux';
-import Home from './Home';
+import Daftar_Karyawan from './Daftar_Karyawan';
 
 // const mapStateToProps = state => ({
 // })
@@ -8,4 +8,4 @@ import Home from './Home';
 // }
 
 // export default connect(mapStateToProps, mapActionToProps)(Home);
-export default Home;
+export default Daftar_Karyawan;
