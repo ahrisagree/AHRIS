@@ -16,6 +16,7 @@
     border-radius: 8px;
     cursor: pointer;
     transition: transform 0.3s ease;
+    margin-top: 10px;
     box-shadow: 4.13551px 4.7263px 10.0434px rgba(0, 0, 0, 0.25);
 
   }
@@ -31,7 +32,6 @@
   /* untuk yg di tabel2 */
   .btnMedium {
     padding: 5px 15px;
-
     font-size:  calc(16px / var(--size-divisor));;
 
   }
@@ -39,12 +39,11 @@
   /* untuk popup/modal */
   .btnLarge {
     padding: 5px 25px;
-    font-size: 20px;
+    font-size: calc(20px / var(--size-divisor));
   }
 
   .btnLong {
     padding: 5px 50px;
-
     font-size:  calc(16px / var(--size-divisor));;
 
   }

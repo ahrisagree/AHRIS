@@ -6,7 +6,7 @@ import {
 import ReactDOM from "react-dom";
 
 // Jangan lupa import ini kalo mau pake button yg dibikin
-import Button  from "components/Button";
+import TemplateButton  from "components/TemplateButton";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -22,7 +22,7 @@ const Coba = props => {
     <div className="App">
       <h1>Button-button</h1>
       <br></br>
-      <Button
+      <TemplateButton
         onClick={() => {
           console.log("You Clicked on Me!");
         }}
@@ -31,10 +31,10 @@ const Coba = props => {
         buttonSize="btnMedium"
       >
         View
-      </Button>
+      </TemplateButton>
       {" "}
       
-      <Button
+      <TemplateButton
         onClick={() => {
           console.log("You Clicked on Me!");
         }}
@@ -43,9 +43,9 @@ const Coba = props => {
         buttonSize="btnMedium"
       >
         Edit
-      </Button>
+      </TemplateButton>
       {" "}
-      <Button
+      <TemplateButton
         onClick={() => {
           console.log("You Clicked on Me!");
         }}
@@ -54,9 +54,9 @@ const Coba = props => {
         buttonSize="btnMedium"
       >
         Delete
-      </Button>
+      </TemplateButton>
       {" "}
-      <Button
+      <TemplateButton
         onClick={() => {
           console.log("You Clicked on Me!");
         }}
@@ -65,9 +65,9 @@ const Coba = props => {
         buttonSize="btnLong"
       >
         Simpan
-      </Button>
+      </TemplateButton>
       {" "}
-      <Button
+      <TemplateButton
         onClick={() => {
           console.log("You Clicked on Me!");
         }}
@@ -76,9 +76,9 @@ const Coba = props => {
         buttonSize="btnMedium"
       >
         Isi Penilaian
-      </Button>
+      </TemplateButton>
       {" "}
-      <Button size="small"
+      <TemplateButton size="small"
         onClick={() => {
           console.log("You Clicked on Me!");
         }}
@@ -87,9 +87,9 @@ const Coba = props => {
         buttonSize="btnLarge"
       >
         Batal
-      </Button>
+      </TemplateButton>
       {" "}
-      <Button
+      <TemplateButton
         onClick={() => {
           console.log("You Clicked on Me!");
         }}
@@ -98,9 +98,9 @@ const Coba = props => {
         buttonSize="btnMedium"
       >
        + Tambah Akun
-      </Button>
+      </TemplateButton>
       {" "}
-      <Button
+      <TemplateButton
         onClick={() => {
           console.log("You Clicked on Me!");
         }}
@@ -109,9 +109,9 @@ const Coba = props => {
         buttonSize="btnLarge"
       >
         Tutup
-      </Button>
+      </TemplateButton>
       {" "}
-      <Button
+      <TemplateButton
         onClick={() => {
           console.log("You Clicked on Me!");
         }}
@@ -120,7 +120,7 @@ const Coba = props => {
         buttonSize="btnLong"
       >
         Logout
-      </Button>
+      </TemplateButton>
 
     
 

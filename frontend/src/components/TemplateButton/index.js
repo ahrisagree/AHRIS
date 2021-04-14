@@ -19,7 +19,7 @@ const SIZES = [
   "btnLong",
 ];
 
- const Button = ({
+ const TemplateButton = ({
     children,
     type,
     onClick,
@@ -54,4 +54,4 @@ const SIZES = [
     );
   };
 
-export default Button
+export default TemplateButton

@@ -1,30 +1,24 @@
-
-
 import React from "react";
 import {
-  withStyles,
   makeStyles,
   Paper,
   Grid,
   Typography,
-  ButtonBase,
   TextField,
   Divider,
 } from '@material-ui/core';
-import Button  from "components/Button";
-import CustomTextField from 'components/CustomTextField';
+import TemplateButton  from "components/TemplateButton";
 
 
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
     width : 'stretch',
-    // marginTop: "5%",
     padding: theme.spacing(2),
     maxWidth: 1000,
     margin: 'auto',
-
-
+    paddingTop: 50,
+    marginTop: 20,
   },
   paper1: {
     padding: theme.spacing(5),
@@ -33,9 +27,7 @@ const useStyles = makeStyles((theme) => ({
     height:  '100%',
     minHeight: 500,
     backgroundColor: '#0A3142',
-    // diplay: 'flex',
-    // justify: 'space-between',
-    
+
   },
   paper2: {
     padding: theme.spacing(5),
@@ -43,7 +35,6 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: 1000, 
     height:  '100%',
     minHeight: 500,
-
     },
   image: {
     width: 128,
@@ -55,19 +46,29 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: '100%',
     maxHeight: '100%',
   },
+  title: {
+    position: "relative",
+    top: 40,
+    right : -160,
+  },
 }));
 
-// function App() {
 const Profil = props => {
   const classes = useStyles();
   return (
+    <div className="m-10">
+      <div className={classes.title}>
+        <h4 style={{fontFamily: "IBM Plex Sans", fontSize: "24px", fontWeight:600}}>Profil Pengguna</h4>
+        <div style={{width:414, height: 12, backgroundColor:"#FFB800", borderRadius: 4}}></div>
+      </div>
+
     <div className={classes.root}>
     <Grid container direction='row'>
       <Grid item xs={12} container>
         {/* yg warna biru */}
         <Grid item xs={3}>
           <Paper className={classes.paper1}>
-          <Grid container spacing={2} margin='auto' display='flex' justifyContent="space-between" direction='column'>
+          <Grid container spacing={2} margin='auto' display='flex' justify="space-between" direction='row' style={{height: '100%'}}>
             <Grid item xs={12}>
             <Typography style={{ color:"#fdfdfd", textAlign:'center', fontFamily: 'IBM Plex Sans', fontWeight:600, variant:'body1'}} >
                       Email
@@ -76,8 +77,8 @@ const Profil = props => {
                       a05@propensi.com
             </Typography>
             </Grid>
-               <Grid item xs={12} alignItems="flex-end">
-                  <Button 
+               <Grid item container xs={12} alignItems="flex-end">
+               <TemplateButton 
                     onClick={() => {
                       console.log("You Clicked on Me!");
                     }}
@@ -86,8 +87,7 @@ const Profil = props => {
                     buttonSize="btnLong"
                   >
                     Logout
-                  </Button>               
-                </Grid>
+                  </TemplateButton>                 </Grid>
           </Grid>
           </Paper>
         </Grid>
@@ -131,39 +131,37 @@ const Profil = props => {
                </Grid>
                < Grid item xs={5}>
                     <Grid container spacing={2} direction='row'>
-                      <Grid item xs={12} container>
-                        <Grid item xs={12}>
+                      {/* <Grid item xs={12} container> */}
                         <Typography style={{ fontWeight: 600 }} variant="subtitle1">Change Password</Typography>
-                        </Grid>
-                        <Grid item xs={12}>
                           <TextField 
+                            required="true"
                             variant="outlined"
                             style={{}}
                             size="small"
+                            fullWidth
                             label="Old Password"
                             margin = "normal"
                           />
-                        </Grid> 
-                        <Grid item xs={12}>
                           <TextField 
+                            required="true"
                             variant="outlined"
                             style={{}}
                             size="small"
+                            fullWidth
                             label="New Password "
                             margin = "normal"
                           />
-                        </Grid>
-                        <Grid item xs={12}>
                           <TextField 
+                            required="true"
                             variant="outlined"
                             style={{}}
                             size="small"
+                            fullWidth
                             label="New Password Confirmation"
                             margin = "normal"
                           />
-                        </Grid>
-                        <Grid item xs={12}>
-                          <Button
+                          <br></br>
+                          <TemplateButton 
                                 onClick={() => {
                                   console.log("You Clicked on Me!");
                                 }}
@@ -172,9 +170,7 @@ const Profil = props => {
                                 buttonSize="btnSmall"
                               >
                                 Ubah Password
-                          </Button>
-                          </Grid>
-                      </Grid>
+                          </TemplateButton>
                 </Grid>
                </Grid>
             </Grid>
@@ -185,6 +181,7 @@ const Profil = props => {
   
       </Grid>
     </Grid>
+    </div>
     </div>
 
     
