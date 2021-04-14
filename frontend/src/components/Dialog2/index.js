@@ -63,42 +63,41 @@ const styles = (theme) => ({
 });
 
 const DialogContent = withStyles(styles)((props) => {
-    const { children, classes, onClose, ...other } = props;
+    const { children, classes, updateModalState, ...other } = props;
     return (
       <MuiDialogContent disableTypography className={classes.root} {...other}>
         <img src={Placeholder} alt="Sukses" className={classes.foto}/>
         <Typography variant="h6" className={classes.typography}>{children}</Typography>
-        {onClose ? (
-        <Button className={classes.button} onClick={onClose}>Tutup</Button>
+        {updateModalState ? (
+        <Button className={classes.button} onClick={updateModalState}>Tutup</Button>
       ) : null}
       </MuiDialogContent>
     );
 });
 
-export default function CustomizedDialogs() {
-  const [open, setOpen] = React.useState(false);
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
+
+  const Modal = ({ canShow, updateModalState }) => {
+    if (canShow) {
+      return (
+        <div>
+          <Dialog aria-labelledby="customized-dialog-title">
+            <DialogContent dividers style={{alignItems: "center"}} >
+            <Typography style={{fontFamily: "IBM Plex Sans", position:"relative", top:-8}}>
+                <Typography style={{fontWeight:"bold", fontSize:"24px",fontFamily: "IBM Plex Sans"}}>
+                    Sukses
+                  </Typography>
+                    Data telah berhasil disimpan
+                </Typography>
+                <br></br>
+            </DialogContent>
+            
+          </Dialog>
+        </div>
+      );
+    }
+  
+    return null;
   };
 
-  return (
-    <div>
-      <Dialog aria-labelledby="customized-dialog-title" show={open} onHide={handleClose}>
-        <DialogContent dividers style={{alignItems: "center"}} onClose={handleClose}>
-        <Typography style={{fontFamily: "IBM Plex Sans", position:"relative", top:-8}}>
-            <Typography style={{fontWeight:"bold", fontSize:"24px",fontFamily: "IBM Plex Sans"}}>
-                Sukses
-              </Typography>
-                Data telah berhasil disimpan
-            </Typography>
-            <br></br>
-        </DialogContent>
-        
-      </Dialog>
-    </div>
-  );
-}
+  export default Modal;

@@ -35,6 +35,7 @@ const useStyles = makeStyles((theme) => ({
   textField: {
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
+    fontFamily:"IBM Plex Sans"
   },
   button: {
     alignSelf: "center",
@@ -61,6 +62,10 @@ const useStyles = makeStyles((theme) => ({
 
 const Register = props => {
   const classes = useStyles();
+
+  const [showModal, updateShowModal] = React.useState(false);
+
+  const toggleModal = () => updateShowModal(state => !state);
 
   return (
     <div className="m-10">
@@ -122,7 +127,8 @@ const Register = props => {
           variant="outlined"></TextField>
         </Grid>
         <Dialog2></Dialog2>
-        <Button className={classes.button} onClick={Dialog2.handleClickOpen}>Simpan</Button>
+        <Button className={classes.button} onClick={toggleModal}>Simpan</Button>
+        <Dialog2 canShow={showModal} updateModalState={toggleModal}></Dialog2>
         
         
       </Container>
