@@ -14,6 +14,7 @@ import {
   Grid
 } from '@material-ui/core';
 import title from 'images/Group 124.png';
+import Dialog2 from 'components/Dialog2';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -40,7 +41,8 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     backgroundColor: "#0A3142",
     color: '#FFFFFF',
-    fontWeight: 'semi-bold',
+    fontWeight: 600,
+    fontFamily: "IBM Plex Sans",
     borderRadius: 25.86,
     width: 286,
     height: 50,
@@ -49,6 +51,11 @@ const useStyles = makeStyles((theme) => ({
   },
   foto: {
     marginLeft: 160
+  },
+  title: {
+    position: "relative",
+    top: 40,
+    right : -160
   }
 }));
 
@@ -57,10 +64,15 @@ const Register = props => {
 
   return (
     <div className="m-10">
-      <img src={title} alt="title" className={classes.foto}/>
+      <div className={classes.title}>
+        <h4 style={{fontFamily: "IBM Plex Sans", fontSize: "24px", fontWeight:600}}>Buat Akun</h4>
+        <div style={{width:414, height: 12, backgroundColor:"#FFB800", borderRadius: 4}}></div>
+      </div>
+      
       <Container component={Paper} className={classes.paper}>
         <Grid item xs={12}>
           <TextField id="outlined-full-width"
+          required="true"
           label="Nama"
           style={{ margin: 8 }}
           fullWidth
@@ -71,6 +83,7 @@ const Register = props => {
         <div>
         <TextField
           id="outlined-margin-normal"
+          required="true"
           label="Email"
           style={{ margin: 8 , width: '75ch'}}
           margin="normal"
@@ -78,6 +91,7 @@ const Register = props => {
         />
         <TextField
           id="outlined-medium"
+          required="true"
           label="Role"
           select
           style={{ margin: 8 , width: '21ch'}}
@@ -89,6 +103,7 @@ const Register = props => {
 
         <Grid item xs={12}>
           <TextField id="outlined-full-width"
+          required="true"
           label="Divisi"
           style={{ margin: 8 }}
           fullWidth
@@ -99,14 +114,16 @@ const Register = props => {
         
         <Grid item xs={12}>
           <TextField id="outlined-full-width"
+          required="true"
           label="Gaji Pokok"
           style={{ margin: 8 }}
           fullWidth
           margin="normal"
           variant="outlined"></TextField>
         </Grid>
-
-        <Button className={classes.button}>Simpan</Button>
+        <Dialog2></Dialog2>
+        <Button className={classes.button} onClick={Dialog2.handleClickOpen}>Simpan</Button>
+        
         
       </Container>
 
