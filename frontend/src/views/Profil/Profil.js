@@ -67,7 +67,7 @@ const Profil = props => {
         {/* yg warna biru */}
         <Grid item xs={3}>
           <Paper className={classes.paper1}>
-          <Grid container spacing={2} margin='auto' display='flex' justifyContent="space-between" direction='column'>
+          <Grid container spacing={2} margin='auto' display='flex' justify="space-between" direction='row' style={{height: '100%'}}>
             <Grid item xs={12}>
             <Typography style={{ color:"#fdfdfd", textAlign:'center', fontFamily: 'IBM Plex Sans', fontWeight:600, variant:'body1'}} >
                       Email
@@ -76,7 +76,7 @@ const Profil = props => {
                       a05@propensi.com
             </Typography>
             </Grid>
-               <Grid item xs={12} alignItems="flex-end">
+               <Grid item container xs={12} alignItems="flex-end">
                   <Button 
                     onClick={() => {
                       console.log("You Clicked on Me!");
