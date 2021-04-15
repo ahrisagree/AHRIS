@@ -1,6 +1,7 @@
 import { makeStyles, Paper } from '@material-ui/core';
 import TextField from 'components/CustomTextField';
 import React from 'react';
+import { newPertanyaanTemplate } from 'utils/constant';
 import FormActionController from './FormActionController';
 import Pertanyaan from './Pertanyaan';
 
@@ -20,10 +21,6 @@ const useStyles = makeStyles({
     // }
   }
 })
-const newPertanyaanTemplate = { 
-  pertanyaan: "", 
-  tipe: 0 
-} 
 
 const SectionPertanyaan = ({
   aspek, 

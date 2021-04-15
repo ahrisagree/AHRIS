@@ -5,9 +5,11 @@ import {
   Paper, 
 } from '@material-ui/core';
 import TextField from 'components/CustomTextField';
-import Autocomplete from '@material-ui/lab/Autocomplete';
 import SectionPertanyaan from 'components/PaketPertanyaan/SectionPertanyaan';
 import MainTitle from 'components/MainTitle';
+import TemplateButton from 'components/TemplateButton';
+import CreateableSelection from 'components/CreateableSelection';
+import { JENIS_PAKET, newAspekTemplate } from 'utils/constant';
 
 const useStyles = makeStyles((theme) => ({
   smallSelection: {
@@ -21,16 +23,11 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const newAspekTemplate = {
-  nama: "", 
-  list_pertanyaan: [{ 
-    pertanyaan: "", 
-    tipe: 0 
-  }] 
-}
-
 const kategoriOption = [
-  "Finance", "IT", "Buat Gue", "DLL", "sadas", "sakd", "asd"
+  {id: 1, nama: "Finance"},
+  {id: 2, nama: "Fi2n13ance"},
+  {id: 3, nama: "Financdse"},
+  {id: 4, nama: "Finance44"},
 ]
 
 const BuatPaketPertanyaan = () => {
@@ -38,11 +35,20 @@ const BuatPaketPertanyaan = () => {
 
   const [nama, setNama] = useState("")
   const [template, setTemplate] = useState("")
-  const [tipe, setTipe] = useState("")
+  const [jenis, setJenis] = useState("")
   const [kategori, setkategori] = useState("")
   const [data, setData] = useState({  // data isinya list_aspek aja nanti pas post baru gabungin
     list_aspek: [ newAspekTemplate ]
   })
+console.log(kategori)
+  const sendData = () => {
+    console.log({
+      nama,
+      jenis,
+      kategori,
+      ...data
+    })
+  }
 
   const onAspekChange = (index, aspek) => {
     const newListAspek = Array.from(data.list_aspek)
@@ -113,22 +119,25 @@ const BuatPaketPertanyaan = () => {
                 required
                 label="Jenis Paket"
                 variant="outlined"
-                value={tipe}
-                onChange={e=>setTipe(e.target.value)}
+                value={jenis}
+                onChange={e=>setJenis(e.target.value)}
                 size="small"
                 fullWidth
                 className={classes.mb}
                 select
                 >
-                <MenuItem value={0}>AntarDivisi</MenuItem>
-                <MenuItem value={1}>Divisi</MenuItem>
+                  {JENIS_PAKET.map(pkt=>(
+                    <MenuItem value={pkt.value}>{pkt.label}</MenuItem>
+                  ))}
               </TextField>
             </div>
             <div className="w-5/12 sm:w-4/12 md:w-3/12 lg:w-1/6 ml-1">
-              <Autocomplete
-                freeSolo
-                options={kategoriOption.map(o=>o)}
+              <CreateableSelection 
                 className={classes.mb}
+                options={kategoriOption}
+                labelKey="nama"
+                value={kategori}
+                setData={setkategori}
                 size="small"
                 fullWidth
                 renderInput={props=>(
@@ -136,10 +145,7 @@ const BuatPaketPertanyaan = () => {
                     required
                     label="Kategori"
                     variant="outlined"
-                    value={kategori}
-                    onChange={e=>setkategori(e.target.value)}
-                    {...props}
-                  />
+                    {...props}/>
                 )}
               />
             </div>
@@ -156,6 +162,14 @@ const BuatPaketPertanyaan = () => {
             />
           ))}
         </div>
+        <TemplateButton
+          onClick={sendData}
+          type="button"
+          buttonStyle="btnBlue"
+          buttonSize="btnLong"
+        >
+          Simpan
+        </TemplateButton>
       </Paper>
     </div>
   );
