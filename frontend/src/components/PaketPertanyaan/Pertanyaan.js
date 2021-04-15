@@ -1,17 +1,40 @@
-import { MenuItem } from '@material-ui/core';
+import { makeStyles, MenuItem } from '@material-ui/core';
 import TextField from 'components/CustomTextField';
 import React from 'react';
+import FormActionController from './FormActionController';
 
-const Pertanyaan = ({pertanyaan, tipe, onChangeCallback}) => {
+const useStyles = makeStyles({
+  root: {
+    marginBottom: '1rem',
+    '&:focus-within #foac-pertanyaan': {
+      display: 'flex'
+    },
+    '& > #foac-pertanyaan': {
+      display: 'none'
+    }
+  }
+})
+
+
+const Pertanyaan = ({
+  pertanyaan, 
+  tipe, 
+  onChangeCallback,
+  onAddCallback,
+  onDeleteCallback,
+  onUpCallback,
+  onDownCallback
+}) => {
+  const classes = useStyles()
 
   const onChangeTipe = newTipe => onChangeCallback({pertanyaan, tipe: newTipe});
   const onChangePertanyaan = newPertanyaan => 
       onChangeCallback({tipe, pertanyaan: newPertanyaan});
 
   return (
-    <div>
+    <div className={classes.root}>
       <div className="flex flex-row">
-        <div className="w-full mb-4 mr-1">
+        <div className="w-full mb-1 mr-1">
           <TextField 
             variant="filled"
             placeholder="Pertanyaan"
@@ -21,7 +44,7 @@ const Pertanyaan = ({pertanyaan, tipe, onChangeCallback}) => {
             fullWidth
           />
         </div>
-        <div className="w-3/12 flex items-center mb-4 ml-1">
+        <div className="w-3/12 flex items-center mb-1 ml-1">
           <TextField 
             variant="outlined"
             value={tipe}
@@ -35,8 +58,15 @@ const Pertanyaan = ({pertanyaan, tipe, onChangeCallback}) => {
           </TextField>
         </div>
       </div>
+      <FormActionController
+        id="pertanyaan"
+        onAdd={onAddCallback}
+        onDelete={onDeleteCallback}
+        onUp={onUpCallback}
+        onDown={onDownCallback}
+      />
     </div>
   )
 }
 
-export default Pertanyaan;
+export default React.memo(Pertanyaan);

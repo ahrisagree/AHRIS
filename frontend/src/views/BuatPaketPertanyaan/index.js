@@ -21,45 +21,27 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
+const newAspekTemplate = {
+  nama: "", 
+  list_pertanyaan: [{ 
+    pertanyaan: "", 
+    tipe: 0 
+  }] 
+}
+
+const kategoriOption = [
+  "Finance", "IT", "Buat Gue", "DLL", "sadas", "sakd", "asd"
+]
+
 const BuatPaketPertanyaan = () => {
   const classes = useStyles()
-  const kategoriOption = [
-    "Finance", "IT", "Buat Gue", "DLL", "sadas", "sakd", "asd"
-  ]
 
   const [nama, setNama] = useState("")
   const [template, setTemplate] = useState("")
   const [tipe, setTipe] = useState("")
   const [kategori, setkategori] = useState("")
-  const [data, setData] = useState({
-    list_aspek: [
-      {
-        nama: "",
-        list_pertanyaan: [
-          {
-            pertanyaan: "",
-            tipe: 0
-          },
-          {
-            pertanyaan: "",
-            tipe: 0
-          },
-        ]
-      },
-      {
-        nama: "",
-        list_pertanyaan: [
-          {
-            pertanyaan: "",
-            tipe: 0
-          },
-          {
-            pertanyaan: "",
-            tipe: 0
-          },
-        ]
-      }
-    ]
+  const [data, setData] = useState({  // data isinya list_aspek aja nanti pas post baru gabungin
+    list_aspek: [ newAspekTemplate ]
   })
 
   const onAspekChange = (index, aspek) => {
@@ -68,8 +50,34 @@ const BuatPaketPertanyaan = () => {
     setData({
       ...data,
       list_aspek: newListAspek
-    })
-  }
+    })}
+  const addNewAspek = index => {
+    const listBeforeIndex = data.list_aspek.slice(0,index+1)
+    const listAfterIndex = data.list_aspek.slice(index+1)
+    setData({
+      ...data,
+      list_aspek: [
+        ...listBeforeIndex, 
+        newAspekTemplate,
+        ...listAfterIndex
+      ]})}
+  const deleteAspek = index => {
+    if (data.list_aspek.length > 1){
+      const listBeforeIndex = data.list_aspek.slice(0,index)
+      const listAfterIndex = data.list_aspek.slice(index+1)
+      setData({
+        ...data,
+        list_aspek: [...listBeforeIndex, ...listAfterIndex]
+      })}}
+  const swapAspek = (index1, index2) => {
+    const aspek1 = data.list_aspek[index1];
+    const newListAspek = Array.from(data.list_aspek)
+    newListAspek[index1] = newListAspek[index2]
+    newListAspek[index2] = aspek1
+    setData({
+      ...data,
+      list_aspek: newListAspek
+    })}
   return (
     <div style={{maxWidth: '55rem', margin: 'auto'}}>
       <MainTitle title="Buat Paket Pertanyaan" style={{marginBottom: '2rem'}}/>
@@ -110,7 +118,6 @@ const BuatPaketPertanyaan = () => {
                 size="small"
                 fullWidth
                 className={classes.mb}
-                // className={classes.smallSelection}
                 select
                 >
                 <MenuItem value={0}>AntarDivisi</MenuItem>
@@ -122,7 +129,6 @@ const BuatPaketPertanyaan = () => {
                 freeSolo
                 options={kategoriOption.map(o=>o)}
                 className={classes.mb}
-                // className={classes.smallSelection}
                 size="small"
                 fullWidth
                 renderInput={props=>(
@@ -142,6 +148,10 @@ const BuatPaketPertanyaan = () => {
             <SectionPertanyaan
               key={`aspek-${i}`}
               onChangeCallback={a=>onAspekChange(i, a)}
+              onAddCallback={()=>addNewAspek(i)}
+              onDeleteCallback={()=>deleteAspek(i)}
+              onUpCallback={i!==0 ? ()=>swapAspek(i, i-1) : null}
+              onDownCallback={i!==data.list_aspek.length-1 ? ()=>swapAspek(i, i+1) : null}
               aspek={aspek}
             />
           ))}
