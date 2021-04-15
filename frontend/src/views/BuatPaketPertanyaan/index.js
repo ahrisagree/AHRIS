@@ -40,7 +40,7 @@ const BuatPaketPertanyaan = () => {
   const [data, setData] = useState({  // data isinya list_aspek aja nanti pas post baru gabungin
     list_aspek: [ newAspekTemplate ]
   })
-console.log(kategori)
+
   const sendData = () => {
     console.log({
       nama,
