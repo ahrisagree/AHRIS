@@ -9,11 +9,14 @@ import {
   TableBody,
   Container,
   Button,
-  TextField
+  TextField,
 } from '@material-ui/core';
 import Breadcrumbs from 'components/Breadcrumbs';
 import CustomButton from 'components/CustomButton';
 import CustomTextField from 'components/CustomTextField';
+import Dialog from 'components/Dialog';
+import DialogFail from 'components/DialogFail';
+import DialogConf from 'components/DialogConf';
 
 const Home = ({logoutThunk}) => {
   const dataTable = [
@@ -39,7 +42,6 @@ const Home = ({logoutThunk}) => {
       protein: 4.0
     },
   ]
-
 
   return (
     <Container component={Paper}>
@@ -130,6 +132,12 @@ const Home = ({logoutThunk}) => {
             variant="outlined"
             label="Custom Ini"
           />
+      </div>
+
+      <div>
+        <Dialog>HAHAH</Dialog>
+        <DialogFail></DialogFail>
+        <DialogConf></DialogConf>
       </div>
       
     </Container>

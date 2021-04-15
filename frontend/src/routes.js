@@ -3,6 +3,7 @@ import Login from "./views/Login";
 import Profil from "./views/Profil";
 import Coba from "./views/Coba";
 
+import Register from "./views/Register";
 
 export default [
   {
@@ -24,5 +25,10 @@ export default [
     path: '/coba',
     exact: true,
     component: Coba,
+  },
+  {
+    path: "/register",
+    exact: true,
+    component: Register,
   },
 ]
