@@ -6,13 +6,11 @@ import Breadcrumbs from 'components/Breadcrumbs';
 import CustomButton from 'components/CustomButton';
 import CustomTextField from 'components/CustomTextField';
 import Button  from "components/Button";
-import ReactDOM from "react-dom";
 import {
   makeStyles,
   withStyles,
   Table as MuiTable,
   TableBody,
-  TableCell,
   TableContainer,
   TableHead,
   TableRow,
@@ -20,27 +18,8 @@ import {
   Grid,
   IconButton,
 } from '@material-ui/core';
-
-
-const StyledTableCell = withStyles((theme) => ({
-  head: {
-    backgroundColor: "#0B3242",
-    color: theme.palette.common.white,
-    width: "20%",
-    align: "Left",
-    size: "50%",
-  },
-  body: {
-    fontSize: 16,
-    color:"#0B3242",
-  }
-}))(TableCell);
-
-const StyledTableRow = withStyles((theme) => ({
-  root: {
-    width: 700
-  },
-}))(TableRow);
+import { StyledTableCell, StyledTableRow } from "components/Table";
+import MainTitle from "components/MainTitle";
 
 
 function createData(name, calories, fat, carbs, protein) {
@@ -111,24 +90,18 @@ const useStyles = makeStyles((theme) =>({
       right : -160
     }
 }));
+
   export default function BasicPagination() {
     const classes = useStyles();
 
     return (
     <div className={classes.root1}>
-      <Paper className={classes.page}>
-    
-
-
-
+      {/* <Paper className={classes.page}> */}
       <Grid container spacing={2} direction="column">
       <Grid item xs={12} container>
           <Grid item xs={4} alignContent="flex-start">
             {/* <div className="m-12"> */}
-            <div className={classes.title}>
-            <h4 style={{fontFamily: "IBM Plex Sans", color:"black", fontSize: "30px", fontWeight:600, textAlign:"left"}}>Kelola Akun</h4>
-              <div style={{width:414, height: 12, backgroundColor:"#FFB800", borderRadius: 4}}></div>
-            </div>
+            <MainTitle title="Kelola Akun" className={classes.title} />
             {/* </div> */}
           </Grid>
           <Grid item xs={8}/>
@@ -182,7 +155,7 @@ const useStyles = makeStyles((theme) =>({
         <div className={classes.pagination}>
           <Pagination count={5} />
         </div>
-        </Paper>
+        {/* </Paper> */}
     </div>
   );
 }

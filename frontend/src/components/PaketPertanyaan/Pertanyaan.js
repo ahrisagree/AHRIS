@@ -1,4 +1,5 @@
-import { MenuItem, TextField } from '@material-ui/core';
+import { MenuItem } from '@material-ui/core';
+import TextField from 'components/CustomTextField';
 import React from 'react';
 
 const Pertanyaan = ({pertanyaan, tipe, onChangeCallback}) => {

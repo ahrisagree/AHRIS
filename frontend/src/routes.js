@@ -5,6 +5,7 @@ import Profil from "./views/Profil";
 import Coba from "./views/Coba";
 
 import Register from "./views/Register";
+import DaftarKaryawan from "views/DaftarKaryawan";
 
 export default [
   {
@@ -37,4 +38,9 @@ export default [
     exact: true,
     component: BuatPaketPertanyaan,
   },
+  {
+    path: '/akun',
+    exact: true,
+    component: DaftarKaryawan
+  }
 ]

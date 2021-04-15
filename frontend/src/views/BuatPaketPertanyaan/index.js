@@ -1,13 +1,13 @@
+import React, { useState } from 'react';
 import { 
-  Container, 
   makeStyles, 
   MenuItem, 
   Paper, 
-  TextField 
 } from '@material-ui/core';
+import TextField from 'components/CustomTextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import SectionPertanyaan from 'components/PaketPertanyaan/SectionPertanyaan';
-import React, { useState } from 'react';
+import MainTitle from 'components/MainTitle';
 
 const useStyles = makeStyles((theme) => ({
   smallSelection: {
@@ -24,9 +24,13 @@ const useStyles = makeStyles((theme) => ({
 const BuatPaketPertanyaan = () => {
   const classes = useStyles()
   const kategoriOption = [
-    "Finance", "IT", "Buat Gue", "DLL"
+    "Finance", "IT", "Buat Gue", "DLL", "sadas", "sakd", "asd"
   ]
 
+  const [nama, setNama] = useState("")
+  const [template, setTemplate] = useState("")
+  const [tipe, setTipe] = useState("")
+  const [kategori, setkategori] = useState("")
   const [data, setData] = useState({
     list_aspek: [
       {
@@ -67,14 +71,15 @@ const BuatPaketPertanyaan = () => {
     })
   }
   return (
-    <Container>
-      <Paper
-        style={{maxWidth: '55rem', margin: 'auto'}}
-      >
+    <div style={{maxWidth: '55rem', margin: 'auto'}}>
+      <MainTitle title="Buat Paket Pertanyaan" style={{marginBottom: '2rem'}}/>
+      <Paper>
         <div className="p-4">
           <TextField
             required
             label="Nama Paket"
+            value={nama}
+            onChange={e=>setNama(e.target.value)}
             margin="normal"
             style={{width: '50%', minWidth: '20rem', marginBottom: '2rem'}}
           />
@@ -83,7 +88,8 @@ const BuatPaketPertanyaan = () => {
               <TextField
                 label="Copy of Template"
                 variant="outlined"
-                value=""
+                value={template}
+                onChange={e=>setTemplate(e.target.value)}
                 size="small"
                 className={classes.mb}
                 fullWidth
@@ -99,7 +105,8 @@ const BuatPaketPertanyaan = () => {
                 required
                 label="Jenis Paket"
                 variant="outlined"
-                value=""
+                value={tipe}
+                onChange={e=>setTipe(e.target.value)}
                 size="small"
                 fullWidth
                 className={classes.mb}
@@ -123,7 +130,8 @@ const BuatPaketPertanyaan = () => {
                     required
                     label="Kategori"
                     variant="outlined"
-                    value=""
+                    value={kategori}
+                    onChange={e=>setkategori(e.target.value)}
                     {...props}
                   />
                 )}
@@ -139,7 +147,7 @@ const BuatPaketPertanyaan = () => {
           ))}
         </div>
       </Paper>
-    </Container>
+    </div>
   );
 }
 
