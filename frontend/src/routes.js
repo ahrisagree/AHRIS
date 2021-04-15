@@ -1,3 +1,4 @@
+import BuatPaketPertanyaan from "views/BuatPaketPertanyaan";
 import Home from "./views/Home";
 import Login from "./views/Login";
 import Profil from "./views/Profil";
@@ -30,5 +31,10 @@ export default [
     path: "/register",
     exact: true,
     component: Register,
+  },
+  {
+    path: '/paket-pertanyaan/add',
+    exact: true,
+    component: BuatPaketPertanyaan,
   },
 ]
