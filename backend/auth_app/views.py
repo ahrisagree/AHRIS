@@ -56,6 +56,12 @@ class UserViewSet(
     filterset_fields = ['divisi', 'role']
     search_fields = ['username']
 
+    ## Kalo Butuh disable pagination dan defaultnya dipaginate
+    # def list(self, request, *args, **kwargs):
+    #     if request.query_params.get('disablepagination') != None:
+    #         self.pagination_class = None
+    #     return super().list(request, *args, **kwargs)
+
     # def filter_queryset(self, queryset):
     #     q_divisi = self.request.query_params.get('divisi')
     #     queryset.filter('divisi__nama_divisi__in', q_divisi)
