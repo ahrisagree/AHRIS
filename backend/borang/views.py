@@ -25,4 +25,6 @@ class PaketPertanyaanViewSet(viewsets.ModelViewSet):
 
   def list(self, request, *args, **kwargs):
     self.serializer_class = PaketPertanyaanMiniSerializer
+    if request.query_params.get('disablepagination') != None:
+      self.pagination_class = None
     return super().list(request, *args, **kwargs)
