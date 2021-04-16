@@ -5,8 +5,12 @@ const CustomTextField = withStyles({
     '& label.Mui-focused': {
       color: '#0B3242',
     },
-    '& .MuiInput-underline:after, & .MuiFilledInput-underline:after': {
+    '& .MuiInput-underline:not(.Mui-error):after, & .MuiFilledInput-underline:not(.Mui-error):after': {
       borderBottomColor: '#0B3242',
+    },
+    '& .MuiFormHelperText-root': {
+      position: 'absolute',
+      top: '100%'
     },
     '& .MuiOutlinedInput-root': {
       '&:hover fieldset': {

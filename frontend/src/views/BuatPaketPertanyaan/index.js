@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { 
   makeStyles, 
   MenuItem, 
@@ -10,6 +10,7 @@ import MainTitle from 'components/MainTitle';
 import TemplateButton from 'components/TemplateButton';
 import CreateableSelection from 'components/CreateableSelection';
 import { JENIS_PAKET, newAspekTemplate } from 'utils/constant';
+import { getKategoriAPI, postPaketPertanyaanAPI } from 'api/borang';
 
 const useStyles = makeStyles((theme) => ({
   smallSelection: {
@@ -23,23 +24,37 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const kategoriOption = [
-  {id: 1, nama: "Finance"},
-  {id: 2, nama: "Fi2n13ance"},
-  {id: 3, nama: "Financdse"},
-  {id: 4, nama: "Finance44"},
-]
+const initialState = {
+  nama: "",
+  template: "",
+  jenis: "",
+  kategori: null,
+  data: {list_aspek: [newAspekTemplate]} // data nya isi list aspek nanti pas post baru gabungin
+}
 
 const BuatPaketPertanyaan = () => {
   const classes = useStyles()
 
-  const [nama, setNama] = useState("")
-  const [template, setTemplate] = useState("")
-  const [jenis, setJenis] = useState("")
-  const [kategori, setkategori] = useState("")
-  const [data, setData] = useState({  // data isinya list_aspek aja nanti pas post baru gabungin
-    list_aspek: [ newAspekTemplate ]
-  })
+  const [nama, setNama] = useState(initialState.nama)
+  const [template, setTemplate] = useState(initialState.template)
+  const [jenis, setJenis] = useState(initialState.jenis)
+  const [kategori, setkategori] = useState(initialState.kategori)
+  const [data, setData] = useState(initialState.data)
+  const [errorState, setError] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [kategoriOption, setKategoriOption] = useState([]);
+  
+  useEffect(() => {
+    setLoading(true);
+    getKategoriAPI().then(res=>{
+      setKategoriOption(res.data);
+    }).catch(err=>{
+      console.error(err.response);
+      setError(err.response && err.response.data);
+    }).finally(()=>{
+      setLoading(false);
+    });
+  }, []);
 
   const sendData = () => {
     console.log({
@@ -47,6 +62,22 @@ const BuatPaketPertanyaan = () => {
       jenis,
       kategori,
       ...data
+    })
+    setLoading(true);
+    postPaketPertanyaanAPI({
+      nama, jenis, kategori, ...data
+    }).then(res=>{
+      // SUCCESS
+      setData(initialState.data);
+      setNama(initialState.nama);
+      setJenis(initialState.jenis);
+      setTemplate(initialState.template);
+      setkategori(initialState.kategori);
+    }).catch(err=>{
+      console.error(err.response);
+      setError(err.response && err.response.data);
+    }).finally(()=>{
+      setLoading(false);
     })
   }
 
@@ -93,9 +124,11 @@ const BuatPaketPertanyaan = () => {
             required
             label="Nama Paket"
             value={nama}
-            onChange={e=>setNama(e.target.value)}
+            onChange={e=>{setNama(e.target.value); delete errorState.nama }}
             margin="normal"
             style={{width: '50%', minWidth: '20rem', marginBottom: '2rem'}}
+            error={!!errorState.nama}
+            helperText={errorState.nama && errorState.nama[0]}
           />
           <div className="flex flex-row items-end justify-end flex-wrap mb-8">
             <div className="w-full md:w-4/12 lg:w-3/12 md:mr-1">
@@ -120,11 +153,13 @@ const BuatPaketPertanyaan = () => {
                 label="Jenis Paket"
                 variant="outlined"
                 value={jenis}
-                onChange={e=>setJenis(e.target.value)}
+                onChange={e=>{setJenis(e.target.value); delete errorState.jenis}}
                 size="small"
                 fullWidth
                 className={classes.mb}
                 select
+                error={!!errorState.jenis}
+                helperText={errorState.jenis && errorState.jenis[0]}
                 >
                   {JENIS_PAKET.map(pkt=>(
                     <MenuItem value={pkt.value}>{pkt.label}</MenuItem>
@@ -134,10 +169,10 @@ const BuatPaketPertanyaan = () => {
             <div className="w-5/12 sm:w-4/12 md:w-3/12 lg:w-1/6 ml-1">
               <CreateableSelection 
                 className={classes.mb}
-                options={kategoriOption}
+                options={kategoriOption || []}
                 labelKey="nama"
                 value={kategori}
-                setData={setkategori}
+                setData={val => {setkategori(val); delete errorState.kategori}}
                 size="small"
                 fullWidth
                 renderInput={props=>(
@@ -145,6 +180,8 @@ const BuatPaketPertanyaan = () => {
                     required
                     label="Kategori"
                     variant="outlined"
+                    error={!!errorState.kategori}
+                    helperText={errorState.kategori && errorState.kategori[0]}
                     {...props}/>
                 )}
               />
@@ -170,6 +207,7 @@ const BuatPaketPertanyaan = () => {
         >
           Simpan
         </TemplateButton>
+        {loading && "LOADINGG..."}
       </Paper>
     </div>
   );
