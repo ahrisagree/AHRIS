@@ -10,7 +10,7 @@ import MainTitle from 'components/MainTitle';
 import TemplateButton from 'components/TemplateButton';
 import CreateableSelection from 'components/CreateableSelection';
 import { JENIS_PAKET, newAspekTemplate } from 'utils/constant';
-import { getKategoriAPI, postPaketPertanyaanAPI } from 'api/borang';
+import { getKategoriAPI, getListPaketPertanyaan, postPaketPertanyaanAPI } from 'api/borang';
 
 const useStyles = makeStyles((theme) => ({
   smallSelection: {
@@ -43,6 +43,7 @@ const BuatPaketPertanyaan = () => {
   const [errorState, setError] = useState({});
   const [loading, setLoading] = useState(false);
   const [kategoriOption, setKategoriOption] = useState([]);
+  const [templateOption, setTemplateOption] = useState([]);
   
   useEffect(() => {
     setLoading(true);
@@ -54,6 +55,12 @@ const BuatPaketPertanyaan = () => {
     }).finally(()=>{
       setLoading(false);
     });
+    getListPaketPertanyaan({disablepagination: true}).then(res=>{
+      setTemplateOption(res.data);
+    }).catch(err=>{
+      console.error(err.response);
+      setError(err.response && err.response.data);
+    })
   }, []);
 
   const sendData = () => {
@@ -142,9 +149,9 @@ const BuatPaketPertanyaan = () => {
                 fullWidth
                 select
                 >
-                <MenuItem value={10}>Ten</MenuItem>
-                <MenuItem value={20}>Twenty</MenuItem>
-                <MenuItem value={30}>Thirty</MenuItem>
+                  {templateOption.map(temp=>(
+                    <MenuItem value={temp.id}>{temp.nama}</MenuItem>
+                  ))}
               </TextField>
             </div>
             <div className="w-5/12 sm:w-4/12 md:w-3/12 lg:w-1/6 mx-1">
