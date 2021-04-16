@@ -14,3 +14,6 @@ export const getListPaketPertanyaan = query => {
     queryAvailable.forEach(qkey=>formatedQuery+=query[qkey]?`${qkey}=${query[qkey]}&`:'');
     return axios.get(`${baseUrl}/evaluation/pertanyaan/?${formatedQuery}`);
 }
+
+export const getPaketPertanyaan = id =>
+    axios.get(`${baseUrl}/evaluation/pertanyaan/${id}/`);

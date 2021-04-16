@@ -10,7 +10,7 @@ import MainTitle from 'components/MainTitle';
 import TemplateButton from 'components/TemplateButton';
 import CreateableSelection from 'components/CreateableSelection';
 import { JENIS_PAKET, newAspekTemplate } from 'utils/constant';
-import { getKategoriAPI, getListPaketPertanyaan, postPaketPertanyaanAPI } from 'api/borang';
+import { getKategoriAPI, getListPaketPertanyaan, getPaketPertanyaan, postPaketPertanyaanAPI } from 'api/borang';
 
 const useStyles = makeStyles((theme) => ({
   smallSelection: {
@@ -86,6 +86,26 @@ const BuatPaketPertanyaan = () => {
     }).finally(()=>{
       setLoading(false);
     })
+  };
+
+  const fetchTemplate = (tempId) => {
+    setTemplate(tempId);
+    console.log(tempId)
+    if (tempId) {
+      setLoading(true);
+      getPaketPertanyaan(tempId).then(res=>{
+        const templateData = res.data;
+        setNama(templateData.nama);
+        setkategori(templateData.kategori);
+        setJenis(templateData.jenis);
+        setData({list_aspek: templateData.list_aspek});
+      }).catch(err=>{
+        console.error(err.response);
+        setError(err.response && err.response.data);
+      }).finally(()=>{
+        setLoading(false)
+      })
+    }
   }
 
   const onAspekChange = (index, aspek) => {
@@ -143,7 +163,7 @@ const BuatPaketPertanyaan = () => {
                 label="Copy of Template"
                 variant="outlined"
                 value={template}
-                onChange={e=>setTemplate(e.target.value)}
+                onChange={e=>fetchTemplate(e.target.value)}
                 size="small"
                 className={classes.mb}
                 fullWidth
@@ -206,15 +226,18 @@ const BuatPaketPertanyaan = () => {
             />
           ))}
         </div>
-        <TemplateButton
-          onClick={sendData}
-          type="button"
-          buttonStyle="btnBlue"
-          buttonSize="btnLong"
-        >
-          Simpan
-        </TemplateButton>
-        {loading && "LOADINGG..."}
+        <div className="flex justify-center py-6">
+          <TemplateButton
+            onClick={sendData}
+            type="button"
+            buttonStyle="btnBlue"
+            buttonSize="btnLong"
+            disabled={loading}
+          >
+            Simpan
+          </TemplateButton>
+          {loading && "LOADINGG..."}
+        </div>
       </Paper>
     </div>
   );

@@ -103,6 +103,9 @@ const NavigationDrawer = ({children, history, location}) => {
     setOpen(false);
   };
 
+  if (pathname === "/login") {
+    return children;
+  }
   return (
     <div className={classes.root}>
       {/* <CssBaseline /> */}
