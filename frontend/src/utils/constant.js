@@ -10,6 +10,10 @@ export const ROLE = {
   guest: "Guest"
 }
 
+export const ROLES = [
+  "Admin", "Manager", "Karyawan"
+]
+
 export const newPertanyaanTemplate = { 
   pertanyaan: "", 
   tipe: 0 

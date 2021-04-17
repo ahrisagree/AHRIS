@@ -10,7 +10,12 @@ import MainTitle from 'components/MainTitle';
 import TemplateButton from 'components/TemplateButton';
 import CreateableSelection from 'components/CreateableSelection';
 import { JENIS_PAKET, newAspekTemplate } from 'utils/constant';
-import { getKategoriAPI, getListPaketPertanyaan, getPaketPertanyaan, postPaketPertanyaanAPI } from 'api/borang';
+import {
+  getKategoriAPI,
+  getListPaketPertanyaan,
+  getPaketPertanyaan,
+  postPaketPertanyaanAPI
+} from 'api/borang';
 
 const useStyles = makeStyles((theme) => ({
   smallSelection: {
