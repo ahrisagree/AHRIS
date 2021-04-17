@@ -50,17 +50,15 @@ class UserViewSet(
         viewsets.ReadOnlyModelViewSet):
     permission_classes = (IsAuthenticated, DefaultRolePermission, AdminEditPermission)
     http_method_names = ('get', 'patch', 'delete')
-    pagination_class = None
     queryset = AppUser.objects.all()
     filter_class = UserFilter
     filterset_fields = ['divisi', 'role']
     search_fields = ['username']
 
-    ## Kalo Butuh disable pagination dan defaultnya dipaginate
-    # def list(self, request, *args, **kwargs):
-    #     if request.query_params.get('disablepagination') != None:
-    #         self.pagination_class = None
-    #     return super().list(request, *args, **kwargs)
+    def list(self, request, *args, **kwargs):
+        if request.query_params.get('disablepagination') != None:
+            self.pagination_class = None
+        return super().list(request, *args, **kwargs)
 
     # def filter_queryset(self, queryset):
     #     q_divisi = self.request.query_params.get('divisi')
