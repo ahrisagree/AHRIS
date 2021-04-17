@@ -14,6 +14,8 @@ export const ROLES = [
   "Admin", "Manager", "Karyawan"
 ]
 
+export const PAGE_SIZE = 20;
+
 export const newPertanyaanTemplate = { 
   pertanyaan: "", 
   tipe: 0 

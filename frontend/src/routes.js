@@ -6,6 +6,7 @@ import Coba from "./views/Coba";
 
 import Register from "./views/Register";
 import DaftarKaryawan from "views/DaftarKaryawan";
+import DaftarPaketPertanyaan from "views/DaftarPakerPertanyaan";
 
 export default [
   {
@@ -32,6 +33,11 @@ export default [
     path: "/register",
     exact: true,
     component: Register,
+  },
+  {
+    path: '/paket-pertanyaan',
+    exact: true,
+    component: DaftarPaketPertanyaan,
   },
   {
     path: '/paket-pertanyaan/add',

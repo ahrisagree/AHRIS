@@ -19,18 +19,18 @@ const FormActionController = ({
         <AddCircleOutlineRoundedIcon />
       </IconButton>
     </Tooltip>
-    <Tooltip title="Delete" onClick={onDelete||null}>
-      <IconButton size="small">
+    <Tooltip title="Delete">
+      <IconButton size="small" onClick={onDelete||null}>
         <DeleteOutlineRoundedIcon />
       </IconButton>
     </Tooltip>
-    <Tooltip title="Move up" onClick={onUp||null}>
-      <IconButton size="small">
+    <Tooltip title="Move up">
+      <IconButton size="small" onClick={onUp||null}>
         <KeyboardArrowUpRoundedIcon />
       </IconButton>
     </Tooltip>
-    <Tooltip title="Move down" onClick={onDown||null}>
-      <IconButton size="small">
+    <Tooltip title="Move down">
+      <IconButton size="small" onClick={onDown||null}>
         <KeyboardArrowDownRoundedIcon />
       </IconButton>
     </Tooltip>
