@@ -5,6 +5,7 @@ import Dialog from '@material-ui/core/Dialog';
 import MuiDialogContent from '@material-ui/core/DialogContent';
 import Typography from '@material-ui/core/Typography';
 import warning from 'images/warning.png';
+import TemplateButton from 'components/TemplateButton';
 
 const styles = (theme) => ({
   root: {
@@ -75,38 +76,26 @@ const styles = (theme) => ({
 });
 
 const DialogContent = withStyles(styles)((props) => {
-    const { children, classes, onClose, ...other } = props;
+    const { children, classes, onCancel, onConfirm, ...other } = props;
     return (
       <MuiDialogContent className={classes.root} {...other}>
         <img src={warning} alt="Warning" className={classes.foto}/>
         <Typography variant="h6" className={classes.typography}>{children}</Typography>
-        {onClose ? (
-        <Button className={classes.button} onClick={onClose}>Hapus</Button>
+        {onConfirm ? (
+        <Button className={classes.button} onClick={onConfirm}>Hapus</Button>
       ) : null}
-        {onClose ? (
-        <Button className={classes.buttonSecondary} onClick={onClose}>Batal</Button>
+        {onCancel ? (
+        <Button className={classes.buttonSecondary} onClick={onCancel}>Batal</Button>
       ) : null}
       </MuiDialogContent>
     );
 });
 
-export default function CustomizedDialogs() {
-  const [open, setOpen] = React.useState(false);
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
-  };
+export default function CustomizedDialogs({open, handleCancel, handleConfirm}) {
 
   return (
-    <div>
-      <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-        Open dialog
-      </Button>
-      <Dialog aria-labelledby="customized-dialog-title" open={open}>
-        <DialogContent dividers style={{alignItems: "center"}} onClose={handleClose}>
+      <Dialog aria-labelledby="customized-dialog-title" open={open} onClose={handleCancel}>
+        <DialogContent dividers style={{alignItems: "center"}} onCancel={handleCancel} onConfirm={handleConfirm}>
             <Typography style={{fontFamily: "IBM Plex Sans"}}>
               <Typography style={{fontWeight:"bold", fontSize:"24px",fontFamily: "IBM Plex Sans"}}>
                 Hapus Data
@@ -115,9 +104,7 @@ export default function CustomizedDialogs() {
                 data ini?
             </Typography>
             <br></br>
-        </DialogContent>
-        
+        </DialogContent>        
       </Dialog>
-    </div>
   );
 }

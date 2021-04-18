@@ -18,6 +18,8 @@ import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
 import Breadcrumbs from 'components/Breadcrumbs';
 import { withRouter } from 'react-router';
+import { Accordion, AccordionDetails, AccordionSummary } from '@material-ui/core';
+import { AddRounded } from '@material-ui/icons';
 
 const drawerWidth = 240;
 
@@ -87,7 +89,86 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     padding: theme.spacing(3),
   },
+  accordionSummary: {
+    display: 'block',
+    padding: 0,
+    background: 'none',
+    margin: "0!important",
+    minHeight: 'unset!important',
+    '& .MuiAccordionSummary-content': {
+      margin: "0!important"
+    }
+  },
+  accordion: {
+    background: 'none',
+    boxShadow: 'none',
+    '&:before': {
+      content: 'unset!important',
+    },
+    '&.Mui-expanded': {
+      margin: 0
+    }
+  },
+  accordionDetails: {
+    background: 'yellow',
+    padding: 0
+  }
 }));
+
+
+// gini dulu nanti dipisahin ke constant
+const navigationMenu = [
+  {
+    menu: 'Kelola Akun',
+    children: [
+      {
+        menu: 'List Akun',
+        path: '/',
+      },
+      {
+        menu: 'Buat Akun',
+        path: '/register',
+        icon: <AddRounded />
+      }
+    ]
+  },
+  {
+    menu: 'Presensi',
+    path: '/'
+  },
+  {
+    menu: 'Daily Log',
+    children: [
+      {
+        menu: 'List Daily Log',
+        path: '/'
+      },
+      {
+        menu: 'Submit Log',
+        path: '/',
+        icon: <AddRounded />
+      }
+    ]
+  },
+  {
+    menu: 'Paket Pertanyaan',
+    children: [
+      {
+        menu: 'List Paket Pertanyaan',
+        path: '/paket-pertanyaan'
+      },
+      {
+        menu: 'Buat Paket Pertanyaan',
+        path: '/paket-pertanyaan/add',
+        icon: <AddRounded />
+      }
+    ]
+  },
+  {
+    menu: 'Gaji',
+    path: '/'
+  }
+]
 
 const NavigationDrawer = ({children, history, location}) => {
   const classes = useStyles();
@@ -152,24 +233,32 @@ const NavigationDrawer = ({children, history, location}) => {
           </IconButton>
         </div>
         <Divider />
-        {/* buat listitemnya */}
-        <List>
-          {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
-        </List>
-        <Divider />
-        <List>
-          {['All mail', 'Trash', 'Spam'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
-        </List>
+        {navigationMenu.map(nav=>nav.children?
+        (
+          <Accordion TransitionProps={{ unmountOnExit: true }} className={classes.accordion} key={nav.menu}>
+            <AccordionSummary className={classes.accordionSummary}>
+              <ListItem button key={nav.menu}>
+                <ListItemIcon><InboxIcon /></ListItemIcon>
+                <ListItemText primary={nav.menu} />
+              </ListItem>
+            </AccordionSummary>
+            <AccordionDetails className={classes.accordionDetails}>
+              <List>
+                {nav.children.map(child => (
+                  <ListItem button key={child.menu} onClick={()=>history.push(child.path)}>
+                    <ListItemIcon>{child.icon || <MailIcon />}</ListItemIcon>
+                    <ListItemText primary={child.menu} />
+                  </ListItem>
+                ))}
+              </List>
+            </AccordionDetails>
+          </Accordion>
+        ):(
+          <ListItem button key={nav.menu} onClick={()=>history.push(nav.path)}>
+            <ListItemIcon>{nav.icon || <InboxIcon />}</ListItemIcon>
+            <ListItemText primary={nav.menu} />
+          </ListItem>
+        ))}
       </Drawer>
       <main className={classes.content}>
         <div className={classes.toolbar} />

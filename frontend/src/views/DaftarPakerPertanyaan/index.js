@@ -20,6 +20,8 @@ import MainTitle from "components/MainTitle";
 import Pagination from '@material-ui/lab/Pagination';
 import { getListPaketPertanyaan } from 'api/borang';
 import { PAGE_SIZE } from 'utils/constant';
+import CircularProgress from 'components/Loading/CircularProgress';
+import DeleteConfirmationDialog from 'components/DialogConf';
 // import { setQueryParams } from 'utils/setQueryParams';
 
 const useStyles = makeStyles({})
@@ -30,6 +32,7 @@ const DaftarPaketPertanyaan = ({history}) => {
   const [listItem, setListItem] = useState([]);
   const [page, setPage] = useState(1);
   const [count, setCount] = useState(0);
+  const [deletePaket, setDeletePaket] = useState(null);
   
   useEffect(()=>{
     setLoading(true)
@@ -52,6 +55,12 @@ const DaftarPaketPertanyaan = ({history}) => {
   // const doQuery = () => {
   //   setQueryParams({page}, history);
   // }
+  
+  const handleDeletePaket = () => {
+    setDeletePaket(null);
+    console.log(deletePaket)
+    // DElete trus confirmation
+  }
 
   return (
     <div className={classes.root1}>
@@ -79,7 +88,6 @@ const DaftarPaketPertanyaan = ({history}) => {
           </Grid>
         </Grid>
       </Grid>
-
         <TableContainer component={Paper}>
           <MuiTable className={classes.table} aria-label="customized table">
             <TableHead>
@@ -92,31 +100,44 @@ const DaftarPaketPertanyaan = ({history}) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {loading ? "LOADING...": 
-              listItem.map((row, i) => (
-                <StyledTableRow key={row.name}>
-                  <StyledTableCell component="th" scope="row">
-                    {`${i+1}.`}
-                  </StyledTableCell>
-                  <StyledTableCell align="left">{row.nama}</StyledTableCell>
-                  <StyledTableCell align="left">{row.jenis}</StyledTableCell>
-                  <StyledTableCell align="left">{row.kategori?.nama}</StyledTableCell>
-                  <StyledTableCell align="left">
-                  <Grid item sm={10}>
-                    <Tooltip title="Edit">
-                      <IconButton size="small">
-                        <CreateIcon style={{ color: "green"}}/>
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Delete">
-                      <IconButton size="small">
-                        <DeleteOutlineIcon style={{ color: "red"}}/>
-                      </IconButton>
-                    </Tooltip>
-                  </Grid>
+              {loading ? 
+              <StyledTableRow>
+                <StyledTableCell align="center" colSpan="5">
+                  <CircularProgress />
+                </StyledTableCell>
+              </StyledTableRow>
+              : (
+                listItem?.length === 0 ? 
+                <StyledTableRow>
+                  <StyledTableCell align="center" colSpan="5">
+                    Tidak ada Paket Pertanyaan
                   </StyledTableCell>
                 </StyledTableRow>
-              ))}
+                :
+                listItem.map((row, i) => (
+                  <StyledTableRow key={row.name}>
+                    <StyledTableCell component="th" scope="row">
+                      {`${i+1}.`}
+                    </StyledTableCell>
+                    <StyledTableCell align="left">{row.nama}</StyledTableCell>
+                    <StyledTableCell align="left">{row.jenis}</StyledTableCell>
+                    <StyledTableCell align="left">{row.kategori?.nama}</StyledTableCell>
+                    <StyledTableCell align="left">
+                    <Grid item sm={10}>
+                      <Tooltip title="Edit">
+                        <IconButton size="small">
+                          <CreateIcon style={{ color: "green"}}/>
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Delete">
+                        <IconButton size="small" onClick={()=>setDeletePaket(row)}>
+                          <DeleteOutlineIcon style={{ color: "red"}}/>
+                        </IconButton>
+                      </Tooltip>
+                    </Grid>
+                    </StyledTableCell>
+                  </StyledTableRow>
+                )))}
             </TableBody>
           </MuiTable>
         </TableContainer>
@@ -128,6 +149,11 @@ const DaftarPaketPertanyaan = ({history}) => {
             />
         </div>
         {/* </Paper> */}
+        <DeleteConfirmationDialog 
+          open={!!deletePaket}
+          handleCancel={()=>setDeletePaket(null)}
+          handleConfirm={handleDeletePaket}
+        />
     </div>
   );
 };
