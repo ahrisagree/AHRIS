@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
   Switch,
   Route,
@@ -10,12 +10,12 @@ import './App.css';
 import { ConnectedRouter } from 'connected-react-router';
 import { PersistGate } from 'redux-persist/integration/react';
 import NavigationDrawer from 'components/NavigationDrawer/NavigationDrawer';
-import { setupAuthToken } from 'api/setup';
+// import { setupAuthToken } from 'api/setup';
 
 function App() {
-  useEffect(()=>{
-    setupAuthToken(store.getState().auth.token)
-  }, []);
+  // useEffect(()=>{
+  //   setupAuthToken(store.getState().auth.token)
+  // }, []);
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>

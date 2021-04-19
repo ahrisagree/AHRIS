@@ -28,6 +28,7 @@ const Login = ({
     error,
     token,
     history,
+    tokenError,
     loginThunk
 }) => {
     const classes = useStyles();
@@ -53,6 +54,7 @@ const Login = ({
                     <h1 style={{fontSize: 30, textAlign: "center"}}>Silakan login untuk</h1>
                     <h1 style={{fontSize: 30, textAlign: "center"}}>melanjutkan</h1>
 
+                    {tokenError && <p>{tokenError}</p>}
                     <div className="m-7 p-2" style={{ textAlign: "left", paddingBottom: "10%", paddingLeft: 0 }}> 
                         <h1>E-mail</h1>
                         <TextField

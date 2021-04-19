@@ -16,6 +16,7 @@ import {
   getPaketPertanyaan,
   postPaketPertanyaanAPI
 } from 'api/borang';
+import Loading from 'components/Loading';
 
 const useStyles = makeStyles((theme) => ({
   smallSelection: {
@@ -55,16 +56,16 @@ const BuatPaketPertanyaan = () => {
     getKategoriAPI().then(res=>{
       setKategoriOption(res.data);
     }).catch(err=>{
-      console.error(err.response);
-      setError(err.response && err.response.data);
+      console.error(err && err.response);
+      setError((err?.response && err.response.data) || {});
     }).finally(()=>{
       setLoading(false);
     });
     getListPaketPertanyaan({disablepagination: true}).then(res=>{
       setTemplateOption(res.data);
     }).catch(err=>{
-      console.error(err.response);
-      setError(err.response && err.response.data);
+      console.error(err && err.response);
+      setError((err?.response && err.response.data) || {});
     })
   }, []);
 
@@ -86,8 +87,8 @@ const BuatPaketPertanyaan = () => {
       setTemplate(initialState.template);
       setkategori(initialState.kategori);
     }).catch(err=>{
-      console.error(err.response);
-      setError(err.response && err.response.data);
+      console.error(err && err.response);
+      setError((err?.response && err.response.data) || {});
     }).finally(()=>{
       setLoading(false);
     })
@@ -105,8 +106,8 @@ const BuatPaketPertanyaan = () => {
         setJenis(templateData.jenis);
         setData({list_aspek: templateData.list_aspek});
       }).catch(err=>{
-        console.error(err.response);
-        setError(err.response && err.response.data);
+        console.error(err && err.response);
+        setError((err?.response && err.response.data) || {});
       }).finally(()=>{
         setLoading(false)
       })
@@ -241,7 +242,7 @@ const BuatPaketPertanyaan = () => {
           >
             Simpan
           </TemplateButton>
-          {loading && "LOADINGG..."}
+          <Loading open={loading} />
         </div>
       </Paper>
     </div>
