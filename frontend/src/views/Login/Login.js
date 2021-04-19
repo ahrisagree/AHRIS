@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { makeStyles, Paper, Grid, TextField, Button } from '@material-ui/core';
+import { makeStyles, Paper, Grid, Button } from '@material-ui/core';
 import AHRIS from 'images/agree.png';
 import logo from 'images/logo.png';
 import Breadcrumbs from 'components/Breadcrumbs';
+import TextField from 'components/CustomTextField';
+import Loading from 'components/Loading';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -45,6 +47,7 @@ const Login = ({
 
     return (
         <div className={classes.root}>
+            <Loading open={loading} />
             <Grid container direction="row">
 
             <Grid item xs={10} sm={6}>
@@ -55,6 +58,7 @@ const Login = ({
                     <h1 style={{fontSize: 30, textAlign: "center"}}>melanjutkan</h1>
 
                     {tokenError && <p>{tokenError}</p>}
+                    {error.non_field_errors && <p>{error.non_field_errors[0]}</p>}
                     <div className="m-7 p-2" style={{ textAlign: "left", paddingBottom: "10%", paddingLeft: 0 }}> 
                         <h1>E-mail</h1>
                         <TextField
@@ -68,7 +72,8 @@ const Login = ({
                             variant="outlined"
                             value={email}
                             onChange={(e)=>setEmail(e.target.value)}
-                            error={error.email}
+                            error={!!error.email}
+                            helperText={error.email && error.email[0]}
                         />
                     </div>
                     
@@ -86,8 +91,8 @@ const Login = ({
                             value={password}
                             onChange={(e)=>setPassword(e.target.value)}
                             variant="outlined"
-                            error={error.password}
-                            // bikin formcontrol buat error nanti di component -leo
+                            error={!!error.password}
+                            helperText={error.password && error.password[0]}
                         />
                     </div>
 

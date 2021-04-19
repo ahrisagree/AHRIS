@@ -19,22 +19,22 @@ export const setupAuthTokenMiddleware = store => next => action => {
   console.log(action)
   if (['persist/REHYDRATE', 'auth/login/fulfilled'].includes(action.type)) {
     const token = action.payload?.token;
-    // if (token) {
-      console.log("axios configured", token)
+    console.log("axios configured", token)
+    if (token) {
       axios.defaults.headers.common['Authorization'] = `Token ${token}`
-      axios.interceptors.response.use(null, err=>{
-        if (err.response && err.response.status === 401) {
-          delete axios.defaults.headers.common['Authorization']
-          store.dispatch(dispatch=>{
-            dispatch(setTokenError(`${err.response.statusText}: ${err.response.data.detail}`));
-            dispatch(push('/login'));
-          })
-        }
-        return Promise.reject(err);
-      });
-    // } else {
-    //   delete axios.defaults.headers.common['Authorization']
-    // }
+    } else {
+      delete axios.defaults.headers.common['Authorization']
+    }
+    axios.interceptors.response.use(null, err=>{
+      if (err.response && err.response.status === 401) {
+        delete axios.defaults.headers.common['Authorization']
+        store.dispatch(dispatch=>{
+          dispatch(setTokenError(`${err.response.statusText}: ${err.response.data.detail}`));
+          dispatch(push('/login'));
+        })
+      }
+      return Promise.reject(err);
+    });
   } 
 
   // continue processing this action
