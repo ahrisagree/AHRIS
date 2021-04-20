@@ -18,10 +18,12 @@ import CreateIcon from '@material-ui/icons/CreateRounded';
 import { StyledTableCell, StyledTableRow } from "components/Table";
 import MainTitle from "components/MainTitle";
 import Pagination from '@material-ui/lab/Pagination';
-import { getListPaketPertanyaan } from 'api/borang';
+import { getListPaketPertanyaanAPI, deletePaketPertanyaanAPI } from 'api/borang';
 import { PAGE_SIZE } from 'utils/constant';
 import CircularProgress from 'components/Loading/CircularProgress';
 import DeleteConfirmationDialog from 'components/DialogConf';
+import { Link } from 'react-router-dom';
+import Loading from 'components/Loading';
 // import { setQueryParams } from 'utils/setQueryParams';
 
 const useStyles = makeStyles({})
@@ -33,14 +35,16 @@ const DaftarPaketPertanyaan = ({history}) => {
   const [page, setPage] = useState(1);
   const [count, setCount] = useState(0);
   const [deletePaket, setDeletePaket] = useState(null);
-  
+  const [fullLoading, setFullLoading] = useState(false);
+  const [update, setUpdate] = useState(0)
+
   useEffect(()=>{
     setLoading(true)
     // const params = new URLSearchParams(history.location.search)
 
     // console.log(history.location.search)
     // console.log(params.get("page"))
-    getListPaketPertanyaan({
+    getListPaketPertanyaanAPI({
       page
     }).then(res=>{
       setListItem(res.data?.results);
@@ -50,16 +54,22 @@ const DaftarPaketPertanyaan = ({history}) => {
     }).finally(()=>{
       setLoading(false);
     })
-  }, [page]);
+  }, [page, update]);
 
   // const doQuery = () => {
   //   setQueryParams({page}, history);
   // }
   
   const handleDeletePaket = () => {
-    setDeletePaket(null);
-    console.log(deletePaket)
-    // DElete trus confirmation
+    setFullLoading(true);
+    deletePaketPertanyaanAPI(deletePaket.id).then(()=>{
+      setDeletePaket(null);
+      setUpdate(update+1);
+    }).catch(err=>{
+    // Handle ERROR
+    }).finally(()=>{
+      setFullLoading(false);
+    });
   }
 
   return (
@@ -125,9 +135,11 @@ const DaftarPaketPertanyaan = ({history}) => {
                     <StyledTableCell align="left">
                     <Grid item sm={10}>
                       <Tooltip title="Edit">
-                        <IconButton size="small">
-                          <CreateIcon style={{ color: "green"}}/>
-                        </IconButton>
+                        <Link to={`/paket-pertanyaan/${row.id}`}>
+                          <IconButton size="small">
+                            <CreateIcon style={{ color: "green"}}/>
+                          </IconButton>
+                        </Link>
                       </Tooltip>
                       <Tooltip title="Delete">
                         <IconButton size="small" onClick={()=>setDeletePaket(row)}>
@@ -154,6 +166,7 @@ const DaftarPaketPertanyaan = ({history}) => {
           handleCancel={()=>setDeletePaket(null)}
           handleConfirm={handleDeletePaket}
         />
+        <Loading open={fullLoading} />
     </div>
   );
 };

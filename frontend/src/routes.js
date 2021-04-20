@@ -7,6 +7,7 @@ import Coba from "./views/Coba";
 import Register from "./views/Register";
 import DaftarKaryawan from "views/DaftarKaryawan";
 import DaftarPaketPertanyaan from "views/DaftarPakerPertanyaan";
+import DetailEditPaketPertanyaan from "views/DetailEditPaketPertanyaan";
 
 export default [
   {
@@ -43,6 +44,11 @@ export default [
     path: '/paket-pertanyaan/add',
     exact: true,
     component: BuatPaketPertanyaan,
+  },
+  {
+    path: '/paket-pertanyaan/:id',
+    exact: true,
+    component: DetailEditPaketPertanyaan,
   },
   {
     path: '/akun',
