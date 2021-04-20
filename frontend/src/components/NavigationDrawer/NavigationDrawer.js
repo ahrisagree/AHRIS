@@ -20,6 +20,14 @@ import Breadcrumbs from 'components/Breadcrumbs';
 import { withRouter } from 'react-router';
 import { Accordion, AccordionDetails, AccordionSummary } from '@material-ui/core';
 import { AddRounded } from '@material-ui/icons';
+import InsertDriveFileOutlinedIcon from '@material-ui/icons/InsertDriveFileOutlined';
+import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
+import LocalAtmRoundedIcon from '@material-ui/icons/LocalAtmRounded';
+import CheckIcon from '@material-ui/icons/Check';
+import BookIcon from '@material-ui/icons/Book';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import profil from 'images/profil.png';
+
 
 const drawerWidth = 240;
 
@@ -57,7 +65,15 @@ const useStyles = makeStyles((theme) => ({
     whiteSpace: 'nowrap',
   },
   drawerBg: {
-    background: 'green'  // STYLING BACKGROUND DRAWER KIRI DISINI
+    position: "absolute",
+    width: 101,
+    height: "100%",
+    minHeight: 700,
+    left: 0,
+    top: 0,
+    background: "linear-gradient(180deg, #00A96F 0%, #437B74 100%)",
+    boxShadow: "9px 4px 33px rgba(0, 0, 0, 0.25)",
+    borderRadius: 7,
   },
   drawerOpen: {
     width: drawerWidth,
@@ -76,6 +92,7 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.up('sm')]: {
       width: theme.spacing(9) + 1,
     },
+
   },
   toolbar: {
     display: 'flex',
@@ -99,7 +116,15 @@ const useStyles = makeStyles((theme) => ({
       margin: "0!important"
     }
   },
+  collection: {
+    marginTop: 50,
+    color: 'white',
+    fontFamily: "IBM Plex Sans",
+    fontStyle: "normal",
+    fontWeight: "normal",
+  },
   accordion: {
+    color: 'white',
     background: 'none',
     boxShadow: 'none',
     '&:before': {
@@ -110,7 +135,7 @@ const useStyles = makeStyles((theme) => ({
     }
   },
   accordionDetails: {
-    background: 'yellow',
+    background: 'rgba(196, 196, 196, 0.24)',
     padding: 0
   }
 }));
@@ -120,6 +145,7 @@ const useStyles = makeStyles((theme) => ({
 const navigationMenu = [
   {
     menu: 'Kelola Akun',
+    icon: <InsertDriveFileOutlinedIcon style={{ color: 'white' }}/>,
     children: [
       {
         menu: 'List Akun',
@@ -128,16 +154,17 @@ const navigationMenu = [
       {
         menu: 'Buat Akun',
         path: '/register',
-        icon: <AddRounded />
       }
     ]
   },
   {
     menu: 'Presensi',
+    icon: <CheckIcon style={{ color: 'white' }}/>,
     path: '/'
   },
   {
     menu: 'Daily Log',
+    icon: <BookIcon style={{ color: 'white' }}/>,
     children: [
       {
         menu: 'List Daily Log',
@@ -146,12 +173,12 @@ const navigationMenu = [
       {
         menu: 'Submit Log',
         path: '/',
-        icon: <AddRounded />
       }
     ]
   },
   {
     menu: 'Paket Pertanyaan',
+    icon: <PeopleAltIcon style={{ color: 'white' }}/>,
     children: [
       {
         menu: 'List Paket Pertanyaan',
@@ -160,13 +187,13 @@ const navigationMenu = [
       {
         menu: 'Buat Paket Pertanyaan',
         path: '/paket-pertanyaan/add',
-        icon: <AddRounded />
       }
     ]
   },
   {
     menu: 'Gaji',
-    path: '/'
+    path: '/',
+    icon: <LocalAtmRoundedIcon style={{ color: 'white' }}/>,
   }
 ]
 
@@ -232,13 +259,21 @@ const NavigationDrawer = ({children, history, location}) => {
             {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
           </IconButton>
         </div>
+
         <Divider />
+
+        <div className={classes.collection}>
+
+        <AccountCircleIcon style={{width: 'auto', height: 'auto', textAlign: 'center', color: 'white'}} />
+        <h1 style={{textAlign: 'center'}}>Nama</h1>
+        <h1 style={{textAlign: 'center'}}>Role</h1>
+
         {navigationMenu.map(nav=>nav.children?
         (
           <Accordion TransitionProps={{ unmountOnExit: true }} className={classes.accordion} key={nav.menu}>
             <AccordionSummary className={classes.accordionSummary}>
               <ListItem button key={nav.menu}>
-                <ListItemIcon><InboxIcon /></ListItemIcon>
+                <ListItemIcon>{nav.icon}</ListItemIcon>
                 <ListItemText primary={nav.menu} />
               </ListItem>
             </AccordionSummary>
@@ -246,7 +281,7 @@ const NavigationDrawer = ({children, history, location}) => {
               <List>
                 {nav.children.map(child => (
                   <ListItem button key={child.menu} onClick={()=>history.push(child.path)}>
-                    <ListItemIcon>{child.icon || <MailIcon />}</ListItemIcon>
+                    {/* <ListItemIcon>{child.icon || <MailIcon />}</ListItemIcon> */}
                     <ListItemText primary={child.menu} />
                   </ListItem>
                 ))}
@@ -255,10 +290,13 @@ const NavigationDrawer = ({children, history, location}) => {
           </Accordion>
         ):(
           <ListItem button key={nav.menu} onClick={()=>history.push(nav.path)}>
-            <ListItemIcon>{nav.icon || <InboxIcon />}</ListItemIcon>
+            {/* <ListItemIcon>{nav.icon || <InboxIcon />}</ListItemIcon> */}
+            <ListItemIcon>{nav.icon}</ListItemIcon>
             <ListItemText primary={nav.menu} />
           </ListItem>
         ))}
+
+        </div>
       </Drawer>
       <main className={classes.content}>
         <div className={classes.toolbar} />
