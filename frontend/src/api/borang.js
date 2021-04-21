@@ -17,3 +17,10 @@ export const getListPaketPertanyaan = query => {
 
 export const getPaketPertanyaan = id =>
     axios.get(`${baseUrl}/evaluation/pertanyaan/${id}/`);
+
+export const getListAssignment = query => {
+    // const queryAvailable = ['search', 'jenis', 'kategori', 'disablepagination'];
+    let formatedQuery = ""
+    Object.keys(query).forEach(qkey=>formatedQuery+=query[qkey]?`${qkey}=${query[qkey]}&`:'');
+    return axios.get(`${baseUrl}/evaluation/assign/?${formatedQuery}`);
+}
