@@ -52,4 +52,8 @@ class PresensiFilter(FilterSet):
     field_name='id_user__id',
     lookup_expr='in'
   )
+
+class LogAktivitasFilter(FilterSet):
+  tanggal = filters.DateFilter()
+  user = filters.NumberFilter(field_name='user__id')
   

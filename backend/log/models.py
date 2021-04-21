@@ -25,6 +25,10 @@ class LogAktivitas(models.Model):
         on_delete=models.SET_NULL,
         null=True,
         related_name='manajer_penyetuju')
+    user = models.ForeignKey(AppUser,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name='user')
     alasan_lembur = models.CharField(max_length=250, blank=True, null=True)
 
 

@@ -5,7 +5,7 @@ from .serializers import *
 from backend.utils import get_or_none
 from auth_app.permissions import *
 from django.utils.timezone import now
-from backend.filters import PresensiFilter
+from backend.filters import PresensiFilter, LogAktivitasFilter
 
 class PresensiViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated, DefaultRolePermission)
@@ -13,7 +13,7 @@ class PresensiViewSet(viewsets.ModelViewSet):
     queryset = Presensi.objects.all()
     serializer_class = PresensiSerializer
     filter_class = PresensiFilter
-    filterset_fields = ['kategori', 'jenis']
+    filterset_fields = ['tanggal', 'user']
     search_fields = ['id_user__username']
 
     def get_serializer_class(self):
@@ -36,14 +36,26 @@ class PresensiViewSet(viewsets.ModelViewSet):
         return super().create(request, *args, **kwargs)
 
 class LogAktivitasViewSet(viewsets.ModelViewSet):
-    permission_classes = (IsAuthenticated, DefaultRolePermission, AdminEditPermission)
+    permission_classes = (IsAuthenticated, DefaultRolePermission)
     queryset = LogAktivitas.objects.all()
     serializer_class = LogAktivitasSerializer
+    filter_class = LogAktivitasFilter
+    filterset_fields = ['tanggal', 'user']
+    search_fields = ['user__username']
 
+    def get_queryset(self):
+        if not self.request.user.has_role('Admin', 'Manager'):
+            return LogAktivitas.objects.filter(user=self.request.user)
+        return super().get_queryset()
+        
     def get_serializer_class(self):
         if self.request.method == 'GET':
             return LogAktivitasDetailSerializer
         return super().get_serializer_class()
+
+    def create(self, request, *args, **kwargs):
+        request.data['user'] = request.user.id
+        return super().create(request, *args, **kwargs)
 
     def retrieve(self, request, *args, **kwargs):
         return super().retrieve(request, *args, **kwargs)

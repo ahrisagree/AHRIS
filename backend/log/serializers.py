@@ -75,6 +75,7 @@ class PresensiDetailSerializer(serializers.ModelSerializer):
 
 class LogAktivitasDetailSerializer(serializers.ModelSerializer):
     manajer_penyetuju = UserListSerializer()
+    user = UserListSerializer()
     class Meta:
         model = LogAktivitas
         fields = '__all__'
