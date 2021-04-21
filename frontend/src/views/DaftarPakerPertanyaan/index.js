@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import Button  from "components/TemplateButton";
 import {
   makeStyles,
-  withStyles,
   Table as MuiTable,
   TableBody,
   TableContainer,
