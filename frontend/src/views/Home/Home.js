@@ -11,10 +11,11 @@ import {
   Button,
   TextField
 } from '@material-ui/core';
+import Breadcrumbs from 'components/Breadcrumbs';
 import CustomButton from 'components/CustomButton';
 import CustomTextField from 'components/CustomTextField';
 
-const Home = props => {
+const Home = ({logoutThunk}) => {
   const dataTable = [
     {
       name: 'Frozen yoghurt',
@@ -42,6 +43,11 @@ const Home = props => {
 
   return (
     <Container component={Paper}>
+
+    {/* breadcrumbs */}
+      <Breadcrumbs>
+      </Breadcrumbs>
+    {/* breadcrumbs */}
 
     {/** table */}
       <TableContainer component={Paper}>
@@ -71,9 +77,10 @@ const Home = props => {
         </Table>
       </TableContainer>
       {/** table */}
+      
 
       <div className="p-9">
-        <Button
+        <Button 
           variant="contained" 
           style={{
             boxShadow: "black 2px 2px",
@@ -81,7 +88,18 @@ const Home = props => {
             backgroundColor: "#FF0000"
           }}
           >
-          Click Button
+          Login
+        </Button>
+        <Button 
+          variant="contained" 
+          style={{
+            boxShadow: "black 2px 2px",
+            margin: "1rem",
+            backgroundColor: "#FF0000"
+          }}
+          onClick={() => logoutThunk()}
+          >
+          Logout
         </Button>
 
         <Button
