@@ -17,7 +17,7 @@ class PresensiSerializer(serializers.ModelSerializer):
     tanggal = serializers.DateField(default = datetime.date.today)
     jam_masuk = serializers.TimeField(default = now)
     keterangan = serializers.CharField(max_length=100) 
-    id_user = UserSerializer()
+    # id_user = UserSerializer()
 
     # def create(self, validated_data):
     #     return Presensi.objects.create(**validated_data)
@@ -38,7 +38,7 @@ class LogAktivitasSerializer(serializers.ModelSerializer):
     tipe_log = models.CharField(max_length=35)
     status_log = models.CharField(max_length=35)
     komentar = models.CharField(max_length=250)
-    manajer_penyetuju = UserSerializer()
+    # manajer_penyetuju = UserSerializer()
     alasan_lembur = models.CharField(max_length=250)
 
 
