@@ -22,4 +22,5 @@ urlpatterns = [
     path('user/', include('auth_app.urls.user')),
     path('divisi/', include('auth_app.urls.divisi')),
     path('evaluation/', include('borang.urls')),
+    path('log/', include('log.urls')),
 ]
