@@ -14,19 +14,21 @@ const useStyles = makeStyles(theme => ({
         flexGrow: 1,
     },
     breadcrumbs: {
-        position: "absolute",
+        // ini breadcrumb beberapa style nya didisable biar ga nimpa trs dipindahin ke navigationdrawer
+        position: "relative",  // position absolute nya bwt di navigation drawer biar ga nimpa
         width: "100%",
-        height: 60,
-        left: 0,
-        top: 0,
-        background: "rgba(255, 255, 255, 0.99)",
-        border: "1px solid rgba(0, 0, 0, 0.3)",
+        minHeight: "2.5rem",
+        // height: 60,
+        // left: 0,
+        // top: 0,
+        // background: "rgba(255, 255, 255, 0.99)",  bg disable ikutin styling yg navigation
+        // border: "1px solid rgba(0, 0, 0, 0.3)",
         boxSizing: "border-box",
-        boxShadow: "0px -16px 57px rgba(0, 0, 0, 0.25)",
+        // boxShadow: "0px -16px 57px rgba(0, 0, 0, 0.25)",
         fontFamily: "IBM Plex Sans",
         fontStyle: "normal",
         fontWeight: "normal",
-        fontSize: "24px",
+        // fontSize: "24px",  
         color: "#0A3142",
         display: "flex",
         alignItems: "center",
@@ -37,7 +39,7 @@ const useStyles = makeStyles(theme => ({
         fontFamily: "IBM Plex Sans",
         fontStyle: "normal",
         fontWeight: "normal",
-        fontSize: "24px",
+        fontSize: "1rem", // fontsize biasain pake rem   1rem=16px
         color: "#0A3142",
         display: "flex",
         alignItems: "center",
@@ -46,20 +48,21 @@ const useStyles = makeStyles(theme => ({
     }
     }));
 
-const Breadcrumbs = props => {
+const Breadcrumbs = ({pathname, push}) => {
     const classes = useStyles();
 
-    const {
-        history,
-        location: { pathname }
-    } = props;
+    // const {
+    //     history,
+    //     location: { pathname }
+    // } = props;
+    // pindahin propsnya dari navigation drawer biar ga ngelag
 
     const pathnames = pathname.split("/").filter(x => x);
     return (
         <div className={classes.root}>
             <MUIBreadcrumbs aria-label="breadcrumb" className={classes.breadcrumbs}>
                 {pathnames.length > 0 ? (
-                    <Link onClick={() => history.push("/")}>Home</Link>
+                    <Link onClick={() => push("/")}>Home</Link>
                 ) : (
                     <Typography className={classes.typography}> Home </Typography>
                 )}
@@ -69,14 +72,18 @@ const Breadcrumbs = props => {
                     return isLast ? (
                         <Typography className={classes.typography}> {name} </Typography>
                     ) : (
-                        <Link onClick = {() => history.push(routeTo)}>{name}</Link>
+                        <Link onClick = {() => push(routeTo)}>{name}</Link>
                         );
                 })}
 
-                <img src={logo} alt="logo AHRIS" style={{ position: "absolute", top: 0, right: 0}} />
+                <img 
+                    src={logo} 
+                    alt="logo AHRIS" 
+                    style={{ position: "absolute", top: 0, right: 0, height: '100%'}} 
+                />
             </MUIBreadcrumbs>
         </div>
     );
 };
 
-export default withRouter(Breadcrumbs);
+export default React.memo(Breadcrumbs);

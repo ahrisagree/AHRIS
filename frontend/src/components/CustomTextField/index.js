@@ -3,20 +3,21 @@ import { TextField, withStyles } from "@material-ui/core";
 const CustomTextField = withStyles({
   root: {
     '& label.Mui-focused': {
-      color: 'green',
+      color: '#0B3242',
     },
-    '& .MuiInput-underline:after': {
-      borderBottomColor: 'green',
+    '& .MuiInput-underline:not(.Mui-error):after, & .MuiFilledInput-underline:not(.Mui-error):after': {
+      borderBottomColor: '#0B3242',
+    },
+    '& .MuiFormHelperText-root': {
+      position: 'absolute',
+      top: '100%'
     },
     '& .MuiOutlinedInput-root': {
-      '& fieldset': {
-        borderColor: 'red',
-      },
       '&:hover fieldset': {
-        borderColor: 'yellow',
+        borderColor: '#0B3242',
       },
       '&.Mui-focused fieldset': {
-        borderColor: 'green',
+        borderColor: '#0B3242',
       },
     },
   },

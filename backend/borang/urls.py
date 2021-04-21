@@ -9,7 +9,7 @@ router.register(
   basename='kategori',
 )
 router.register(
-  prefix='paket',
+  prefix='',
   viewset=PaketPertanyaanViewSet,
   basename='paket'
 )

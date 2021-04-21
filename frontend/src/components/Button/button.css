@@ -1,0 +1,91 @@
+:root {
+    --primary: #00A96F;
+    --warning: #FFD500;
+    --danger: #E84855;
+    --blue: #0A3142;
+    --white: #fdfdfd;
+    --dark: #181717;
+  }
+  
+  .btn {
+    font-family: 'IBM Plex Sans';
+    align-items: center;
+    text-align: center;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    box-shadow: 4.13551px 4.7263px 10.0434px rgba(0, 0, 0, 0.25);
+
+  }
+  
+  .btn:hover {
+    transform: translateY(-3px);
+  }
+  
+ 
+
+  /* Button Size */
+  
+  /* untuk yg di tabel2 */
+  .btnMedium {
+    padding: 5px 15px;
+
+    font-size:  calc(16px / var(--size-divisor));;
+
+  }
+  
+  /* untuk popup/modal */
+  .btnLarge {
+    padding: 5px 25px;
+    font-size: 20px;
+  }
+
+  .btnLong {
+    padding: 5px 50px;
+
+    font-size:  calc(16px / var(--size-divisor));;
+
+  }
+   /* Button Colors and Styles */
+  
+   .btnGreen{
+    background-color: var(--primary);
+    color: var(--white);
+    border: none;
+  }
+  
+  .btnYellow {
+    background-color: var(--warning);
+    color: var(--white);
+    border: none;
+  }
+  
+  .btnDanger {
+    background-color: var(--danger);
+    color: var(--white);
+    border: none;
+  }
+  
+  
+  .btnGreenOutline {
+    background-color: transparent;
+    border: 2px solid var(--primary);
+    color: var(--primary);
+  }
+
+  .btnBlueOutline {
+    background-color: var(--white);
+    border: 2px solid var(--blue);
+    color: var(--blue);
+    border-radius: 25.8612px;
+
+  }
+  
+
+  .btnBlue {
+    background-color: var(--blue);
+    color: var(--white);
+    border: none;
+    border-radius: 25.8612px;
+  }

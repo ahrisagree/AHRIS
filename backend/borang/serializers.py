@@ -76,6 +76,7 @@ class PaketPertanyaanSerializer(serializers.ModelSerializer):
     list_aspek_data = validated_data.pop('list_aspek')
     new_paket = super().create(validated_data)
     new_paket.kategori=kategori
+    new_paket.save()
 
     for aspek_data in list_aspek_data:
       aspek = AspekPertanyaanSerializer(data = aspek_data)
