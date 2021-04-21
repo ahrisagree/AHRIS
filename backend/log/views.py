@@ -86,8 +86,9 @@ def logCreate(request):
 
     if serializer.is_valid():
         serializer.save()
-
-    return Response(serializer.data)
+        return Response(serializer.data)
+    else:
+        return Response("Error!")
 
 @api_view(['POST'])
 def logUpdate(request, pk):

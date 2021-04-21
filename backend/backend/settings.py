@@ -56,7 +56,6 @@ INSTALLED_APPS = [
     # Apps
     'auth_app',
     'borang',
-    'log'
     'jawaban',
     'assign',
     'log'
