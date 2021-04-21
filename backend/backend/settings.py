@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'log',
     'jawaban',
     'assign',
+    'notification',
 ]
 
 MIDDLEWARE = [
