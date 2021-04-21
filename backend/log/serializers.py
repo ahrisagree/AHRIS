@@ -1,8 +1,7 @@
 from rest_framework import serializers
 from django.utils.translation import ugettext_lazy as _
-from backend.utils import get_or_none
 from .models import *
-from auth_app.serializers import UserSerializer
+from auth_app.serializers import UserListSerializer
 import datetime
 from django.utils.timezone import now
 
@@ -13,35 +12,30 @@ in this file Serializer:
 """
 
 class PresensiSerializer(serializers.ModelSerializer):
-    id = serializers.IntegerField(required=False)
-    tanggal = serializers.DateField(default = datetime.date.today)
-    jam_masuk = serializers.TimeField(default = now)
-    keterangan = serializers.CharField(max_length=100) 
-    # id_user = UserSerializer()
-
-    # def create(self, validated_data):
-    #     return Presensi.objects.create(**validated_data)
-    
     class Meta:
         model = Presensi
         fields = '__all__'
 
 class LogAktivitasSerializer(serializers.ModelSerializer):
-    id = serializers.IntegerField(required=False)
-    tanggal = serializers.DateField(default = datetime.date.today)
-    jam_masuk = serializers.TimeField(default = now)
-    jam_keluar = serializers.TimeField(default = now)
-    keterangan = models.CharField(max_length=50)
-    aktivitas = models.CharField(max_length=250)
-    link_deliverable = models.CharField(max_length=250)
-    status_deliverable = models.CharField(max_length=50)
-    tipe_log = models.CharField(max_length=35)
-    status_log = models.CharField(max_length=35)
-    komentar = models.CharField(max_length=250)
-    # manajer_penyetuju = UserSerializer()
-    alasan_lembur = models.CharField(max_length=250)
+    # TODO case nya log apaaja gw lupa
 
+    # id = serializers.IntegerField(required=False)
+    # # tanggal = serializers.DateField(default = datetime.date.today)
+    # # jam_masuk = serializers.TimeField(default = now)
+    # # jam_keluar = serializers.TimeField(default = now)
+    # keterangan = models.CharField(max_length=50)
+    # aktivitas = models.CharField(max_length=250)
+    # link_deliverable = models.CharField(max_length=250)
+    # status_deliverable = models.CharField(max_length=50)
+    # tipe_log = models.CharField(max_length=35)
+    # status_log = models.CharField(max_length=35)
+    # komentar = models.CharField(max_length=250)
+    # # manajer_penyetuju = UserSerializer()
+    # alasan_lembur = models.CharField(max_length=250)
 
+    # def create(self, validated_data):
+    #     log = super().create(validated_data)
+    #     # presensi = 
     # def create(self, validated_data):
     #     return LogAktivitas.objects.create(**validated_data)
 
@@ -69,6 +63,18 @@ class LogAktivitasSerializer(serializers.ModelSerializer):
 
     #     return super().update(instance, validated_data)
 
+    class Meta:
+        model = LogAktivitas
+        fields = '__all__'
+
+class PresensiDetailSerializer(serializers.ModelSerializer):
+    id_user = UserListSerializer()
+    class Meta:
+        model = Presensi
+        fields = '__all__'
+
+class LogAktivitasDetailSerializer(serializers.ModelSerializer):
+    manajer_penyetuju = UserListSerializer()
     class Meta:
         model = LogAktivitas
         fields = '__all__'
