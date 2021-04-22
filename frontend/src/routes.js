@@ -12,7 +12,8 @@ import DaftarPaketPertanyaan from "views/DaftarPakerPertanyaan";
 import DetailEditPaketPertanyaan from "views/DetailEditPaketPertanyaan";
 import DaftarBorang from "views/MengisiBorang";
 import EditLogAktivitas from "views/LogAktivitas/EditLogAktivitas";
-
+import DaftarKaryawanPerforma from "views/KelolaHasilPerforma/DaftarKaryawanPerforma";
+import DaftarBorangPerforma from "views/KelolaHasilPerforma/DaftarBorangPerforma";
 export default [
   {
     path: '/',
@@ -83,5 +84,15 @@ export default [
     path: '/edit-log',
     exact: true,
     component: EditLogAktivitas
-  }
+  },
+  {
+    path: '/daftar-karyawan-performa',
+    exact: true,
+    component: DaftarKaryawanPerforma,
+  },
+  {
+    path: '/daftar-borang-performa',
+    exact: true,
+    component: DaftarBorangPerforma,
+  },
 ]

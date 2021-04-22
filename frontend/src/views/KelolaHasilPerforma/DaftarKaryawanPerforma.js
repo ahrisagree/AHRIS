@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Button  from "components/TemplateButton";
+import TemplateButton from 'components/TemplateButton';
 import {
   makeStyles,
   Table as MuiTable,
@@ -11,9 +11,11 @@ import {
   Grid,
   IconButton,
   Tooltip,
+  TextField,
   MenuItem,
 } from '@material-ui/core';
-import TextField from 'components/CustomTextField';
+import SearchIcon from '@material-ui/icons/Search';
+import _, {debounce} from 'lodash';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutlineRounded';
 import CreateIcon from '@material-ui/icons/CreateRounded';
 import { StyledTableCell, StyledTableRow } from "components/Table";
@@ -23,87 +25,86 @@ import { getDivisiAPI, getListDaftarKaryawan } from 'api/akun';
 import { PAGE_SIZE, ROLES } from 'utils/constant';
 import CircularProgress from 'components/Loading/CircularProgress';
 import DeleteConfirmationDialog from 'components/DialogConf';
+import CreateableSelection from 'components/CreateableSelection';
 import { setQueryParams } from 'utils/setQueryParams';
-import SearchIcon from '@material-ui/icons/Search';
-import _, {debounce} from 'lodash';
-
+import DaftarKaryawan from 'views/DaftarKaryawan';
 
 const useStyles = makeStyles({
-  mb: {
-    marginBottom: '1rem'
-  }
-})
-const DaftarKaryawan = ({history}) => {
-  
-  const classes = useStyles();
-  const [loading, setLoading] = useState(false);
-  const [listItem, setListItem] = useState([]);
-  const [divisiOptions, setDivisiOptions] = useState([]);
-  const [page, setPage] = useState(1);
-  const [count, setCount] = useState(0);
-  const [deleteKaryawan, setDeleteKaryawan] = useState(null);
-
-  // buat ngefilter
-  const [update, setUpdate] = useState(0);
-  
-  const params = new URLSearchParams(history.location.search);
-
-  const [roleFilter, setFilterRole] = useState(params.get("role"));
-  const [divisiFilter, setFilterDivisi] = useState(params.get("divisi"));
-  const [searchFilter, setFilterSearch] = useState(params.get("search"));
-
-  useEffect(()=>{
-    setLoading(true)
+    mb: {
+      marginBottom: '1rem'
+    }
+  })
+  const DaftarKaryawanPerforma = ({history}) => {
     
-    const search = params.get("search");
-    const role = params.get("role");
-    const divisi = params.get("divisi");
+    const classes = useStyles();
+    const [loading, setLoading] = useState(false);
+    const [listItem, setListItem] = useState([]);
+    const [divisiOptions, setDivisiOptions] = useState([]);
+    const [page, setPage] = useState(1);
+    const [count, setCount] = useState(0);
+    const [deleteKaryawan, setDeleteKaryawan] = useState(null);
 
+      // buat ngefilter
+    const [update, setUpdate] = useState(0);
+    
+    const params = new URLSearchParams(history.location.search);
 
-    getListDaftarKaryawan({
-      page, search, role, divisi 
-    }).then(res=>{
-      setListItem(res.data?.results);
-      setCount(Math.ceil(res.data?.count/PAGE_SIZE));
-    }).catch(err=>{
-    // Handle ERROR
-    }).finally(()=>{
-      setLoading(false);
-    })
-  }, [page, update]);
+    const [roleFilter, setFilterRole] = useState(params.get("role"));
+    const [divisiFilter, setFilterDivisi] = useState(params.get("divisi"));
+    const [searchFilter, setFilterSearch] = useState(params.get("search"));
+    
+    useEffect(()=>{
+      setLoading(true)
 
-  useEffect(()=>{
-    getDivisiAPI().then(res=>{
-      setDivisiOptions(res.data);
-    }).catch(err=>{
-      console.error(err.response);
-    })
-  }, [])
+      const search = params.get("search");
+      const role = params.get("role");
+      const divisi = params.get("divisi");
 
-  const doQuery = () => {
-    setQueryParams({
-      role: roleFilter || "",
-      divisi: divisiFilter || "",
-      search: searchFilter || ""
-    }, history);
-    setPage(1);
-    setUpdate(update+1);
-  }
+      getListDaftarKaryawan({
+        page, search, role, divisi 
+      }).then(res=>{
+        setListItem(res.data?.results);
+        setCount(Math.ceil(res.data?.count/PAGE_SIZE));
+      }).catch(err=>{
+      // Handle ERROR
+      }).finally(()=>{
+        setLoading(false);
+      })
+    }, [page, update]);
 
-  const resetQuery = () => {
-    setQueryParams({}, history);
-    setPage(1);
-    setUpdate(update+1);
-    setFilterDivisi(null)
-    setFilterSearch(null)
-    setFilterRole(null)
-  }
+    useEffect(()=>{
+      getDivisiAPI().then(res=>{
+        setDivisiOptions(res.data);
+      }).catch(err=>{
+        console.error(err.response);
+      })
+    }, [])
+
+    const doQuery = () => {
+      setQueryParams({
+        role: roleFilter || "",
+        divisi: divisiFilter || "",
+        search: searchFilter || ""
+      }, history);
+      setPage(1);
+      setUpdate(update+1);
+    }
   
-  const handleDeleteKaryawan = () => {
-    setDeleteKaryawan(null);
-    console.log(deleteKaryawan)
-    // DElete trus confirmation
-  }
+    const resetQuery = () => {
+      setQueryParams({}, history);
+      setPage(1);
+      setUpdate(update+1);
+      setFilterDivisi(null)
+      setFilterSearch(null)
+      setFilterRole(null)
+    }
+
+    
+    const handleDeleteKaryawan = () => {
+      setDeleteKaryawan(null);
+      console.log(deleteKaryawan)
+      // DElete trus confirmation
+    }
 
   return (
     <div className={classes.root1}>
@@ -111,30 +112,12 @@ const DaftarKaryawan = ({history}) => {
       <Grid container spacing={2} direction="column">
       <Grid item xs={12} container>
           <Grid item xs={4} alignContent="flex-start">
-            <MainTitle title="Kelola Akun" className={classes.title} />
+            <MainTitle title="Daftar Karyawan" className={classes.title} />
           </Grid>
           <Grid item xs={8}/>
         </Grid>
-
-        <Grid item xs={12} container>
-
+        <Grid item xs={12} spacing={2} direction="row" container>
         <Grid item xs={2} alignContent="">
-        <div style={{position: 'relative', display: 'inline-block', padding: 2}}>
-                <SearchIcon style={{position: 'absolute', right: 0, top: 10, width: 25, height: 25}}/>
-                <TextField
-                    label="Search"
-                    fullWidth
-                    bordered={true}
-                    value={searchFilter}
-                    onChange={e=>setFilterSearch(e.target.value)}
-                    variant="outlined"
-                    className={classes.mb}
-                    size="small"
-                    hintText="Search by Name"
-                  />
-          </div>
-        </Grid>
-          <Grid item xs={2} alignContent="">
           <div style={{position: 'relative', padding: 2}}>
           <TextField
             label="Role"
@@ -154,6 +137,7 @@ const DaftarKaryawan = ({history}) => {
           </div>
         </Grid>
 
+          
         <Grid item xs={2} alignContent="">
         <div style={{position: 'relative', padding: 2}}>
         <TextField
@@ -174,7 +158,26 @@ const DaftarKaryawan = ({history}) => {
         </TextField>
         </div>
         </Grid>
-        <Grid item xs={4}>
+
+        <Grid item xs={5}/>
+          <Grid item lg={2} alignContent="">
+          <div style={{position: 'relative', display: 'inline-block'}}>
+          <SearchIcon style={{position: 'absolute', right: 0, top: 10, width: 25, height: 25}}/>
+                <TextField
+                    label="Search"
+                    fullWidth
+                    bordered={true}
+                    value={searchFilter}
+                    onChange={e=>setFilterSearch(e.target.value)}
+                    variant="outlined"
+                    className={classes.mb}
+                    size="small"
+                    hintText="Search by Name"
+                    // onChange={_,debounce((event, value) => this.handleSearch(value), 500)}
+                  />
+          </div>
+          </Grid>
+          <Grid item xs={1}>
           {!(params.get("search") === searchFilter &&
             params.get("role") === roleFilter && 
             params.get("divisi") === divisiFilter) &&
@@ -186,16 +189,6 @@ const DaftarKaryawan = ({history}) => {
             <button onClick={resetQuery}>Reset</button>  
           }
         </Grid>
-
-          <Grid item xs={2} alignContent="">
-          <Button
-          variant="outlined"
-          color="primary" 
-          size="small"
-          >
-          + Tambah Akun
-        </Button>
-          </Grid>
         </Grid>
       </Grid>
 
@@ -204,7 +197,7 @@ const DaftarKaryawan = ({history}) => {
             <TableHead>
               <TableRow>
                 <StyledTableCell align="left">No </StyledTableCell>
-                <StyledTableCell align="left">Nama </StyledTableCell>
+                <StyledTableCell align="left">Nama Karyawan </StyledTableCell>
                 <StyledTableCell align="left">Role </StyledTableCell>
                 <StyledTableCell align="left">Divisi</StyledTableCell>
                 <StyledTableCell align="left"></StyledTableCell>
@@ -232,19 +225,20 @@ const DaftarKaryawan = ({history}) => {
                     </StyledTableCell>
                     <StyledTableCell align="left">{row.username}</StyledTableCell>
                     <StyledTableCell align="left">{row.role}</StyledTableCell>
+                    {/* <StyledTableCell align="left">{row.nama_divisi?.username}</StyledTableCell> */}
                     <StyledTableCell align="left">{row.divisi.map(x=> x.nama_divisi+", ")}</StyledTableCell>
                     <StyledTableCell align="left">
                     <Grid item sm={10}>
-                      <Tooltip title="Edit">
-                        <IconButton size="small">
-                          <CreateIcon style={{ color: "green"}}/>
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip title="Delete">
-                        <IconButton size="small" onClick={()=>setDeleteKaryawan(row)}>
-                          <DeleteOutlineIcon style={{ color: "red"}}/>
-                        </IconButton>
-                      </Tooltip>
+                        <TemplateButton
+                        onClick={() => {
+                        console.log("Ini nanti diganti");
+                        }}
+                        type="button"
+                        buttonStyle="btnGreen"
+                        buttonSize="btnLong"
+                    >
+                        Lihat Borang
+                    </TemplateButton>
                     </Grid>
                     </StyledTableCell>
                   </StyledTableRow>
@@ -267,6 +261,6 @@ const DaftarKaryawan = ({history}) => {
         />
     </div>
   );
-};
+};  
 
-export default DaftarKaryawan;
+export default DaftarKaryawanPerforma;
