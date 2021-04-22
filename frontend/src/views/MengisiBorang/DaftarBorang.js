@@ -199,7 +199,7 @@ export default function BasicPagination() {
                     </StyledTableCell>
                     <StyledTableCell align="left">{row.user_dinilai.username}</StyledTableCell>
                     <StyledTableCell align="left">{row.user_dinilai.role}</StyledTableCell>
-                    <StyledTableCell align="left">{row.user_dinilai.divisi.map(x=> x.nama_divisi)}</StyledTableCell>
+                    <StyledTableCell align="left">{row.user_dinilai.divisi.map(x=> x.nama_divisi+", ")}</StyledTableCell>
                     <StyledTableCell align="left">
                     <Grid item sm={10}>
                     <TemplateButton

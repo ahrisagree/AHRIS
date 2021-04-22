@@ -174,7 +174,7 @@ const Profil = props => {
                       Divisi
                     </Typography>
                     <Typography variant="body2" color="textSecondary">
-                    {divisi.map(x=> x.nama_divisi )}
+                    {divisi.map(x=> x.nama_divisi + "," )}
                     </Typography>
                     <br></br>
                     <Typography style={{ fontWeight: 600 }} gutterBottom variant="subtitle1">
