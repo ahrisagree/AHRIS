@@ -19,7 +19,7 @@ import MailIcon from '@material-ui/icons/Mail';
 import Breadcrumbs from 'components/Breadcrumbs';
 import { withRouter } from 'react-router';
 import { Accordion, AccordionDetails, AccordionSummary } from '@material-ui/core';
-import { AddRounded } from '@material-ui/icons';
+import { AddRounded } from '@material-ui/icons/AddRounded';
 
 const drawerWidth = 240;
 

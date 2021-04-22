@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useEffect, useState  } from 'react';
+import axios from 'axios';
+import { baseUrl } from 'api/constant';
 import {
   makeStyles,
   Paper,
@@ -8,7 +10,7 @@ import {
   Divider,
 } from '@material-ui/core';
 import TemplateButton  from "components/TemplateButton";
-
+import DeleteConfirmationDialog from 'components/DialogConf';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -47,15 +49,70 @@ const useStyles = makeStyles((theme) => ({
     maxHeight: '100%',
   },
   title: {
-    position: "relative",
     top: 40,
     right : -160,
   },
 }));
 
+
+
 const Profil = props => {
+
   const classes = useStyles();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = React.useState({});
+  const [username, setNama] = React.useState("");
+  const [email, setEmail] = React.useState("");
+  const [role, setRole] = React.useState("");
+  const [divisi, setDivisi] = React.useState([]);
+  const [gaji, setGaji] = React.useState("");
+  const [new_password1, setNew_Password1] = React.useState("");
+  const [new_password2, setNew_Password2] = React.useState("");
+  const [old_password, setOld_Password] = React.useState("");
+  const [confirmChange, setConfirmChange] = useState(null);
+
+
+  useEffect(()=>{
+    setLoading(true)
+
+    axios.get(`${baseUrl}/auth/profile/`).then(res=>{
+      setNama(res.data?.username);
+      setEmail(res.data?.email);
+      setGaji(res.data?.gaji);
+      setRole(res.data?.role);
+      setDivisi(res.data?.divisi);
+    }).catch(err=>{
+    // Handle ERROR
+    }).finally(()=>{
+      setLoading(false);
+    })
+  });
+
+  const handleChangePassword = () => {
+    setLoading(true)
+    axios.post(`${baseUrl}/auth/password/change/`, 
+    {new_password1, new_password2, old_password} ).then(res=>{
+      setOld_Password("");
+      setNew_Password1("");
+      setNew_Password2("");
+    }).catch(err=>{
+      console.error(err.response);
+      setError(err.response && err.response.data);
+      }).finally(()=>{
+        setLoading(false);
+      })
+  }
+
+  const handleConfirmChange = () => {
+    setConfirmChange(null);
+    console.log(confirmChange)
+  }
+
+
+
+
   return (
+   
     <div className="m-10">
       <div className={classes.title}>
         <h4 style={{fontFamily: "IBM Plex Sans", fontSize: "24px", fontWeight:600}}>Profil Pengguna</h4>
@@ -74,7 +131,7 @@ const Profil = props => {
                       Email
             </Typography>
             <Typography style={{ color:"#fdfdfd", textAlign:'center', fontFamily: 'IBM Plex Sans', fontWeight:300, variant:'body2'}} >
-                      a05@propensi.com
+                      {email}
             </Typography>
             </Grid>
                <Grid item container xs={12} alignItems="flex-end">
@@ -87,7 +144,8 @@ const Profil = props => {
                     buttonSize="btnLong"
                   >
                     Logout
-                  </TemplateButton>                 </Grid>
+                  </TemplateButton>                 
+                  </Grid>
           </Grid>
           </Paper>
         </Grid>
@@ -102,28 +160,28 @@ const Profil = props => {
                       Nama
                     </Typography>
                     <Typography variant="body2" color="textSecondary">
-                      Set nama
+                      {username}
                     </Typography>
                     <br></br>
                     <Typography style={{ fontWeight: 600 }} gutterBottom variant="subtitle1">
                       Role
                     </Typography>
                     <Typography variant="body2" color="textSecondary">
-                      Set role
+                      {role}
                     </Typography>
                     <br></br>
                     <Typography style={{ fontWeight: 600 }} gutterBottom variant="subtitle1">
                       Divisi
                     </Typography>
                     <Typography variant="body2" color="textSecondary">
-                      Set divisi
+                    {divisi.map(x=> x.nama_divisi )}
                     </Typography>
                     <br></br>
                     <Typography style={{ fontWeight: 600 }} gutterBottom variant="subtitle1">
                       Gaji
                     </Typography>
                     <Typography variant="body2" color="textSecondary">
-                      Set gaji
+                      {gaji}
                     </Typography>
                </Grid>
                <Divider orientation="vertical" flexItem />
@@ -141,30 +199,56 @@ const Profil = props => {
                             fullWidth
                             label="Old Password"
                             margin = "normal"
+                            InputLabelProps={{
+                              shrink: true,
+                            }}
+                            type="password"
+                            value={old_password}
+                            onChange={(e)=>setOld_Password(e.target.value)}
+                            error={!!error.password}
+                            helperText={error.password && error.password[0]}
+            
+                            
                           />
                           <TextField 
+                            type= "password"
                             required="true"
+                            value={new_password1}
                             variant="outlined"
                             style={{}}
                             size="small"
                             fullWidth
                             label="New Password "
                             margin = "normal"
+                            InputLabelProps={{
+                              shrink: true,
+                            }}
+                            onChange={(e)=>setNew_Password1(e.target.value)}
+                            error={!!error.password}
+                            helperText={error.password && error.password[0]}
+
                           />
                           <TextField 
+                            type= "password"
                             required="true"
+                            value={new_password1}
                             variant="outlined"
                             style={{}}
                             size="small"
                             fullWidth
                             label="New Password Confirmation"
                             margin = "normal"
+                            InputLabelProps={{
+                              shrink: true,
+                            }}
+                            onChange={(e)=>setNew_Password2(e.target.value)}
+                            error={!!error.password}
+                            helperText={error.password && error.password[0]}
                           />
                           <br></br>
                           <TemplateButton 
-                                onClick={() => {
-                                  console.log("You Clicked on Me!");
-                                }}
+                                // onClick={setConfirmChange(new_password1)}
+                                onClick={handleChangePassword}
                                 type="button"
                                 buttonStyle="btnBlue"
                                 buttonSize="btnSmall"
@@ -182,6 +266,13 @@ const Profil = props => {
       </Grid>
     </Grid>
     </div>
+
+    {/* <DeleteConfirmationDialog 
+ open={!!confirmChange}
+ handleCancel={()=>setConfirmChange(null)}
+ handleConfirm={handleChangePassword}
+/> */}
+   
     </div>
 
     
