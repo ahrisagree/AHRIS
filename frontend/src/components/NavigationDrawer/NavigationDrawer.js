@@ -200,7 +200,12 @@ const NavigationDrawer = ({children, history, location, user}) => {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const [accordion, setAccordion] = React.useState(-1);
   const {pathname} = location;
+
+  const handleAccordion = panel => (_e, isExpanded) => {
+    setAccordion(isExpanded ? panel : -1);
+  };
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -280,9 +285,15 @@ const NavigationDrawer = ({children, history, location, user}) => {
             <h1 style={{textAlign: 'center'}}>{user.role || "No Role"}</h1>
           </ListItem>
           <div style={{marginTop: '1.5rem'}} />
-          {navigationMenu.map(nav=>nav.children?
+          {navigationMenu.map((nav, i)=>nav.children?
           (
-            <Accordion TransitionProps={{ unmountOnExit: true }} className={classes.accordion} key={nav.menu}>
+            <Accordion 
+              TransitionProps={{ unmountOnExit: true }} 
+              className={classes.accordion} 
+              key={nav.menu} 
+              expanded={accordion===i}
+              onChange={handleAccordion(i)}
+            >
               <AccordionSummary className={classes.accordionSummary}>
                 <ListItem button key={nav.menu}>
                   <ListItemIcon>{nav.icon}</ListItemIcon>
