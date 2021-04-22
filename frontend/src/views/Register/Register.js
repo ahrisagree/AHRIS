@@ -9,7 +9,7 @@ import {
 } from '@material-ui/core';
 import TextField from 'components/CustomTextField';
 import title from 'images/Group 124.png';
-import Dialog2 from 'components/Dialog2';
+import Dialog from 'components/Dialog';
 import MainTitle from 'components/MainTitle';
 import TemplateButton from 'components/TemplateButton';
 import { ROLES } from 'utils/constant';
@@ -67,7 +67,7 @@ const Register = props => {
 
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState({});
-  const [showModal, updateShowModal] = React.useState(false);
+  const [regisAccount, setRegistAccount] = React.useState(false);
   const [role, setRole] = React.useState("");
   const [username, setNama] = React.useState("");
   const [email, setEmail] = React.useState("");
@@ -85,8 +85,6 @@ const Register = props => {
       setLoading(false);
     })
   }, [])
-
-  const toggleModal = () => updateShowModal(state => !state);
 
   const onSubmit = () => {
     // generate password
@@ -239,7 +237,7 @@ const Register = props => {
         {/* <Dialog2></Dialog2> */}
         <div className="flex justify-center py-6">
           <TemplateButton
-              onClick={onSubmit}
+              onClick={onSubmit, ()=>setRegistAccount(true)}
               type="button"
               buttonStyle="btnBlue"
               buttonSize="btnLong"
@@ -251,6 +249,8 @@ const Register = props => {
         {/* <Button className={classes.button} onClick={toggleModal}>Simpan</Button> */}
         {/* <Dialog2 canShow={showModal} updateModalState={toggleModal}></Dialog2> */}
       </Container>
+
+      <Dialog open={!!regisAccount} handleClose={()=>setRegistAccount(false)} ></Dialog>
 
     </div>
   )
