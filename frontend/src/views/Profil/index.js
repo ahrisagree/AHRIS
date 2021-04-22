@@ -1,11 +1,12 @@
-// import { connect } from 'react-redux';
+import { connect } from 'react-redux';
+import { logoutThunk } from 'thunk/auth';
 import Profil from './Profil';
 
 // const mapStateToProps = state => ({
 // })
 
-// const mapActionToProps = {
-// }
+const mapActionToProps = {
+  logoutThunk
+}
 
-// export default connect(mapStateToProps, mapActionToProps)(Home);
-export default Profil;
+export default connect(null, mapActionToProps)(Profil);
