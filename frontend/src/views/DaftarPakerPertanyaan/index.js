@@ -23,7 +23,7 @@ import CircularProgress from 'components/Loading/CircularProgress';
 import DeleteConfirmationDialog from 'components/DialogConf';
 import { Link } from 'react-router-dom';
 import Loading from 'components/Loading';
-// import { setQueryParams } from 'utils/setQueryParams';
+import { setQueryParams } from 'utils/setQueryParams';
 
 const useStyles = makeStyles({})
 const DaftarPaketPertanyaan = ({history}) => {
@@ -35,16 +35,26 @@ const DaftarPaketPertanyaan = ({history}) => {
   const [count, setCount] = useState(0);
   const [deletePaket, setDeletePaket] = useState(null);
   const [fullLoading, setFullLoading] = useState(false);
-  const [update, setUpdate] = useState(0)
+  const [update, setUpdate] = useState(0);
+
+  // FILTER
+  const params = new URLSearchParams(history.location.search);
+
+  const [kategoriFilter, setFilterKategori] = useState(params.get("kategori"));
+  const [jenisFilter, setFilterJenis] = useState(params.get("jenis"));
+  const [searchFilter, setFilterSearch] = useState(params.get("search"));
 
   useEffect(()=>{
     setLoading(true)
     // const params = new URLSearchParams(history.location.search)
+    const kategori = params.get("kategori");
+    const jenis = params.get("jenis");
+    const search = params.get("search");
 
     // console.log(history.location.search)
-    // console.log(params.get("page"))
+    // console.log(params.get("page"))z
     getListPaketPertanyaanAPI({
-      page
+      page, kategori, jenis, search
     }).then(res=>{
       setListItem(res.data?.results);
       setCount(Math.ceil(res.data?.count/PAGE_SIZE));
@@ -55,9 +65,15 @@ const DaftarPaketPertanyaan = ({history}) => {
     })
   }, [page, update]);
 
-  // const doQuery = () => {
-  //   setQueryParams({page}, history);
-  // }
+  const doQuery = () => {
+    setQueryParams({
+      kategori: kategoriFilter, 
+      jenis: jenisFilter, 
+      search: searchFilter
+    }, history);
+    setPage(1);
+    setUpdate(update+1);
+  }
   
   const handleDeletePaket = () => {
     setFullLoading(true);

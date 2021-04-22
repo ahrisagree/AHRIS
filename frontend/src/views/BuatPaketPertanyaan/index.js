@@ -10,6 +10,8 @@ import SectionPertanyaan from 'components/PaketPertanyaan/SectionPertanyaan';
 import MainTitle from 'components/MainTitle';
 import TemplateButton from 'components/TemplateButton';
 import CreateableSelection from 'components/CreateableSelection';
+import DialogSuccess from 'components/Dialog';
+import DialogFail from 'components/DialogFail';
 import { JENIS_PAKET, newAspekTemplate } from 'utils/constant';
 import {
   editPaketPertanyaanAPI,
@@ -51,6 +53,8 @@ const BuatPaketPertanyaan = ({paket, isEdit, isDetail, setEditMode}) => {
   const [data, setData] = useState((paket?.list_aspek && {list_aspek: paket?.list_aspek}) || initialState.data)
   const [errorState, setError] = useState({});
   const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [update, setUpdate] = useState(0);
   const [kategoriOption, setKategoriOption] = useState([]);
   const [templateOption, setTemplateOption] = useState([]);
 
@@ -89,6 +93,7 @@ const BuatPaketPertanyaan = ({paket, isEdit, isDetail, setEditMode}) => {
     postPaketPertanyaanAPI({
       nama, jenis, kategori, ...data
     }).then(res=>{
+      setSuccess(true);
       // SUCCESS
       setData(initialState.data);
       setNama(initialState.nama);
@@ -109,6 +114,7 @@ const BuatPaketPertanyaan = ({paket, isEdit, isDetail, setEditMode}) => {
       editPaketPertanyaanAPI(paket.id, {
         nama, jenis, kategori, ...data
       }).then(res=>{
+        setSuccess(true);
         // SUCCESS
         const resData = res.data;
         setData({list_aspek: resData.list_aspek});
@@ -320,6 +326,16 @@ const BuatPaketPertanyaan = ({paket, isEdit, isDetail, setEditMode}) => {
           <Loading open={loading} />
         </div>
       </Paper>
+
+      <DialogSuccess open={success} handleClose={()=>setSuccess(false)} />
+      <DialogFail 
+        open={!!errorState.detail || !!errorState.list_aspek} 
+        handleClose={()=>{
+          delete errorState.detail;
+          setUpdate(update+1);
+        }} 
+        text={errorState.detail}
+        />
     </div>
   );
 }

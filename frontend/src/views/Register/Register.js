@@ -8,13 +8,13 @@ import {
   Chip
 } from '@material-ui/core';
 import TextField from 'components/CustomTextField';
-import title from 'images/Group 124.png';
 import Dialog from 'components/Dialog';
 import MainTitle from 'components/MainTitle';
 import TemplateButton from 'components/TemplateButton';
 import { ROLES } from 'utils/constant';
 import { getDivisiAPI, registerAkunAPI } from 'api/akun';
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
+import Loading from 'components/Loading';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -104,6 +104,7 @@ const Register = props => {
       setGaji("");
       setRole("");
       setDivisi([]);
+      setRegistAccount(true);
     }).catch(err=>{
       console.error(err.response);
       setError(err.response && err.response.data);
@@ -132,6 +133,7 @@ const Register = props => {
           onChange={e=>{setNama(e.target.value); delete error.username}}
           error={!!error.username}
           helperText={error.username && error.username[0]}
+          disabled={loading}
           />
         </Grid>
 
@@ -147,6 +149,7 @@ const Register = props => {
           onChange={e=>{setEmail(e.target.value); delete error.email}}
           error={!!error.email}
           helperText={error.email && error.email[0]}
+          disabled={loading}
         />
         <TextField
           id="outlined-medium"
@@ -161,6 +164,7 @@ const Register = props => {
           onChange={e=>{setRole(e.target.value); delete error.role}}
           error={!!error.role}
           helperText={error.role && error.role[0]}
+          disabled={loading}
         >
           {ROLES.map(peran=>(
             <MenuItem key={peran} value={peran}>{peran}</MenuItem>
@@ -192,6 +196,7 @@ const Register = props => {
               freeSolo
               error={!!error.divisi}
               helperText={error.divisi && "Not Valid"}
+              disabled={loading}
               filterOptions={(opts, params) => {
                 const filtered = filter(opts, params);
                 // Suggest the creation of a new value
@@ -232,12 +237,15 @@ const Register = props => {
           onChange={e=>{setGaji(e.target.value); delete error.gaji}}
           error={!!error.gaji}
           helperText={error.gaji && error.gaji[0]}
+          disabled={loading}
           />
         </Grid>
         {/* <Dialog2></Dialog2> */}
         <div className="flex justify-center py-6">
           <TemplateButton
-              onClick={onSubmit, ()=>setRegistAccount(true)}
+          // Lo gabisa bikin GIni
+              // onClick={onSubmit, ()=>setRegistAccount(true)}
+              onClick={onSubmit}
               type="button"
               buttonStyle="btnBlue"
               buttonSize="btnLong"
@@ -249,7 +257,7 @@ const Register = props => {
         {/* <Button className={classes.button} onClick={toggleModal}>Simpan</Button> */}
         {/* <Dialog2 canShow={showModal} updateModalState={toggleModal}></Dialog2> */}
       </Container>
-
+      <Loading open={loading} />
       <Dialog open={!!regisAccount} handleClose={()=>setRegistAccount(false)} ></Dialog>
 
     </div>
