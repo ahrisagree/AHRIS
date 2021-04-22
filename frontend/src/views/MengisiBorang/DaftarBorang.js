@@ -8,7 +8,6 @@ import CustomTextField from 'components/CustomTextField';
 import Button  from "components/Button";
 import {
   makeStyles,
-  withStyles,
   Table as MuiTable,
   TableBody,
   TableContainer,
@@ -16,16 +15,16 @@ import {
   TableRow,
   Paper,
   Grid,
-  FormControl,
+  Tooltip,
   MenuItem,
-  InputLabel,
-  Select,
 } from '@material-ui/core';
 import { StyledTableCell, StyledTableRow } from "components/Table";
 import MainTitle from "components/MainTitle";
 import { getListAssignment } from 'api/borang';
-import { PAGE_SIZE } from 'utils/constant';
+import { PAGE_SIZE, ROLES } from 'utils/constant';
 import CircularProgress from 'components/Loading/CircularProgress';
+import { setQueryParams } from 'utils/setQueryParams';
+import TextField from 'components/CustomTextField';
 
 
 
@@ -91,19 +90,27 @@ const useStyles = makeStyles((theme) =>({
       },
 }));
 
-export default function BasicPagination() {
+const DaftarBorang = ({history}) => {
     const classes = useStyles();
     const [loading, setLoading] = useState(false);
     const [listItem, setListItem] = useState([]);
     const [page, setPage] = useState(1);
     const [count, setCount] = useState(0);
-    
+    const [update, setUpdate] = useState(0);
+    const params = new URLSearchParams(history.location.search);
+    const [roleFilter, setFilterRole] = useState(params.get("role"));
+    const [searchFilter, setFilterSearch] = useState(params.get("search"));
+    const [role, setRole] = React.useState("");
+
+  
+
     useEffect(()=>{
       setLoading(true)
-  
+      const search = params.get("search");
       getListAssignment({
-        page
+        page, role, search, 
       }).then(res=>{
+        setRole(res.data?.results.user_dinilai);
         setListItem(res.data?.results);
         setCount(Math.ceil(res.data?.count/PAGE_SIZE));
       }).catch(err=>{
@@ -111,27 +118,31 @@ export default function BasicPagination() {
       }).finally(()=>{
         setLoading(false);
       })
-    }, [page]);
+    }, [page, update]);
 
 
-
-    const [role, setRole] = React.useState('');
-
-    const handleChange = (event) => {
-        setRole(event.target.value);
-      };
+    const doQuery = () => {
+      setQueryParams({
+        role: roleFilter || "",
+        search: searchFilter || ""
+      }, history);
+      setPage(1);
+      setUpdate(update+1);
+    }
+  
+    const resetQuery = () => {
+      setQueryParams({}, history);
+      setPage(1);
+      setFilterRole(null)
+      setFilterSearch(null)
+    }
 
    
     return (
 
       <div className={classes.root}>
-      {/* // <div className={classes.title}>
-      //   <h4 style={{fontFamily: "IBM Plex Sans", fontSize: "24px", fontWeight:600}}>Daftar Borang</h4>
-      //   <div style={{width:414, height: 12, backgroundColor:"#FFB800", borderRadius: 4}}></div>
-      // </div> */}
     
     <div className={classes.root1}>
-      {/* <Paper className={classes.page}> */}
       <Grid container spacing={2} direction="column">
       <Grid item xs={12} container>
           <Grid item xs={4} alignContent="flex-start">
@@ -143,26 +154,56 @@ export default function BasicPagination() {
         </Grid>
 
         <Grid item xs={12} container>
-          <Grid item xs={2} alignContent="flex-end">
-          <FormControl variant="outlined" className={classes.formControl}>
-            <InputLabel id="role">Role</InputLabel>
-            <Select
-            labelId="role"
-            id="role"
-            value={role}
-            onChange={handleChange}
-            label="role"
-            >
-            <MenuItem value="">
-                <em>None</em>
-            </MenuItem>
-            <MenuItem value={10}>Ten</MenuItem>
-            <MenuItem value={20}>Twenty</MenuItem>
-            <MenuItem value={30}>Thirty</MenuItem>
-            </Select>
-            </FormControl>
+        <Grid item xs={2} alignContent="">
+        <div style={{position: 'relative', padding: 2}}>
+             <TextField
+            label="Role"
+            variant="outlined"
+            size="small"
+            className={classes.mb}
+            fullWidth
+            select
+            bordered={true}
+            value={roleFilter}
+            onChange={e=>setFilterRole(e.target.value)}
+          >
+            {ROLES.map(r=>(
+            <MenuItem value={r}>{r}</MenuItem>
+          ))}
+          </TextField>
+          </div>
           </Grid>
-          <Grid item xs={10} />
+        <Grid item xs={2} alignContent="">
+        <div style={{position: 'relative', padding: 2}}>
+          <TextField
+            label="Search"
+            variant="outlined"
+            size="small"
+            className={classes.mb}
+            fullWidth
+            bordered={true}
+            value={searchFilter}
+            onChange={e=>setFilterSearch(e.target.value)}
+          />
+          </div>
+        </Grid>
+        <Grid item xs={2}>
+        <div style={{position: 'relative', padding: 2}}>
+          {!(params.get("role") === roleFilter && 
+          params.get("search") === searchFilter) &&
+            <TemplateButton 
+            type="button"
+            buttonStyle="btnBlueOutline"
+            buttonSize="btnMedium" onClick={doQuery}>Apply</TemplateButton>  
+          }
+          {(params.get("search") ||
+            params.get("role")) &&
+            <TemplateButton type="button"
+            buttonStyle="btnBlueOutline"
+            buttonSize="btnMedium" onClick={resetQuery}>Reset</TemplateButton>  
+          }
+        </div>
+        </Grid>
         </Grid>
       </Grid>
 
@@ -199,7 +240,7 @@ export default function BasicPagination() {
                     </StyledTableCell>
                     <StyledTableCell align="left">{row.user_dinilai.username}</StyledTableCell>
                     <StyledTableCell align="left">{row.user_dinilai.role}</StyledTableCell>
-                    <StyledTableCell align="left">{row.user_dinilai.divisi.map(x=> x.nama_divisi)}</StyledTableCell>
+                    <StyledTableCell align="left">{row.user_dinilai.divisi.map(x=> x.nama_divisi+", ")}</StyledTableCell>
                     <StyledTableCell align="left">
                     <Grid item sm={10}>
                     <TemplateButton
@@ -231,4 +272,4 @@ export default function BasicPagination() {
   );
 }
 
-// export default DaftarBorang;
+export default DaftarBorang;

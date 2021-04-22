@@ -281,8 +281,8 @@ const NavigationDrawer = ({children, history, location, user}) => {
               textAlign: 'center', 
               color: 'white'
               }} />
-            <h1 style={{textAlign: 'center'}}>{user.username}</h1>
-            <h1 style={{textAlign: 'center'}}>{user.role || "No Role"}</h1>
+            <h1 style={{textAlign: 'center'}}>{user?.username}</h1>
+            <h1 style={{textAlign: 'center'}}>{user?.role || "No Role"}</h1>
           </ListItem>
           <div style={{marginTop: '1.5rem'}} />
           {navigationMenu.map((nav, i)=>nav.children?
