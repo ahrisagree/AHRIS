@@ -36,7 +36,7 @@ const styles = (theme) => ({
     borderColor: '#FFFFFF',
     position: "relative",
     top: 8,
-    right : -60
+    right : -70
   },
   judul: {
     fontFamily: "IBM Plex Sans",
@@ -75,21 +75,10 @@ const DialogContent = withStyles(styles)((props) => {
     );
 });
 
-export default function CustomizedDialogs() {
-  const [open, setOpen] = React.useState(false);
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
-  };
+export default function CustomizedDialogs({open, handleClose}) {
 
   return (
     <div>
-      <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-        Open dialog
-      </Button>
       <Dialog aria-labelledby="customized-dialog-title" open={open}>
         <DialogContent dividers style={{alignItems: "center"}} onClose={handleClose}>
         <Typography style={{fontFamily: "IBM Plex Sans", position:"relative", top:-8}}>

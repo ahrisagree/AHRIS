@@ -11,7 +11,8 @@ const CreateableSelection = ({
   setData,
   renderInput,
   size,
-  fullWidth
+  fullWidth,
+  ...rest
 }) => {
   return (
     <Autocomplete
@@ -63,6 +64,7 @@ const CreateableSelection = ({
       size={size}
       fullWidth={fullWidth}
       renderInput={renderInput}
+      {...rest}
     />
   )
 }

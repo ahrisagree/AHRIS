@@ -6,11 +6,12 @@ import {
   Paper,
   Grid,
   Typography,
-  TextField,
   Divider,
 } from '@material-ui/core';
+import TextField from 'components/CustomTextField';
 import TemplateButton  from "components/TemplateButton";
-import DeleteConfirmationDialog from 'components/DialogConf';
+import SuccessDialog from 'components/Dialog';
+import Loading from 'components/Loading';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -56,7 +57,7 @@ const useStyles = makeStyles((theme) => ({
 
 
 
-const Profil = props => {
+const Profil = ({logoutThunk}) => {
 
   const classes = useStyles();
   const [loading, setLoading] = useState(false);
@@ -69,7 +70,7 @@ const Profil = props => {
   const [new_password1, setNew_Password1] = React.useState("");
   const [new_password2, setNew_Password2] = React.useState("");
   const [old_password, setOld_Password] = React.useState("");
-  const [confirmChange, setConfirmChange] = useState(null);
+  const [confirmChange, setConfirmChange] = useState(false);
 
 
   useEffect(()=>{
@@ -86,7 +87,7 @@ const Profil = props => {
     }).finally(()=>{
       setLoading(false);
     })
-  });
+  }, []);
 
   const handleChangePassword = () => {
     setLoading(true)
@@ -95,6 +96,7 @@ const Profil = props => {
       setOld_Password("");
       setNew_Password1("");
       setNew_Password2("");
+      setConfirmChange(true);
     }).catch(err=>{
       console.error(err.response);
       setError(err.response && err.response.data);
@@ -102,14 +104,6 @@ const Profil = props => {
         setLoading(false);
       })
   }
-
-  const handleConfirmChange = () => {
-    setConfirmChange(null);
-    console.log(confirmChange)
-  }
-
-
-
 
   return (
    
@@ -136,9 +130,7 @@ const Profil = props => {
             </Grid>
                <Grid item container xs={12} alignItems="flex-end">
                <TemplateButton 
-                    onClick={() => {
-                      console.log("You Clicked on Me!");
-                    }}
+                    onClick={logoutThunk}
                     type="button"
                     buttonStyle="btnBlueOutline"
                     buttonSize="btnLong"
@@ -205,8 +197,8 @@ const Profil = props => {
                             type="password"
                             value={old_password}
                             onChange={(e)=>setOld_Password(e.target.value)}
-                            error={!!error.password}
-                            helperText={error.password && error.password[0]}
+                            error={!!error.old_password}
+                            helperText={error.old_password && error.old_password[0]}
             
                             
                           />
@@ -224,14 +216,14 @@ const Profil = props => {
                               shrink: true,
                             }}
                             onChange={(e)=>setNew_Password1(e.target.value)}
-                            error={!!error.password}
-                            helperText={error.password && error.password[0]}
+                            error={!!error.new_password1}
+                            helperText={error.new_password1 && error.new_password1[0]}
 
                           />
                           <TextField 
                             type= "password"
                             required="true"
-                            value={new_password1}
+                            value={new_password2}
                             variant="outlined"
                             style={{}}
                             size="small"
@@ -242,8 +234,8 @@ const Profil = props => {
                               shrink: true,
                             }}
                             onChange={(e)=>setNew_Password2(e.target.value)}
-                            error={!!error.password}
-                            helperText={error.password && error.password[0]}
+                            error={!!error.new_password2}
+                            helperText={error.new_password2 && error.new_password2[0]}
                           />
                           <br></br>
                           <TemplateButton 
@@ -261,20 +253,16 @@ const Profil = props => {
           </Grid>
           </Paper>
         </Grid>
-
-  
+        <Loading open={loading} />
+          <SuccessDialog 
+            open={confirmChange}
+            handleClose={() => setConfirmChange(false)}
+            text="Password berhasil diubah!"
+          />
       </Grid>
     </Grid>
     </div>
-
-    {/* <DeleteConfirmationDialog 
- open={!!confirmChange}
- handleCancel={()=>setConfirmChange(null)}
- handleConfirm={handleChangePassword}
-/> */}
-   
     </div>
-
     
  
   

@@ -9,7 +9,7 @@ import routes from './routes';
 import './App.css';
 import { ConnectedRouter } from 'connected-react-router';
 import { PersistGate } from 'redux-persist/integration/react';
-import NavigationDrawer from 'components/NavigationDrawer/NavigationDrawer';
+import NavigationDrawer from 'components/NavigationDrawer';
 // import { setupAuthToken } from 'api/setup';
 
 function App() {
