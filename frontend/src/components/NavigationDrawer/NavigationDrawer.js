@@ -14,18 +14,30 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
+// import InboxIcon from '@material-ui/icons/MoveToInbox';
+// import MailIcon from '@material-ui/icons/Mail';
 import Breadcrumbs from 'components/Breadcrumbs';
 import { withRouter } from 'react-router';
 import { Accordion, AccordionDetails, AccordionSummary } from '@material-ui/core';
-import { AddRounded } from '@material-ui/icons/AddRounded';
+// import AddRounded from '@material-ui/icons/AddRounded';
+import InsertDriveFileOutlinedIcon from '@material-ui/icons/InsertDriveFileOutlined';
+import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
+import LocalAtmRoundedIcon from '@material-ui/icons/LocalAtmRounded';
+import CheckIcon from '@material-ui/icons/Check';
+import BookIcon from '@material-ui/icons/Book';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+
 
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
+  },
+  profile: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
@@ -57,7 +69,9 @@ const useStyles = makeStyles((theme) => ({
     whiteSpace: 'nowrap',
   },
   drawerBg: {
-    background: 'green'  // STYLING BACKGROUND DRAWER KIRI DISINI
+    background: "linear-gradient(180deg, #00A96F 0%, #437B74 100%)",
+    boxShadow: "4px 4px 15px rgba(0, 0, 0, 0.25)",
+    borderRadius: '0 0 7px 0',
   },
   drawerOpen: {
     width: drawerWidth,
@@ -76,6 +90,7 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.up('sm')]: {
       width: theme.spacing(9) + 1,
     },
+
   },
   toolbar: {
     display: 'flex',
@@ -99,7 +114,15 @@ const useStyles = makeStyles((theme) => ({
       margin: "0!important"
     }
   },
+  collection: {
+    marginTop: '1.5rem',
+    color: 'white',
+    fontFamily: "IBM Plex Sans",
+    fontStyle: "normal",
+    fontWeight: "normal",
+  },
   accordion: {
+    color: 'white',
     background: 'none',
     boxShadow: 'none',
     '&:before': {
@@ -110,9 +133,9 @@ const useStyles = makeStyles((theme) => ({
     }
   },
   accordionDetails: {
-    background: 'yellow',
+    background: 'rgba(196, 196, 196, 0.24)',
     padding: 0
-  }
+  },
 }));
 
 
@@ -120,24 +143,26 @@ const useStyles = makeStyles((theme) => ({
 const navigationMenu = [
   {
     menu: 'Kelola Akun',
+    icon: <PeopleAltIcon style={{ color: 'white' }}/>,
     children: [
       {
         menu: 'List Akun',
-        path: '/',
+        path: '/akun',
       },
       {
         menu: 'Buat Akun',
-        path: '/register',
-        icon: <AddRounded />
+        path: '/akun/register',
       }
     ]
   },
   {
     menu: 'Presensi',
+    icon: <CheckIcon style={{ color: 'white' }}/>,
     path: '/'
   },
   {
     menu: 'Daily Log',
+    icon: <BookIcon style={{ color: 'white' }}/>,
     children: [
       {
         menu: 'List Daily Log',
@@ -146,12 +171,12 @@ const navigationMenu = [
       {
         menu: 'Submit Log',
         path: '/',
-        icon: <AddRounded />
       }
     ]
   },
   {
     menu: 'Paket Pertanyaan',
+    icon: <InsertDriveFileOutlinedIcon style={{ color: 'white' }}/>,
     children: [
       {
         menu: 'List Paket Pertanyaan',
@@ -160,17 +185,17 @@ const navigationMenu = [
       {
         menu: 'Buat Paket Pertanyaan',
         path: '/paket-pertanyaan/add',
-        icon: <AddRounded />
       }
     ]
   },
   {
     menu: 'Gaji',
-    path: '/'
+    path: '/',
+    icon: <LocalAtmRoundedIcon style={{ color: 'white' }}/>,
   }
 ]
 
-const NavigationDrawer = ({children, history, location}) => {
+const NavigationDrawer = ({children, history, location, user}) => {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -232,33 +257,57 @@ const NavigationDrawer = ({children, history, location}) => {
             {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
           </IconButton>
         </div>
+
         <Divider />
-        {navigationMenu.map(nav=>nav.children?
-        (
-          <Accordion TransitionProps={{ unmountOnExit: true }} className={classes.accordion} key={nav.menu}>
-            <AccordionSummary className={classes.accordionSummary}>
-              <ListItem button key={nav.menu}>
-                <ListItemIcon><InboxIcon /></ListItemIcon>
-                <ListItemText primary={nav.menu} />
-              </ListItem>
-            </AccordionSummary>
-            <AccordionDetails className={classes.accordionDetails}>
-              <List>
-                {nav.children.map(child => (
-                  <ListItem button key={child.menu} onClick={()=>history.push(child.path)}>
-                    <ListItemIcon>{child.icon || <MailIcon />}</ListItemIcon>
-                    <ListItemText primary={child.menu} />
-                  </ListItem>
-                ))}
-              </List>
-            </AccordionDetails>
-          </Accordion>
-        ):(
-          <ListItem button key={nav.menu} onClick={()=>history.push(nav.path)}>
-            <ListItemIcon>{nav.icon || <InboxIcon />}</ListItemIcon>
-            <ListItemText primary={nav.menu} />
+
+        <div className={classes.collection}>
+
+          <ListItem className={clsx(classes.profile, {
+            [classes.hide]: !open
+          })}
+            onClick={()=>history.push('/profil')}
+            button
+          >
+            <AccountCircleIcon style={{
+              width: 'auto', 
+              height: 'auto', 
+              maxWidth: '5rem',
+              textAlign: 'center', 
+              color: 'white'
+              }} />
+            <h1 style={{textAlign: 'center'}}>{user.username}</h1>
+            <h1 style={{textAlign: 'center'}}>{user.role || "No Role"}</h1>
           </ListItem>
-        ))}
+          <div style={{marginTop: '1.5rem'}} />
+          {navigationMenu.map(nav=>nav.children?
+          (
+            <Accordion TransitionProps={{ unmountOnExit: true }} className={classes.accordion} key={nav.menu}>
+              <AccordionSummary className={classes.accordionSummary}>
+                <ListItem button key={nav.menu}>
+                  <ListItemIcon>{nav.icon}</ListItemIcon>
+                  <ListItemText primary={nav.menu} />
+                </ListItem>
+              </AccordionSummary>
+              <AccordionDetails className={classes.accordionDetails}>
+                <List>
+                  {nav.children.map(child => (
+                    <ListItem button key={child.menu} onClick={()=>history.push(child.path)}>
+                      {/* <ListItemIcon>{child.icon || <MailIcon />}</ListItemIcon> */}
+                      <ListItemText primary={child.menu} />
+                    </ListItem>
+                  ))}
+                </List>
+              </AccordionDetails>
+            </Accordion>
+          ):(
+            <ListItem button key={nav.menu} onClick={()=>history.push(nav.path)}>
+              {/* <ListItemIcon>{nav.icon || <InboxIcon />}</ListItemIcon> */}
+              <ListItemIcon>{nav.icon}</ListItemIcon>
+              <ListItemText primary={nav.menu} />
+            </ListItem>
+          ))}
+
+        </div>
       </Drawer>
       <main className={classes.content}>
         <div className={classes.toolbar} />

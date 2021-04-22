@@ -17,6 +17,11 @@ export default [
     component: Home,
   },
   {
+    path: '/coba',
+    exact: true,
+    component: Coba,
+  },
+  {
     path: '/login',
     exact: true,
     component: Login,
@@ -27,12 +32,7 @@ export default [
     component: Profil,
   },
   {
-    path: '/coba',
-    exact: true,
-    component: Coba,
-  },
-  {
-    path: "/register",
+    path: "/akun/register",
     exact: true,
     component: Register,
   },
