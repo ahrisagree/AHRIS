@@ -3,10 +3,14 @@ import Home from "./views/Home";
 import Login from "./views/Login";
 import Profil from "./views/Profil";
 import Coba from "./views/Coba";
+import LogAktivitas from "./views/LogAktivitas/LogAktivitas";
+import DetailLogAktivitas from "./views/LogAktivitas/DetailLogAktivitas";
+import DaftarLog from "./views/LogAktivitas/DaftarLog";
 
 import Register from "./views/Register";
 import DaftarKaryawan from "views/DaftarKaryawan";
 import DaftarPaketPertanyaan from "views/DaftarPakerPertanyaan";
+import EditLogAktivitas from "views/LogAktivitas/EditLogAktivitas";
 
 export default [
   {
@@ -48,5 +52,25 @@ export default [
     path: '/akun',
     exact: true,
     component: DaftarKaryawan
+  },
+  {
+    path: '/log-aktivitas',
+    exact: true,
+    component: LogAktivitas
+  },
+  {
+    path: '/daftar-log',
+    exact: true,
+    component: DaftarLog
+  },
+  {
+    path: '/detail-log',
+    exact: true,
+    component: DetailLogAktivitas
+  },
+  {
+    path: '/edit-log',
+    exact: true,
+    component: EditLogAktivitas
   }
 ]

@@ -141,11 +141,11 @@ const navigationMenu = [
     children: [
       {
         menu: 'List Daily Log',
-        path: '/'
+        path: '/daftar-log'
       },
       {
         menu: 'Submit Log',
-        path: '/',
+        path: '/log-aktivitas',
         icon: <AddRounded />
       }
     ]
