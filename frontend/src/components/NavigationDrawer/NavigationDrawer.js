@@ -19,7 +19,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Breadcrumbs from 'components/Breadcrumbs';
 import { withRouter } from 'react-router';
 import { Accordion, AccordionDetails, AccordionSummary } from '@material-ui/core';
-// import AddRounded from '@material-ui/icons/AddRounded';
+import AddRounded from '@material-ui/icons/AddRounded';
 import InsertDriveFileOutlinedIcon from '@material-ui/icons/InsertDriveFileOutlined';
 import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
 import LocalAtmRoundedIcon from '@material-ui/icons/LocalAtmRounded';
@@ -166,11 +166,12 @@ const navigationMenu = [
     children: [
       {
         menu: 'List Daily Log',
-        path: '/'
+        path: '/daftar-log'
       },
       {
         menu: 'Submit Log',
-        path: '/',
+        path: '/log-aktivitas',
+        icon: <AddRounded />
       }
     ]
   },
