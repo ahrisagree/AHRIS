@@ -21,7 +21,7 @@ const CustomTextField = withStyles({
       },
     },
     '& label.Mui-disabled, .Mui-disabled': {
-      color: props => props.isDetail ? '#0B3242':'',
+      color: props => props.isDetail || props.bordered ? '#0B3242':'',
     }
   },
 })(TextField);

@@ -173,19 +173,19 @@ import {
   Grid,
   IconButton,
   Tooltip,
-  TextField,
+  MenuItem,
 } from '@material-ui/core';
+import TextField from 'components/CustomTextField';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutlineRounded';
 import CreateIcon from '@material-ui/icons/CreateRounded';
 import { StyledTableCell, StyledTableRow } from "components/Table";
 import MainTitle from "components/MainTitle";
 import Pagination from '@material-ui/lab/Pagination';
-import { getListDaftarKaryawan } from 'api/akun';
-import { PAGE_SIZE } from 'utils/constant';
+import { getDivisiAPI, getListDaftarKaryawan } from 'api/akun';
+import { PAGE_SIZE, ROLES } from 'utils/constant';
 import CircularProgress from 'components/Loading/CircularProgress';
 import DeleteConfirmationDialog from 'components/DialogConf';
-import CreateableSelection from 'components/CreateableSelection';
-// import { setQueryParams } from 'utils/setQueryParams';
+import { setQueryParams } from 'utils/setQueryParams';
 
 // const useStyles = makeStyles((theme) => ({
 //   root: {
@@ -206,18 +206,30 @@ const DaftarKaryawan = ({history}) => {
   const classes = useStyles();
   const [loading, setLoading] = useState(false);
   const [listItem, setListItem] = useState([]);
+  const [divisiOptions, setDivisiOptions] = useState([]);
   const [page, setPage] = useState(1);
   const [count, setCount] = useState(0);
   const [deleteKaryawan, setDeleteKaryawan] = useState(null);
+
+  // buat ngefilter
+  const [update, setUpdate] = useState(0);
   
+  const params = new URLSearchParams(history.location.search);
+
+  const [roleFilter, setFilterRole] = useState(params.get("role"));
+  const [divisiFilter, setFilterDivisi] = useState(params.get("divisi"));
+  const [searchFilter, setFilterSearch] = useState(params.get("search"));
+
   useEffect(()=>{
     setLoading(true)
-    // const params = new URLSearchParams(history.location.search)
+    
+    const search = params.get("search");
+    const role = params.get("role");
+    const divisi = params.get("divisi");
 
-    // console.log(history.location.search)
-    // console.log(params.get("page"))
+
     getListDaftarKaryawan({
-      page
+      page, search, role, divisi 
     }).then(res=>{
       setListItem(res.data?.results);
       setCount(Math.ceil(res.data?.count/PAGE_SIZE));
@@ -226,11 +238,34 @@ const DaftarKaryawan = ({history}) => {
     }).finally(()=>{
       setLoading(false);
     })
-  }, [page]);
+  }, [page, update]);
 
-  // const doQuery = () => {
-  //   setQueryParams({page}, history);
-  // }
+  useEffect(()=>{
+    getDivisiAPI().then(res=>{
+      setDivisiOptions(res.data);
+    }).catch(err=>{
+      console.error(err.response);
+    })
+  }, [])
+
+  const doQuery = () => {
+    setQueryParams({
+      role: roleFilter || "",
+      divisi: divisiFilter || "",
+      search: searchFilter || ""
+    }, history);
+    setPage(1);
+    setUpdate(update+1);
+  }
+
+  const resetQuery = () => {
+    setQueryParams({}, history);
+    setPage(1);
+    setUpdate(update+1);
+    setFilterDivisi(null)
+    setFilterSearch(null)
+    setFilterRole(null)
+  }
   
   const handleDeleteKaryawan = () => {
     setDeleteKaryawan(null);
@@ -240,12 +275,6 @@ const DaftarKaryawan = ({history}) => {
 
   return (
     <div className={classes.root1}>
-      {/* <Paper className={classes.page}> */}
-
-      {/* <form className={classes.root} noValidate autoComplete="off"> */}
-      {/* <div className="p-4"> */}
-      {/* </div> */}
-    {/* </form> */}
 
       <Grid container spacing={2} direction="column">
       <Grid item xs={12} container>
@@ -260,51 +289,65 @@ const DaftarKaryawan = ({history}) => {
         <Grid item xs={12} container>
 
         <Grid item xs={2} alignContent="">
-        <CreateableSelection 
-                className={classes.mb}
-                // options={kategoriOption || []}
-                labelKey="nama"
-                // value={kategori}
-                // setData={val => {setkategori(val); delete errorState.kategori}}
-                size="small"
-                fullWidth
-                renderInput={props=>(
-                  <TextField
-                    label="Cari Karyawan..."
-                    variant="outlined"
-                    // error={!!errorState.kategori}
-                    // helperText={errorState.kategori && errorState.kategori[0]}
-                    {...props}/>
-                )}
-              />
+          <TextField
+            label="Search"
+            variant="outlined"
+            size="small"
+            className={classes.mb}
+            fullWidth
+            bordered={true}
+            value={searchFilter}
+            onChange={e=>setFilterSearch(e.target.value)}
+          />
         </Grid>
           <Grid item xs={2} alignContent="">
           <TextField
-          label="Role"
-          // defaultValue="Default Value"
-          // helperText="Some important text"
-          variant="outlined"
-          size="small"
-          className={classes.mb}
-          fullWidth
-          select
-        />
+            label="Role"
+            variant="outlined"
+            size="small"
+            className={classes.mb}
+            fullWidth
+            select
+            bordered={true}
+            value={roleFilter}
+            onChange={e=>setFilterRole(e.target.value)}
+          >
+            {ROLES.map(r=>(
+              <MenuItem value={r}>{r}</MenuItem>
+            ))}
+          </TextField>
         </Grid>
 
         <Grid item xs={2} alignContent="">
         <TextField
-          // id="Divisi"
           label="Divisi"
-          // defaultValue="Default Value"
-          // helperText="Some important text"
           variant="outlined"
           size="small"
           className={classes.mb}
           fullWidth
+          value={divisiFilter}
+          onChange={e=>setFilterDivisi(e.target.value)}
+          // multiple
           select
-        />
+          bordered={true}
+        >
+          {divisiOptions.map(d=>(
+            <MenuItem value={d.nama_divisi}>{d.nama_divisi}</MenuItem>
+          ))}
+        </TextField>
         </Grid>
-        <Grid item xs={4} />
+        <Grid item xs={4}>
+          {!(params.get("search") === searchFilter &&
+            params.get("role") === roleFilter && 
+            params.get("divisi") === divisiFilter) &&
+            <button onClick={doQuery}>Apply</button>  
+          }
+          {(params.get("search") ||
+            params.get("role") || 
+            params.get("divisi")) &&
+            <button onClick={resetQuery}>Reset</button>  
+          }
+        </Grid>
 
           <Grid item xs={2} alignContent="">
           <Button
@@ -352,7 +395,7 @@ const DaftarKaryawan = ({history}) => {
                     <StyledTableCell align="left">{row.username}</StyledTableCell>
                     <StyledTableCell align="left">{row.role}</StyledTableCell>
                     {/* <StyledTableCell align="left">{row.nama_divisi?.username}</StyledTableCell> */}
-                    <StyledTableCell align="left">{row.divisi.map(x=> x.nama_divisi)}</StyledTableCell>
+                    <StyledTableCell align="left">{row.divisi.map(x=> x.nama_divisi+", ")}</StyledTableCell>
                     <StyledTableCell align="left">
                     <Grid item sm={10}>
                       <Tooltip title="Edit">

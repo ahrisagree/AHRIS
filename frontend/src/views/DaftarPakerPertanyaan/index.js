@@ -11,19 +11,21 @@ import {
   Grid,
   IconButton,
   Tooltip,
+  MenuItem,
 } from '@material-ui/core';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutlineRounded';
 import CreateIcon from '@material-ui/icons/CreateRounded';
 import { StyledTableCell, StyledTableRow } from "components/Table";
 import MainTitle from "components/MainTitle";
 import Pagination from '@material-ui/lab/Pagination';
-import { getListPaketPertanyaanAPI, deletePaketPertanyaanAPI } from 'api/borang';
-import { PAGE_SIZE } from 'utils/constant';
+import { getListPaketPertanyaanAPI, deletePaketPertanyaanAPI, getKategoriAPI } from 'api/borang';
+import { JENIS_PAKET, PAGE_SIZE } from 'utils/constant';
 import CircularProgress from 'components/Loading/CircularProgress';
 import DeleteConfirmationDialog from 'components/DialogConf';
 import { Link } from 'react-router-dom';
 import Loading from 'components/Loading';
 import { setQueryParams } from 'utils/setQueryParams';
+import CustomTextField from 'components/CustomTextField';
 
 const useStyles = makeStyles({})
 const DaftarPaketPertanyaan = ({history}) => {
@@ -31,6 +33,7 @@ const DaftarPaketPertanyaan = ({history}) => {
   const classes = useStyles();
   const [loading, setLoading] = useState(false);
   const [listItem, setListItem] = useState([]);
+  const [optionKategori, setOptionKategori] = useState([]);
   const [page, setPage] = useState(1);
   const [count, setCount] = useState(0);
   const [deletePaket, setDeletePaket] = useState(null);
@@ -65,14 +68,29 @@ const DaftarPaketPertanyaan = ({history}) => {
     })
   }, [page, update]);
 
+  useEffect(()=>{
+    getKategoriAPI().then(res=>{
+      setOptionKategori(res.data);
+    })
+  },[])
+
   const doQuery = () => {
     setQueryParams({
-      kategori: kategoriFilter, 
-      jenis: jenisFilter, 
-      search: searchFilter
+      kategori: kategoriFilter || "", 
+      jenis: jenisFilter || "", 
+      search: searchFilter || ""
     }, history);
     setPage(1);
     setUpdate(update+1);
+  }
+
+  const resetQuery = () => {
+    setQueryParams({}, history);
+    setPage(1);
+    setUpdate(update+1);
+    setFilterJenis(null);
+    setFilterSearch(null);
+    setFilterKategori(null);
   }
   
   const handleDeletePaket = () => {
@@ -91,27 +109,82 @@ const DaftarPaketPertanyaan = ({history}) => {
     <div className={classes.root1}>
       {/* <Paper className={classes.page}> */}
       <Grid container spacing={2} direction="column">
-      <Grid item xs={12} container>
-          <Grid item xs={4} alignContent="flex-start">
+        <Grid item xs={12} container>
+          <Grid item alignContent="flex-start">
             {/* <div className="m-12"> */}
             <MainTitle title="Kelola Paket Pertanyaan" className={classes.title} />
             {/* </div> */}
           </Grid>
-          <Grid item xs={8}/>
         </Grid>
-
-        <Grid item xs={12} container>
-          <Grid item xs={10} />
-          <Grid item xs={2} alignContent="flex-end">
-          <Button
-          variant="outlined"
-          color="primary" 
-          size="small"
-          >
-          + Buat Paket
-        </Button>
+        <Grid item xs={12} container justify="flex-end">
+            <Button
+              variant="outlined"
+              color="primary" 
+              size="small"
+              onClick={()=>history.push('/paket-pertanyaan/add')}
+              >
+              + Buat Paket
+            </Button>
           </Grid>
-        </Grid>
+        <div className="flex w-full flex-wrap p-2">
+          <div className="w-full md:w-1/3 my-2 md:mr-2">
+
+            <CustomTextField
+              label="Search"
+              variant="outlined"
+              size="small"
+              fullWidth
+              bordered={true}
+              value={searchFilter}
+              onChange={e=>setFilterSearch(e.target.value)}
+              />
+          </div>
+          <div className="w-1/4 md:w-1/6 my-2 md:mx-2">
+            <CustomTextField
+              label="Jenis"
+              variant="outlined"
+              size="small"
+              fullWidth
+              select
+              bordered={true}
+              value={jenisFilter}
+              onChange={e=>setFilterJenis(e.target.value)}
+            >
+              {JENIS_PAKET.map(j=>(
+                <MenuItem value={j.value}>{j.label}</MenuItem>
+              ))}
+            </CustomTextField>
+          </div>
+          <div className="w-1/4 md:w-1/6 m-2">
+            <CustomTextField
+              label="Kategori"
+              variant="outlined"
+              size="small"
+              fullWidth
+              select
+              bordered={true}
+              value={kategoriFilter}
+              onChange={e=>setFilterKategori(e.target.value)}
+            >
+              {optionKategori.map(k=>(
+                <MenuItem value={k.nama}>{k.nama}</MenuItem>
+              ))}
+            </CustomTextField>
+          </div>
+          <div className="flex items-center">
+            {!(params.get("search") === searchFilter &&
+              params.get("kategori") === kategoriFilter && 
+              params.get("jenis") === jenisFilter) &&
+              <button onClick={doQuery} className="m-1">Apply</button>  
+            }
+            {(params.get("search") ||
+              params.get("kategori") || 
+              params.get("jenis")) &&
+              <button onClick={resetQuery} className="m-1">Reset</button>  
+            }
+          </div>
+        </div>
+
       </Grid>
         <TableContainer component={Paper}>
           <MuiTable className={classes.table} aria-label="customized table">

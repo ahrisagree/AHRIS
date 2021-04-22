@@ -8,11 +8,10 @@ export const registerAkunAPI = data =>
 export const getDivisiAPI = () => axios.get(`${baseUrl}/divisi/`);
 
 export const getListDaftarKaryawan= query => {
-    // const queryAvailable = ['search', 'jenis', 'kategori', 'disablepagination'];
     let formatedQuery = ""
     Object.keys(query).forEach(qkey=>formatedQuery+=query[qkey]?`${qkey}=${query[qkey]}&`:'');
     return axios.get(`${baseUrl}/user/?${formatedQuery}`);
 }
 
-export const getDaftarKaryawan = id =>
+export const getKaryawan = id =>
     axios.get(`${baseUrl}/user/${id}/`);

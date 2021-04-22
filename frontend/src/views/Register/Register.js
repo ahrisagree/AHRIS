@@ -9,6 +9,7 @@ import {
 } from '@material-ui/core';
 import TextField from 'components/CustomTextField';
 import Dialog from 'components/Dialog';
+import DialogFail from 'components/DialogFail';
 import MainTitle from 'components/MainTitle';
 import TemplateButton from 'components/TemplateButton';
 import { ROLES } from 'utils/constant';
@@ -74,6 +75,7 @@ const Register = props => {
   const [divisi, setDivisi] = React.useState([]);
   const [gaji, setGaji] = React.useState("");
   const [opsiDivisi, setOpsiDivisi] = React.useState([]);
+  const [update, setUpdate] = React.useState(0);
 
   useEffect(() => {
     setLoading(true);
@@ -259,6 +261,14 @@ const Register = props => {
       </Container>
       <Loading open={loading} />
       <Dialog open={!!regisAccount} handleClose={()=>setRegistAccount(false)} ></Dialog>
+      <DialogFail
+        open={!!error.detail} 
+        handleClose={()=>{
+          delete error.detail;
+          setUpdate(update+1);
+        }} 
+        text={error.detail}
+        />
 
     </div>
   )
