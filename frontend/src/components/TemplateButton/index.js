@@ -24,7 +24,8 @@ const SIZES = [
     type,
     onClick,
     buttonStyle,
-    buttonSize
+    buttonSize,
+    ...rest
   }) => {
 
     const root = {
@@ -48,6 +49,7 @@ const SIZES = [
         className={`btn ${checkButtonStyle} ${checkButtonSize}`}
         onClick={onClick}
         type={type}
+        {...rest}
       >
         {children}
       </button>

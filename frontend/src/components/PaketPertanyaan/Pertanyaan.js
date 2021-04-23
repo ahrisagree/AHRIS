@@ -23,7 +23,9 @@ const Pertanyaan = ({
   onAddCallback,
   onDeleteCallback,
   onUpCallback,
-  onDownCallback
+  onDownCallback,
+  isDetail,
+  editable
 }) => {
   const classes = useStyles()
 
@@ -42,6 +44,8 @@ const Pertanyaan = ({
             onChange={e=>onChangePertanyaan(e.target.value)}
             size="small"
             fullWidth
+            isDetail={isDetail}
+            disabled={!editable}
           />
         </div>
         <div className="w-3/12 flex items-center mb-1 ml-1">
@@ -52,19 +56,23 @@ const Pertanyaan = ({
             size="small"
             fullWidth
             select
+            isDetail={isDetail}
+            disabled={!editable}
           >
             <MenuItem value={0}>Scale</MenuItem>
             <MenuItem value={1}>Paragraph</MenuItem>
           </TextField>
         </div>
       </div>
-      <FormActionController
-        id="pertanyaan"
-        onAdd={onAddCallback}
-        onDelete={onDeleteCallback}
-        onUp={onUpCallback}
-        onDown={onDownCallback}
-      />
+      {editable && 
+        <FormActionController
+          id="pertanyaan"
+          onAdd={onAddCallback}
+          onDelete={onDeleteCallback}
+          onUp={onUpCallback}
+          onDown={onDownCallback}
+        />
+      }
     </div>
   )
 }

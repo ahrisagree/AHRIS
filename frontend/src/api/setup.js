@@ -1,8 +1,6 @@
 import axios from "axios";
 import { push } from "connected-react-router";
-import store from "store";
 import { setTokenError } from "store/auth";
-import { logoutThunk } from "thunk/auth";
 // import store from "../store";
 
 // axios.interceptors.request.use(config => {

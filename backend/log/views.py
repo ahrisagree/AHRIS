@@ -117,10 +117,11 @@ class LogAktivitasViewSet(viewsets.ModelViewSet):
 # def logCreate(request):
 #     serializer = LogAktivitasSerializer(data=request.data)
 
-#     if serializer.is_valid():
-#         serializer.save()
-
-#     return Response(serializer.data)
+    # if serializer.is_valid():
+    #     serializer.save()
+    #     return Response(serializer.data)
+    # else:
+    #     return Response("Error!")
 
 # @api_view(['POST'])
 # def logUpdate(request, pk):

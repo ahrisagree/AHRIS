@@ -13,7 +13,7 @@ class AssignmentView(viewsets.ReadOnlyModelViewSet, mixins.CreateModelMixin):
   queryset = Assignment.objects.all()
   serializer_class = AssignmentSerializer
   filter_class = AssignmentFilter
-  filterset_fields = ['user_dinilai', 'user_penilai', 'paket_pertanyaan']
+  filterset_fields = ['user_dinilai', 'user_penilai', 'paket_pertanyaan', 'periode']
   search_fields = ['list_paket_pertanyaan__nama']
 
   def perform_create(self, serializer):

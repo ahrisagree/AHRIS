@@ -13,13 +13,16 @@ const CustomTextField = withStyles({
       top: '100%'
     },
     '& .MuiOutlinedInput-root': {
-      '&:hover fieldset': {
+      '&:not(.Mui-disabled):hover fieldset': {
         borderColor: '#0B3242',
       },
       '&.Mui-focused fieldset': {
         borderColor: '#0B3242',
       },
     },
+    '& label.Mui-disabled, .Mui-disabled': {
+      color: props => props.isDetail || props.bordered ? '#0B3242':'',
+    }
   },
 })(TextField);
 

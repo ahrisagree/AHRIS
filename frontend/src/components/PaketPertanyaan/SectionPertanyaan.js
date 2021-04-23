@@ -29,6 +29,8 @@ const SectionPertanyaan = ({
   onDeleteCallback,
   onUpCallback,
   onDownCallback,
+  editable,
+  isDetail
 }) => {
   const classes = useStyles()
   const {nama, list_pertanyaan} = aspek;
@@ -76,23 +78,29 @@ const SectionPertanyaan = ({
             required
             placeholder="Aspek"
             value={nama}
+            isDetail={isDetail}
+            disabled={!editable}
             onChange={e=>onChangeNama(e.target.value)}
             inputProps={{style: {fontWeight: 'bold'}}}
             style={{width: '50%', minWidth: '20rem', marginBottom: '1.5rem'
           }}
           />
-          <FormActionController 
-            id="aspek"
-            onAdd={onAddCallback}
-            onDelete={onDeleteCallback}
-            onUp={onUpCallback}
-            onDown={onDownCallback}
-          />
+          {editable && 
+            <FormActionController 
+              id="aspek"
+              onAdd={onAddCallback}
+              onDelete={onDeleteCallback}
+              onUp={onUpCallback}
+              onDown={onDownCallback}
+            />
+          }
         </div>
         {list_pertanyaan.map((pertanyaan, i)=>(
           <Pertanyaan
             key={`pertanyaan-${i}`}
             {...pertanyaan}
+            editable={editable}
+            isDetail={isDetail}
             onChangeCallback={p=>onPertanyaanChange(i, p)}
             onAddCallback={()=>addNewPertanyaan(i)}
             onDeleteCallback={()=>deletePertanyaan(i)}

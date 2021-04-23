@@ -18,9 +18,10 @@ class LogAktivitas(models.Model):
     aktivitas = models.CharField(max_length=250)
     link_deliverable = models.CharField(max_length=250)
     status_deliverable = models.CharField(max_length=50)
+    notes = models.CharField(max_length=50, default="")
     is_lembur = models.BooleanField(default=False)
     status_log = models.IntegerField(default=STATUS['pending'], choices=(STATUS_CHOICES))
-    komentar = models.CharField(max_length=250)
+    komentar = models.CharField(max_length=250, blank=True, null=True)
     manajer_penyetuju = models.ForeignKey(AppUser,
         on_delete=models.SET_NULL,
         null=True,
@@ -38,21 +39,21 @@ class LogAktivitas(models.Model):
     # 2 -> ditolak
 
     def __str__(self):
-        return self.aktivitas
+        return "{} - {} - {}".format(self.user, self.tanggal, self.is_lembur)
 
 
 class Presensi(models.Model):
     tanggal = models.DateField(default = datetime.date.today)
     jam_masuk = models.TimeField(default = now)
     keterangan = models.CharField(max_length=100)
-    id_user = models.ForeignKey(AppUser,
-        on_delete=models.SET_NULL,
-        null=True,
-        related_name='id_user') 
-    log = models.ForeignKey(LogAktivitas,
-        on_delete=models.SET_NULL,
-        null=True,
-        related_name='log')
+    # id_user = models.ForeignKey(AppUser,
+    #     on_delete=models.SET_NULL,
+    #     null=True,
+    #     related_name='id_user') 
+    # log = models.ForeignKey(LogAktivitas,
+    #     on_delete=models.SET_NULL,
+    #     null=True,
+    #     related_name='log')
     
     def __str__(self):
         return "{} - {}-{}".format(self.id_user, self.tanggal, self.jam_masuk) 
