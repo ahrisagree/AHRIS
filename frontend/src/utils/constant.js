@@ -14,6 +14,10 @@ export const ROLES = [
   "Admin", "Manager", "Karyawan"
 ]
 
+export const STATUS_LOG = [
+"Menunggu Persetujuan", "Disetujui", "Ditolak"
+]
+
 export const PAGE_SIZE = 20;
 
 export const newPertanyaanTemplate = { 

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   makeStyles,
   Paper,
@@ -9,15 +9,22 @@ import {
 } from '@material-ui/core';
 import TextField from 'components/CustomTextField';
 import MainTitle from 'components/MainTitle';
+import Dialog from 'components/Dialog';
+import DialogFail from 'components/DialogFail';
 import TemplateButton from 'components/TemplateButton';
+import { buatLogAPI } from 'api/log';
+import Loading from 'components/Loading';
+
 
 
 const daftar_tipe = [
   {
-    value: 'reguler',
+    value: false,
+    label: 'Reguler',
   },
   {
-    value: 'lembur',
+    value: true,
+    label: 'Lembur',
   },
 ];
 
@@ -60,7 +67,22 @@ const useStyles = makeStyles((theme) => ({
 
 const LogAktivitas = props => {
   const classes = useStyles();
-  const [tipe, setTipe] = React.useState('reguler');
+  const [loading, setLoading] = React.useState(false);
+  const [error, setError] = React.useState({});
+
+
+  // const [tanggal, setTanggal] = React.useState("");
+  const [jamMasuk, setJamMasuk] = React.useState("");
+  const [jamKeluar, setJamKeluar] = React.useState("");
+  const [tipe, setTipe] = React.useState(false);
+  const [keterangan, setKeterangan] = React.useState("");
+  const [aktivitas, setAktivitas] = React.useState("");
+  const [linkDeliverables, setLinkDeliverables] = React.useState("");
+  const [statusDeliverables, setStatusDeliverables] = React.useState("");
+  const [notes, setNotes] = React.useState("");
+  const [createLog, setCreateLog] = React.useState(false);
+  const [update, setUpdate] = React.useState(0);
+
 
   const [selectedDate, setSelectedDate] = React.useState(new Date(''));
   const handleDateChange = (date) => {
@@ -70,6 +92,37 @@ const LogAktivitas = props => {
   const handleChange = (event) => {
     setTipe(event.target.value);
   };
+
+  const onSubmit = () => {
+    buatLogAPI(
+      {tanggal: selectedDate,
+      jam_masuk: jamMasuk,
+      jam_keluar: jamKeluar,
+      is_lembur: tipe,
+      keterangan: keterangan,
+      aktivitas: aktivitas,
+      link_deliverable: linkDeliverables,
+      status_deliverable: statusDeliverables,
+      notes: notes},
+    ).then(res=>{
+      setSelectedDate("");
+      setJamMasuk("");
+      setJamKeluar("");
+      setTipe("");
+      setKeterangan("");
+      setAktivitas("");
+      setLinkDeliverables("");
+      setStatusDeliverables("");
+      setNotes("");
+      setCreateLog(true);
+    }).catch(err=>{
+      console.error(err.response);
+      setError(err.response && err.response.data);
+    }).finally(()=>{
+      setLoading(false);
+    })
+  }
+
   
     return (
       <div className="m-10">
@@ -107,6 +160,11 @@ const LogAktivitas = props => {
               InputLabelProps={{
                 shrink: true,
               }}
+              value={selectedDate}
+              onChange={e=>{setSelectedDate(e.target.value); delete error.selectedDate}}
+              error={!!error.selectedDate}
+              helperText={error.selectedDate && error.selectedDate[0]}
+              disabled={loading}
               />
             
           
@@ -141,6 +199,11 @@ const LogAktivitas = props => {
               inputProps={{
                 step: 300, 
               }}
+              value={jamMasuk}
+              onChange={e=>{setJamMasuk(e.target.value); delete error.jamMasuk}}
+              error={!!error.jamMasuk}
+              helperText={error.jamMasuk && error.jamMasuk[0]}
+              disabled={loading}
             />
 
 
@@ -158,6 +221,11 @@ const LogAktivitas = props => {
               inputProps={{
                 step: 300, 
               }}
+              value={jamKeluar}
+              onChange={e=>{setJamKeluar(e.target.value); delete error.jamKeluar}}
+              error={!!error.jamKeluar}
+              helperText={error.jamKeluar && error.jamKeluar[0]}
+              disabled={loading}
             />
 
             </Grid>
@@ -174,13 +242,19 @@ const LogAktivitas = props => {
             className={classes.textField}
             value={tipe}
             onChange={handleChange}
+            value={tipe}
+            onChange={e=>{setTipe(e.target.value); delete error.tipe}}
+            error={!!error.tipe}
+            helperText={error.tipe && error.tipe[0]}
+            disabled={loading}
             >
               {daftar_tipe.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
-                  {option.value}
+                  {option.label}
                 </MenuItem>
               ))}
             </TextField>
+
 
             <TextField id="outlined-full-width"
             required="true"
@@ -189,6 +263,10 @@ const LogAktivitas = props => {
             margin="normal"
             variant="outlined"
             className={classes.textField}
+            onChange={e=>{setKeterangan(e.target.value); delete error.keterangan}}
+            error={!!error.keterangan}
+            helperText={error.keterangan && error.keterangan[0]}
+            disabled={loading}
             />
           </Grid>
 
@@ -201,7 +279,12 @@ const LogAktivitas = props => {
             required="true"
             style={{ margin: 8, width: "98%" }}
             margin="normal"
+            onChange={e=>{setAktivitas(e.target.value); delete error.aktivitas}}
+            error={!!error.aktivitas}
+            helperText={error.aktivitas && error.aktivitas[0]}
+            disabled={loading}
             />
+            
           </Grid>
 
           <Grid item xs={12}>
@@ -211,6 +294,10 @@ const LogAktivitas = props => {
               style={{ margin: 8, width: "98%" }}
               margin="normal"
               variant="outlined"
+              onChange={e=>{setLinkDeliverables(e.target.value); delete error.linkDeliverables}}
+              error={!!error.linkDeliverables}
+              helperText={error.linkDeliverables && error.linkDeliverables[0]}
+              disabled={loading}
               />
           </Grid>
 
@@ -221,6 +308,10 @@ const LogAktivitas = props => {
               style={{ margin: 8, width: "98%" }}
               margin="normal"
               variant="outlined"
+              onChange={e=>{setStatusDeliverables(e.target.value); delete error.statusDeliverables}}
+              error={!!error.statusDeliverables}
+              helperText={error.statusDeliverables && error.statusDeliverables[0]}
+              disabled={loading}
               />
           </Grid>
 
@@ -233,20 +324,36 @@ const LogAktivitas = props => {
             required="true"
             style={{ margin: 8, width: "98%" }}
             margin="normal"
+            onChange={e=>{setNotes(e.target.value); delete error.notes}}
+            error={!!error.notes}
+            helperText={error.notes && error.notes[0]}
+            disabled={loading}
             />
           </Grid>
 
           <div className="flex justify-center py-6">
           <TemplateButton
+              onClick={onSubmit}
               type="button"
               buttonStyle="btnBlue"
               buttonSize="btnLong"
+              disabled={loading}
           >
               Simpan
           </TemplateButton>
         </div>
 
         </Container>
+        <Loading open={loading} />
+        <Dialog open={!!createLog} handleClose={()=>setCreateLog(false)} ></Dialog>
+        <DialogFail
+          open={!!error.detail} 
+          handleClose={()=>{
+            delete error.detail;
+            setUpdate(update+1);
+          }} 
+          text={error.detail}
+          />
       </div>
     )
 };
