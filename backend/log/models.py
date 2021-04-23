@@ -18,6 +18,7 @@ class LogAktivitas(models.Model):
     aktivitas = models.CharField(max_length=250)
     link_deliverable = models.CharField(max_length=250)
     status_deliverable = models.CharField(max_length=50)
+    notes = models.CharField(max_length=50, default="")
     is_lembur = models.BooleanField(default=False)
     status_log = models.IntegerField(default=STATUS['pending'], choices=(STATUS_CHOICES))
     komentar = models.CharField(max_length=250, blank=True, null=True)
