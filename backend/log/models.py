@@ -20,7 +20,7 @@ class LogAktivitas(models.Model):
     status_deliverable = models.CharField(max_length=50)
     is_lembur = models.BooleanField(default=False)
     status_log = models.IntegerField(default=STATUS['pending'], choices=(STATUS_CHOICES))
-    komentar = models.CharField(max_length=250)
+    komentar = models.CharField(max_length=250, blank=True, null=True)
     manajer_penyetuju = models.ForeignKey(AppUser,
         on_delete=models.SET_NULL,
         null=True,
