@@ -10,6 +10,7 @@ import {
 import TextField from 'components/CustomTextField';
 import title from 'images/Group 124.png';
 import Dialog from 'components/Dialog';
+import DialogFail from 'components/DialogFail';
 import MainTitle from 'components/MainTitle';
 import TemplateButton from 'components/TemplateButton';
 import { ROLES } from 'utils/constant';
@@ -251,6 +252,7 @@ const Register = props => {
       </Container>
 
       <Dialog open={!!regisAccount} handleClose={()=>setRegistAccount(false)} ></Dialog>
+      {/*<DialogFail open={error} handleClose={()=>setRegistAccount(false)} ></DialogFail>*/}
 
     </div>
   )

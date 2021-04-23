@@ -7,6 +7,9 @@ import Coba from "./views/Coba";
 import Register from "./views/Register";
 import DaftarKaryawan from "views/DaftarKaryawan";
 import DaftarPaketPertanyaan from "views/DaftarPakerPertanyaan";
+import AssignPaket from "./views/AssignPaket";
+import AssignResponden from "views/AssignResponden";
+import AssignPenerima from "views/AssignPenerima";
 
 export default [
   {
@@ -47,6 +50,21 @@ export default [
   {
     path: '/akun',
     exact: true,
-    component: DaftarKaryawan
+    component: DaftarKaryawan,
+  },
+  {
+    path: '/assign',
+    exact: true,
+    component: AssignPaket,
+  },
+  {
+    path: '/assign/penerima/responden',
+    exact: true,
+    component: AssignResponden,
+  },
+  {
+    path: '/assign/penerima/',
+    exact: true,
+    component: AssignPenerima,
   }
 ]
