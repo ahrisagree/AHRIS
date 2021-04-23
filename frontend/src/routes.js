@@ -11,6 +11,7 @@ import DaftarKaryawan from "views/DaftarKaryawan";
 import DaftarPaketPertanyaan from "views/DaftarPakerPertanyaan";
 import DetailEditPaketPertanyaan from "views/DetailEditPaketPertanyaan";
 import DaftarBorang from "views/MengisiBorang";
+import MengisiBorang from "views/MengisiBorang/MengisiBorang";
 import EditLogAktivitas from "views/LogAktivitas/EditLogAktivitas";
 
 export default [
@@ -63,6 +64,11 @@ export default [
     path: '/daftar-borang',
     exact: true,
     component: DaftarBorang
+  },
+  {
+    path: '/mengisi-borang/:id',
+    exact: true,
+    component: MengisiBorang
   },
   {
     path: '/log-aktivitas',
