@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { 
+  IconButton,
   makeStyles, 
   MenuItem, 
   Paper, 
@@ -9,13 +10,18 @@ import SectionPertanyaan from 'components/PaketPertanyaan/SectionPertanyaan';
 import MainTitle from 'components/MainTitle';
 import TemplateButton from 'components/TemplateButton';
 import CreateableSelection from 'components/CreateableSelection';
+import DialogSuccess from 'components/Dialog';
+import DialogFail from 'components/DialogFail';
 import { JENIS_PAKET, newAspekTemplate } from 'utils/constant';
 import {
+  editPaketPertanyaanAPI,
   getKategoriAPI,
-  getListPaketPertanyaan,
-  getPaketPertanyaan,
+  getListPaketPertanyaanAPI,
+  getPaketPertanyaanAPI,
   postPaketPertanyaanAPI
 } from 'api/borang';
+import Loading from 'components/Loading';
+import { EditRounded } from '@material-ui/icons';
 
 const useStyles = makeStyles((theme) => ({
   smallSelection: {
@@ -37,36 +43,44 @@ const initialState = {
   data: {list_aspek: [newAspekTemplate]} // data nya isi list aspek nanti pas post baru gabungin
 }
 
-const BuatPaketPertanyaan = () => {
+const BuatPaketPertanyaan = ({paket, isEdit, isDetail, setEditMode}) => {
   const classes = useStyles()
 
-  const [nama, setNama] = useState(initialState.nama)
-  const [template, setTemplate] = useState(initialState.template)
-  const [jenis, setJenis] = useState(initialState.jenis)
-  const [kategori, setkategori] = useState(initialState.kategori)
-  const [data, setData] = useState(initialState.data)
+  const [nama, setNama] = useState(paket?.nama || initialState.nama)
+  const [template, setTemplate] = useState(paket?.template || initialState.template)
+  const [jenis, setJenis] = useState(paket?.jenis || initialState.jenis)
+  const [kategori, setKategori] = useState(paket?.kategori || initialState.kategori)
+  const [data, setData] = useState((paket?.list_aspek && {list_aspek: paket?.list_aspek}) || initialState.data)
   const [errorState, setError] = useState({});
   const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [update, setUpdate] = useState(0);
   const [kategoriOption, setKategoriOption] = useState([]);
   const [templateOption, setTemplateOption] = useState([]);
+
+  const editable = !loading && !isDetail;
   
   useEffect(() => {
-    setLoading(true);
-    getKategoriAPI().then(res=>{
-      setKategoriOption(res.data);
-    }).catch(err=>{
-      console.error(err.response);
-      setError(err.response && err.response.data);
-    }).finally(()=>{
-      setLoading(false);
-    });
-    getListPaketPertanyaan({disablepagination: true}).then(res=>{
-      setTemplateOption(res.data);
-    }).catch(err=>{
-      console.error(err.response);
-      setError(err.response && err.response.data);
-    })
-  }, []);
+    if (!isDetail) {
+      setLoading(true);
+      getKategoriAPI().then(res=>{
+        setKategoriOption(res.data);
+      }).catch(err=>{
+        console.error(err && err.response);
+        setError((err?.response && err.response.data) || {});
+      }).finally(()=>{
+        setLoading(false);
+      });
+      if (!isEdit) {
+        getListPaketPertanyaanAPI({disablepagination: true}).then(res=>{
+          setTemplateOption(res.data);
+        }).catch(err=>{
+          console.error(err && err.response);
+          setError((err?.response && err.response.data) || {});
+        })
+      }
+    } 
+  }, [isDetail, isEdit]);
 
   const sendData = () => {
     console.log({
@@ -79,34 +93,68 @@ const BuatPaketPertanyaan = () => {
     postPaketPertanyaanAPI({
       nama, jenis, kategori, ...data
     }).then(res=>{
+      setSuccess(true);
       // SUCCESS
       setData(initialState.data);
       setNama(initialState.nama);
       setJenis(initialState.jenis);
       setTemplate(initialState.template);
-      setkategori(initialState.kategori);
+      setKategori(initialState.kategori);
     }).catch(err=>{
-      console.error(err.response);
-      setError(err.response && err.response.data);
+      console.error(err && err.response);
+      setError((err?.response && err.response.data) || {});
     }).finally(()=>{
       setLoading(false);
     })
   };
+
+  const sendEditData = () => {
+    if (paket) {
+      setLoading(true);
+      editPaketPertanyaanAPI(paket.id, {
+        nama, jenis, kategori, ...data
+      }).then(res=>{
+        setSuccess(true);
+        // SUCCESS
+        const resData = res.data;
+        setData({list_aspek: resData.list_aspek});
+        setNama(resData.nama);
+        setJenis(resData.jenis);
+        setKategori(resData.kategori);
+        setEditMode(false)
+      }).catch(err=>{
+        console.error(err && err.response);
+        setError((err?.response && err.response.data) || {});
+      }).finally(()=>{
+        setLoading(false);
+      })
+    }
+  }
+
+  const cancelEdit = () => {
+    if (paket) {
+      setEditMode(false);
+      setNama(paket.nama);
+      setKategori(paket.kategori);
+      setJenis(paket.jenis);
+      setData({list_aspek: paket.list_aspek})
+    }
+  }
 
   const fetchTemplate = (tempId) => {
     setTemplate(tempId);
     console.log(tempId)
     if (tempId) {
       setLoading(true);
-      getPaketPertanyaan(tempId).then(res=>{
+      getPaketPertanyaanAPI(tempId).then(res=>{
         const templateData = res.data;
         setNama(templateData.nama);
-        setkategori(templateData.kategori);
+        setKategori(templateData.kategori);
         setJenis(templateData.jenis);
         setData({list_aspek: templateData.list_aspek});
       }).catch(err=>{
-        console.error(err.response);
-        setError(err.response && err.response.data);
+        console.error(err && err.response);
+        setError((err?.response && err.response.data) || {});
       }).finally(()=>{
         setLoading(false)
       })
@@ -149,7 +197,16 @@ const BuatPaketPertanyaan = () => {
     })}
   return (
     <div style={{maxWidth: '55rem', margin: 'auto'}}>
-      <MainTitle title="Buat Paket Pertanyaan" style={{marginBottom: '2rem'}}/>
+      {isDetail && 
+        <IconButton onClick={() => setEditMode && setEditMode(true)} style={{float: 'right'}}>
+          <EditRounded />
+        </IconButton>
+      }
+      <MainTitle 
+        title={isDetail ? "Detail Paket Pertanyaan" : (
+          isEdit ? "Edit Paket Pertanyaan" : "Buat Paket Pertanyaan")} 
+        style={{marginBottom: '2rem'}}
+      />
       <Paper>
         <div className="p-4">
           <TextField
@@ -161,8 +218,11 @@ const BuatPaketPertanyaan = () => {
             style={{width: '50%', minWidth: '20rem', marginBottom: '2rem'}}
             error={!!errorState.nama}
             helperText={errorState.nama && errorState.nama[0]}
+            disabled={!editable}
+            isDetail={isDetail}
           />
           <div className="flex flex-row items-end justify-end flex-wrap mb-8">
+          {!isDetail && !isEdit && 
             <div className="w-full md:w-4/12 lg:w-3/12 md:mr-1">
               <TextField
                 label="Copy of Template"
@@ -173,12 +233,15 @@ const BuatPaketPertanyaan = () => {
                 className={classes.mb}
                 fullWidth
                 select
+                disabled={!editable}
+                isDetail={isDetail}
                 >
                   {templateOption.map(temp=>(
                     <MenuItem value={temp.id}>{temp.nama}</MenuItem>
                   ))}
               </TextField>
             </div>
+            }
             <div className="w-5/12 sm:w-4/12 md:w-3/12 lg:w-1/6 mx-1">
               <TextField
                 required
@@ -192,6 +255,8 @@ const BuatPaketPertanyaan = () => {
                 select
                 error={!!errorState.jenis}
                 helperText={errorState.jenis && errorState.jenis[0]}
+                disabled={!editable}
+                isDetail={isDetail}
                 >
                   {JENIS_PAKET.map(pkt=>(
                     <MenuItem value={pkt.value}>{pkt.label}</MenuItem>
@@ -204,8 +269,9 @@ const BuatPaketPertanyaan = () => {
                 options={kategoriOption || []}
                 labelKey="nama"
                 value={kategori}
-                setData={val => {setkategori(val); delete errorState.kategori}}
+                setData={val => {setKategori(val); delete errorState.kategori}}
                 size="small"
+                disabled={!editable}
                 fullWidth
                 renderInput={props=>(
                   <TextField
@@ -214,6 +280,7 @@ const BuatPaketPertanyaan = () => {
                     variant="outlined"
                     error={!!errorState.kategori}
                     helperText={errorState.kategori && errorState.kategori[0]}
+                    isDetail={isDetail}
                     {...props}/>
                 )}
               />
@@ -228,22 +295,47 @@ const BuatPaketPertanyaan = () => {
               onUpCallback={i!==0 ? ()=>swapAspek(i, i-1) : null}
               onDownCallback={i!==data.list_aspek.length-1 ? ()=>swapAspek(i, i+1) : null}
               aspek={aspek}
+              editable={editable}
+              isDetail={isDetail}
             />
           ))}
         </div>
         <div className="flex justify-center py-6">
-          <TemplateButton
-            onClick={sendData}
-            type="button"
-            buttonStyle="btnBlue"
-            buttonSize="btnLong"
-            disabled={loading}
-          >
-            Simpan
-          </TemplateButton>
-          {loading && "LOADINGG..."}
+          {isEdit && 
+            <TemplateButton
+              onClick={cancelEdit}
+              type="button"
+              buttonStyle="btnBlueOutline"
+              buttonSize="btnLong"
+              style={{marginRight: '2rem'}}
+            >
+              Cancel
+            </TemplateButton>
+          }
+          {!isDetail && 
+            <TemplateButton
+              onClick={!isEdit ? sendData : sendEditData}
+              type="button"
+              buttonStyle="btnBlue"
+              buttonSize="btnLong"
+              disabled={!editable}
+            >
+              Simpan
+            </TemplateButton>
+          }
+          <Loading open={loading} />
         </div>
       </Paper>
+
+      <DialogSuccess open={success} handleClose={()=>setSuccess(false)} />
+      <DialogFail 
+        open={!!errorState.detail || !!errorState.list_aspek} 
+        handleClose={()=>{
+          delete errorState.detail;
+          setUpdate(update+1);
+        }} 
+        text={errorState.detail}
+        />
     </div>
   );
 }

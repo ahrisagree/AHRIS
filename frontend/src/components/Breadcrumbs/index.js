@@ -6,12 +6,14 @@ import { Breadcrumbs as MUIBreadcrumbs,
     makeStyles
  } from '@material-ui/core';
 import React from 'react';
-import { withRouter } from "react-router-dom";
 import logo from 'images/logo.png';
 
 const useStyles = makeStyles(theme => ({
     root: {
         flexGrow: 1,
+        '& a': {
+            cursor: 'pointer'
+        }
     },
     breadcrumbs: {
         // ini breadcrumb beberapa style nya didisable biar ga nimpa trs dipindahin ke navigationdrawer
@@ -60,7 +62,7 @@ const Breadcrumbs = ({pathname, push}) => {
     const pathnames = pathname.split("/").filter(x => x);
     return (
         <div className={classes.root}>
-            <MUIBreadcrumbs aria-label="breadcrumb" className={classes.breadcrumbs}>
+            <MUIBreadcrumbs aria-label="breadcrumb" separator="›" className={classes.breadcrumbs}>
                 {pathnames.length > 0 ? (
                     <Link onClick={() => push("/")}>Home</Link>
                 ) : (

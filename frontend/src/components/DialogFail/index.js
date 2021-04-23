@@ -75,7 +75,7 @@ const DialogContent = withStyles(styles)((props) => {
     );
 });
 
-export default function CustomizedDialogs({open, handleClose}) {
+export default function CustomizedDialogs({open, handleClose, text}) {
 
   return (
     <div>
@@ -85,7 +85,7 @@ export default function CustomizedDialogs({open, handleClose}) {
               <Typography style={{fontWeight:"bold", fontSize:"24px",fontFamily: "IBM Plex Sans"}}>
                 Gagal
               </Typography>
-                Data tidak dapat disimpan
+                {text || "Data tidak dapat disimpan"}
             </Typography>
             <br></br>
         </DialogContent>

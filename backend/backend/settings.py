@@ -56,8 +56,10 @@ INSTALLED_APPS = [
     # Apps
     'auth_app',
     'borang',
+    'log',
     'jawaban',
-    'assign'
+    'assign',
+    'notification',
 ]
 
 MIDDLEWARE = [
@@ -120,7 +122,7 @@ AUTHENTICATION_BACKENDS = (
 # DRF-specific settings
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 20,
+    'PAGE_SIZE': 2,
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'knox.auth.TokenAuthentication',
     ),

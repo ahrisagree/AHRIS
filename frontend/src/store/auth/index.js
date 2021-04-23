@@ -8,11 +8,22 @@ const formSlice = createSlice({
     token: null,
     user: null,
     loading: false,
-    error: {}
+    error: {},
+    tokenError: null,
+  },
+  reducers: {
+    setTokenError(state, action) {
+      state.tokenError = action.payload;
+      state.token = null;
+      state.user = null;
+      state.loading = false;
+      state.error = {};
+    }
   },
   extraReducers: {
     [loginThunk.pending]: state => {
       state.loading = true;
+      state.tokenError = null;
       state.error = {};
     },
     [loginThunk.fulfilled]: (state, action) => {
@@ -38,6 +49,7 @@ const formSlice = createSlice({
 })
 
 // Extract the action creators object and the reducer
-const { reducer } = formSlice;
+const { reducer, actions } = formSlice;
+export const { setTokenError } = actions;
 // Export the reducer, either as a default or named export
 export default reducer;
