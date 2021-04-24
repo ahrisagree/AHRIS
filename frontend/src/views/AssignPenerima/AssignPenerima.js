@@ -1,74 +1,65 @@
-import React from "react";
+import React, { useEffect, useState } from 'react';
+import TemplateButton  from "components/TemplateButton";
 import {
   makeStyles,
-  Paper,
-  Grid,
-  Typography,
-  TextField,
-  Divider,
   Table as MuiTable,
   TableBody,
   TableContainer,
   TableHead,
   TableRow,
+  Paper,
+  Grid,
+  MenuItem,
+  Checkbox,
   withStyles
 } from '@material-ui/core';
-import TemplateButton  from "components/TemplateButton";
-import MainTitle from "components/MainTitle";
+import TextField from 'components/CustomTextField';
 import { StyledTableCell, StyledTableRow } from "components/Table";
-import Pagination from "@material-ui/lab/Pagination";
-import Checkbox from '@material-ui/core/Checkbox';
+import MainTitle from "components/MainTitle";
+import Pagination from '@material-ui/lab/Pagination';
+import { getDivisiAPI, getListDaftarKaryawan } from 'api/akun';
+import { PAGE_SIZE, ROLES } from 'utils/constant';
+import CircularProgress from 'components/Loading/CircularProgress';
+import { setQueryParams } from 'utils/setQueryParams';
 
-function createData(calories, fat, carbs) {
-    return {calories, fat, carbs  };
-  }
-  
-  const rows = [
-    createData("Leonardo","UI/UX", "Finance"),
-    createData( "Leonardo", "Product Owner", "Finance"),
-    createData( "Leonardo", "UI/UX", "Marketing"),
-    createData( "Leonardo", "Product Owner", "Fishery Squads"),
-    createData( "Leonardo", "UI/UX", "Management"),
-    createData( "Leonardo", "Product Owner", "Engineer"),
-    createData( "Leonardo", "UI/UX", "Engineer"),
-  ];
+
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-        '& > *': {
-          margin: theme.spacing(1),
-        },
+  root: {
+      '& > *': {
+        margin: theme.spacing(1),
       },
-      
-    root1: {
-        flexGrow: 1,
+    },
     
-    },
-  title: {
-    /*position: "relative",*/
-    top: 0,
+  root1: {
+      flexGrow: 1,
+  
   },
-  table: {
-    minWidth: 500,
+title: {
+  /*position: "relative",*/
+  top: 0,
+},
+table: {
+  minWidth: 500,
+},
+pagination: {
+  '& > *': {
+    marginTop: theme.spacing(1),
+    color: "#0B3242",
+    marginLeft: "90%",
+    // color: "primary",
   },
-  pagination: {
-    '& > *': {
-      marginTop: theme.spacing(1),
-      color: "#0B3242",
-      marginLeft: "77%",
-      // color: "primary",
-    },
-  },
-  button: {
-      position: "relative",
-      alignSelf: "center",
-      alignItems: "center",
-      marginLeft: "35%"
-  },
+},
+button: {
+    position: "relative",
+    alignSelf: "center",
+    alignItems: "center",
+    marginLeft: "35%"
+    
+},
 
 }));
-
-const GreenCheckbox = withStyles({
+const CustomCheckbox = withStyles({
   root: {
     color: '#0A3142',
     '&$checked': {
@@ -77,60 +68,197 @@ const GreenCheckbox = withStyles({
   },
   checked: {},
 })((props) => <Checkbox color="default" {...props} />);
-
-const AssignPenerima = props => {
+const AssignResponden = ({history}) => {
+  
   const classes = useStyles();
-  return (      
-    <div className={classes.root1}>
-    {/* <Paper className={classes.page}> */}
-    <Grid container spacing={2} direction="column">
-    <Grid item xs={12} container>
-        <Grid item xs={4} alignContent="flex-start">
-          {/* <div className="m-12"> */}
-          <MainTitle title="Pilih Penerima Evaluasi" className={classes.title} />
-          {/* </div> */}
-        </Grid>
-        <Grid item xs={8}/>
-      </Grid>
-    </Grid>
+  const [loading, setLoading] = useState(false);
+  const [listItem, setListItem] = useState([]);
+  const [divisiOptions, setDivisiOptions] = useState([]);
+  const [page, setPage] = useState(1);
+  const [count, setCount] = useState(0);
+  const [deleteKaryawan, setDeleteKaryawan] = useState(null);
 
-    <TableContainer component={Paper}>
+  // buat ngefilter
+  const [update, setUpdate] = useState(0);
+  
+  const params = new URLSearchParams(history.location.search);
+
+  const [roleFilter, setFilterRole] = useState(params.get("role"));
+  const [divisiFilter, setFilterDivisi] = useState(params.get("divisi"));
+  const [searchFilter, setFilterSearch] = useState(params.get("search"));
+
+  useEffect(()=>{
+    setLoading(true)
+    
+    const search = params.get("search");
+    const role = params.get("role");
+    const divisi = params.get("divisi");
+
+
+    getListDaftarKaryawan({
+      page, search, role, divisi 
+    }).then(res=>{
+      setListItem(res.data?.results);
+      setCount(Math.ceil(res.data?.count/PAGE_SIZE));
+    }).catch(err=>{
+    // Handle ERROR
+    }).finally(()=>{
+      setLoading(false);
+    })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page, update]);
+
+  useEffect(()=>{
+    getDivisiAPI().then(res=>{
+      setDivisiOptions(res.data);
+    }).catch(err=>{
+      console.error(err.response);
+    })
+  }, [])
+
+  const doQuery = () => {
+    setQueryParams({
+      role: roleFilter || "",
+      divisi: divisiFilter || "",
+      search: searchFilter || ""
+    }, history);
+    setPage(1);
+    setUpdate(update+1);
+  }
+
+  const resetQuery = () => {
+    setQueryParams({}, history);
+    setPage(1);
+    setUpdate(update+1);
+    setFilterDivisi(null)
+    setFilterSearch(null)
+    setFilterRole(null)
+  }
+
+  return (
+    <div className={classes.root1}>
+
+      <Grid container spacing={2} direction="column">
+      <Grid item xs={12} container>
+          <Grid item xs={4} alignContent="flex-start">
+            {/* <div className="m-12"> */}
+            <MainTitle title="Pilih Penerima Evaluasi" className={classes.title} />
+            {/* </div> */}
+          </Grid>
+        </Grid>
+        </Grid>
+
+        <div className="flex w-full flex-wrap p-2">
+          <div className="w-full md:w-1/3 my-2 md:mr-2">
+          <TextField
+            label="Search"
+            variant="outlined"
+            size="small"
+            className={classes.mb}
+            fullWidth
+            bordered={true}
+            value={searchFilter}
+            onChange={e=>setFilterSearch(e.target.value)}
+          />
+          </div>
+          <div className="w-1/4 md:w-1/6 my-2 md:mx-2">
+          <TextField
+            label="Role"
+            variant="outlined"
+            size="small"
+            className={classes.mb}
+            fullWidth
+            select
+            bordered={true}
+            value={roleFilter}
+            onChange={e=>setFilterRole(e.target.value)}
+          >
+            {ROLES.map(r=>(
+              <MenuItem value={r}>{r}</MenuItem>
+            ))}
+          </TextField>
+        </div>
+        <div className="w-1/4 md:w-1/6 m-2">
+        <TextField
+          label="Divisi"
+          variant="outlined"
+          size="small"
+          className={classes.mb}
+          fullWidth
+          value={divisiFilter}
+          onChange={e=>setFilterDivisi(e.target.value)}
+          // multiple
+          select
+          bordered={true}
+        >
+          {divisiOptions.map(d=>(
+            <MenuItem value={d.nama_divisi}>{d.nama_divisi}</MenuItem>
+          ))}
+        </TextField>
+        </div>
+        <div className="flex items-center">
+          {!(params.get("search") === searchFilter &&
+            params.get("role") === roleFilter && 
+            params.get("divisi") === divisiFilter) &&
+            <button onClick={doQuery}>Apply</button>  
+          }
+          {(params.get("search") ||
+            params.get("role") || 
+            params.get("divisi")) &&
+            <button onClick={resetQuery}>Reset</button>  
+          }
+        </div>
+      </div>
+
+        <TableContainer component={Paper}>
           <MuiTable className={classes.table} aria-label="customized table">
             <TableHead>
               <TableRow>
-                <StyledTableCell align="left">&nbsp;</StyledTableCell>
-                <StyledTableCell align="left">Nama &nbsp;</StyledTableCell>
-                <StyledTableCell align="left">Role &nbsp;</StyledTableCell>
-                <StyledTableCell align="left">Squads&nbsp;</StyledTableCell>
-                
+                <StyledTableCell align="left"></StyledTableCell>
+                <StyledTableCell align="left">Nama </StyledTableCell>
+                <StyledTableCell align="left">Role </StyledTableCell>
+                <StyledTableCell align="left">Divisi</StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows.map((row) => (
-                <StyledTableRow key={row.calories}>
-                  <StyledTableCell style={{ width: "10%" }} component="th" scope="row">
-                  <Grid item sm={10}>
-                    <GreenCheckbox/>
-                  </Grid>
+              {loading ? 
+              <StyledTableRow>
+                <StyledTableCell align="center" colSpan="5">
+                  <CircularProgress />
+                </StyledTableCell>
+              </StyledTableRow>
+              : (
+                listItem?.length === 0 ? 
+                <StyledTableRow>
+                  <StyledTableCell align="center" colSpan="5">
+                    Tidak ada Daftar Karyawan
                   </StyledTableCell>
-                  <StyledTableCell align="left">{row.calories}</StyledTableCell>
-                  <StyledTableCell align="left">{row.fat}</StyledTableCell>
-                  <StyledTableCell align="left">{row.carbs}</StyledTableCell>
                 </StyledTableRow>
-              ))}
+                :
+                listItem.map((row, i) => (
+                  <StyledTableRow key={row.username}>
+                    <StyledTableCell component="th" scope="row">
+                    <CustomCheckbox/>
+                    </StyledTableCell>
+                    <StyledTableCell align="left">{row.username}</StyledTableCell>
+                    <StyledTableCell align="left">{row.role}</StyledTableCell>
+                    {/* <StyledTableCell align="left">{row.nama_divisi?.username}</StyledTableCell> */}
+                    <StyledTableCell align="left">{row.divisi.map(x=> x.nama_divisi+", ")}</StyledTableCell>
+                  </StyledTableRow>
+                )))}
             </TableBody>
           </MuiTable>
         </TableContainer>
         <div className={classes.pagination}>
-          <Pagination count={5} />
+          <Pagination 
+            count={count} 
+            page={page} 
+            onChange={(_e,val)=>setPage(val)}
+            />
         </div>
-
         <Grid item xs={12} className={classes.button}>
-        <TemplateButton 
-                    className={classes.button}
-                    onClick={() => {
-                      console.log("You Clicked on Me!");
-                    }}
+                  <TemplateButton 
+                    onClick={()=>history.push(`/assign/`)}
                     type="button"
                     buttonStyle="btnBlue"
                     buttonSize="btnLong"
@@ -138,10 +266,7 @@ const AssignPenerima = props => {
                     Sebelumnya
                   </TemplateButton>
                   <TemplateButton 
-                    className={classes.button}
-                    onClick={() => {
-                      console.log("You Clicked on Me!");
-                    }}
+                    onClick={()=>history.push(`/assign/penerima/responden`)}
                     type="button"
                     buttonStyle="btnBlue"
                     buttonSize="btnLong"
@@ -149,10 +274,8 @@ const AssignPenerima = props => {
                     Selanjutnya
                   </TemplateButton>
         </Grid>
-  </div>
+    </div>
   );
-}
+};
 
-
-
-export default AssignPenerima;
+export default AssignResponden;
