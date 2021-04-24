@@ -12,6 +12,7 @@ import DaftarPaketPertanyaan from "views/DaftarPakerPertanyaan";
 import DetailEditPaketPertanyaan from "views/DetailEditPaketPertanyaan";
 import DaftarBorang from "views/MengisiBorang";
 import EditLogAktivitas from "views/LogAktivitas/EditLogAktivitas";
+import DetailEditUser from "views/DetailEditUser";
 
 export default [
   {
@@ -83,5 +84,10 @@ export default [
     path: '/edit-log',
     exact: true,
     component: EditLogAktivitas
+  },
+  {
+    path: '/akun/:idUser',
+    exact: true,
+    component: DetailEditUser
   }
 ]
