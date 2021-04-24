@@ -64,7 +64,7 @@ const AssignmentManager = (props) => {
       setSelectedPenilai([]);
       setSelectedDinilai([]);
       setSelectedBorang([]);
-      // setStep(0);
+      setStep(0);
       // ini mau dikemanain pagenya??
     }).catch(err=>{
       console.error(err && err.response?.data)
