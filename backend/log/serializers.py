@@ -10,6 +10,8 @@ from backend.utils import get_or_none
 in this file Serializer:
 - Presensi
 - LogAktivitas
+- PresensiDetail
+- LogAktivitasDetail
 """
 
 class PresensiSerializer(serializers.ModelSerializer):
@@ -31,6 +33,8 @@ class LogAktivitasSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         presensi = validated_data.pop('presensi')
+        if presensi.log != None:
+            raise serializers.ValidationError({'detail': 'Sudah ada Log di Presensi tanggal yang sama'})
         log = super().create(validated_data)
         presensi.log = log
         presensi.save()

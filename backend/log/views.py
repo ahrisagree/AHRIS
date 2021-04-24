@@ -33,7 +33,7 @@ class PresensiViewSet(viewsets.ModelViewSet):
         return super().create(request, *args, **kwargs)
 
 class LogAktivitasViewSet(viewsets.ModelViewSet):
-    permission_classes = (IsAuthenticated, DefaultRolePermission)
+    permission_classes = (IsAuthenticated, DefaultRolePermission, LogAktifitasPermission)
     queryset = LogAktivitas.objects.all().order_by('-tanggal')
     serializer_class = LogAktivitasSerializer
     filter_class = LogAktivitasFilter
@@ -51,11 +51,20 @@ class LogAktivitasViewSet(viewsets.ModelViewSet):
         return super().get_serializer_class()
 
     def create(self, request, *args, **kwargs):
+        print(request.user.id)
         request.data['user'] = request.user.id
         return super().create(request, *args, **kwargs)
 
-    def retrieve(self, request, *args, **kwargs):
-        return super().retrieve(request, *args, **kwargs)
+    def update(self, request, *args, **kwargs):
+        log = self.get_object()
+        request.data['user'] = log.user.id
+        if request.data.get('tanggal') == None:
+            request.data['tanggal'] = log.tanggal
+        if request.data.get('is_lembur') == None:
+            request.data['is_lembur'] = log.is_lembur
+        if request.data.get('status_log'):
+            request.data['manajer_penyetuju'] = request.user.id
+        return super().update(request, *args, **kwargs)
 
 
 # from django.shortcuts import render
