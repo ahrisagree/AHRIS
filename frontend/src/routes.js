@@ -13,9 +13,7 @@ import DetailEditPaketPertanyaan from "views/DetailEditPaketPertanyaan";
 import DaftarBorang from "views/MengisiBorang";
 import EditLogAktivitas from "views/LogAktivitas/EditLogAktivitas";
 import DetailEditUser from "views/DetailEditUser";
-import AssignPaket from "./views/AssignPaket";
-import AssignResponden from "views/AssignResponden";
-import AssignPenerima from "views/AssignPenerima";
+import AssignmentManager from "views/AssignmentManager";
 
 export default [
   {
@@ -91,17 +89,7 @@ export default [
   {
     path: '/assign',
     exact: true,
-    component: AssignPaket,
-  },
-  {
-    path: '/assign/penerima/responden',
-    exact: true,
-    component: AssignResponden,
-  },
-  {
-    path: '/assign/penerima/',
-    exact: true,
-    component: AssignPenerima,
+    component: AssignmentManager,
   },
   {
     path: '/akun/:idUser',

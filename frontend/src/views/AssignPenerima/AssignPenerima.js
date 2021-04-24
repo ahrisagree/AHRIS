@@ -68,7 +68,14 @@ const CustomCheckbox = withStyles({
   },
   checked: {},
 })((props) => <Checkbox color="default" {...props} />);
-const AssignResponden = ({history}) => {
+const AssignResponden = ({
+  history,
+  selectedDinilai,
+  setSelectedDinilai,
+  onSelect,
+  nextStep,
+  prevStep
+}) => {
   
   const classes = useStyles();
   const [loading, setLoading] = useState(false);
@@ -76,23 +83,23 @@ const AssignResponden = ({history}) => {
   const [divisiOptions, setDivisiOptions] = useState([]);
   const [page, setPage] = useState(1);
   const [count, setCount] = useState(0);
-  const [deleteKaryawan, setDeleteKaryawan] = useState(null);
+  // const [deleteKaryawan, setDeleteKaryawan] = useState(null);
 
   // buat ngefilter
   const [update, setUpdate] = useState(0);
   
   const params = new URLSearchParams(history.location.search);
 
-  const [roleFilter, setFilterRole] = useState(params.get("role"));
-  const [divisiFilter, setFilterDivisi] = useState(params.get("divisi"));
-  const [searchFilter, setFilterSearch] = useState(params.get("search"));
+  const [roleFilter, setFilterRole] = useState(params.get("roleDinilai"));
+  const [divisiFilter, setFilterDivisi] = useState(params.get("divisiDinilai"));
+  const [searchFilter, setFilterSearch] = useState(params.get("searchDinilai"));
 
   useEffect(()=>{
     setLoading(true)
     
-    const search = params.get("search");
-    const role = params.get("role");
-    const divisi = params.get("divisi");
+    const search = params.get("searchDinilai");
+    const role = params.get("roleDinilai");
+    const divisi = params.get("divisiDinilai");
 
 
     getListDaftarKaryawan({
@@ -118,9 +125,9 @@ const AssignResponden = ({history}) => {
 
   const doQuery = () => {
     setQueryParams({
-      role: roleFilter || "",
-      divisi: divisiFilter || "",
-      search: searchFilter || ""
+      roleDinilai: roleFilter || "",
+      divisiDinilai: divisiFilter || "",
+      searchDinilai: searchFilter || ""
     }, history);
     setPage(1);
     setUpdate(update+1);
@@ -133,6 +140,10 @@ const AssignResponden = ({history}) => {
     setFilterDivisi(null)
     setFilterSearch(null)
     setFilterRole(null)
+  }
+
+  const handleSelect = val => () => {
+    onSelect(setSelectedDinilai, selectedDinilai, val, 'pk')
   }
 
   return (
@@ -197,14 +208,14 @@ const AssignResponden = ({history}) => {
         </TextField>
         </div>
         <div className="flex items-center">
-          {!(params.get("search") === searchFilter &&
-            params.get("role") === roleFilter && 
-            params.get("divisi") === divisiFilter) &&
+          {!(params.get("searchDinilai") === searchFilter &&
+            params.get("roleDinilai") === roleFilter && 
+            params.get("divisiDinilai") === divisiFilter) &&
             <button onClick={doQuery}>Apply</button>  
           }
-          {(params.get("search") ||
-            params.get("role") || 
-            params.get("divisi")) &&
+          {(params.get("searchDinilai") ||
+            params.get("roleDinilai") || 
+            params.get("divisiDinilai")) &&
             <button onClick={resetQuery}>Reset</button>  
           }
         </div>
@@ -221,6 +232,17 @@ const AssignResponden = ({history}) => {
               </TableRow>
             </TableHead>
             <TableBody>
+              {/* INI yang selected yah */}
+              {selectedDinilai.map(row => (
+                <StyledTableRow key={row.username}>
+                  <StyledTableCell component="th" scope="row">
+                      <CustomCheckbox checked={true} onChange={handleSelect(row)}/>
+                  </StyledTableCell>
+                  <StyledTableCell align="left">{row.username}</StyledTableCell>
+                  <StyledTableCell align="left">{row.role}</StyledTableCell>
+                  <StyledTableCell align="left">{row.divisi.map(x=> x.nama_divisi+", ")}</StyledTableCell>
+                </StyledTableRow>
+              ))}
               {loading ? 
               <StyledTableRow>
                 <StyledTableCell align="center" colSpan="5">
@@ -235,10 +257,10 @@ const AssignResponden = ({history}) => {
                   </StyledTableCell>
                 </StyledTableRow>
                 :
-                listItem.map((row, i) => (
+                listItem.map((row) => !selectedDinilai.find(x=>x.pk===row.pk) && ( // check gada di selected
                   <StyledTableRow key={row.username}>
                     <StyledTableCell component="th" scope="row">
-                    <CustomCheckbox/>
+                    <CustomCheckbox onChange={handleSelect(row)} />
                     </StyledTableCell>
                     <StyledTableCell align="left">{row.username}</StyledTableCell>
                     <StyledTableCell align="left">{row.role}</StyledTableCell>
@@ -258,18 +280,20 @@ const AssignResponden = ({history}) => {
         </div>
         <Grid item xs={12} className={classes.button}>
                   <TemplateButton 
-                    onClick={()=>history.push(`/assign/`)}
+                    onClick={prevStep}
                     type="button"
                     buttonStyle="btnBlue"
                     buttonSize="btnLong"
+                    disabled={loading}
                   >
                     Sebelumnya
                   </TemplateButton>
                   <TemplateButton 
-                    onClick={()=>history.push(`/assign/penerima/responden`)}
+                    onClick={nextStep}
                     type="button"
                     buttonStyle="btnBlue"
                     buttonSize="btnLong"
+                    disabled={loading}
                   >
                     Selanjutnya
                   </TemplateButton>
