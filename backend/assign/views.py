@@ -10,7 +10,7 @@ class AssignmentView(viewsets.ReadOnlyModelViewSet, mixins.CreateModelMixin):
   permission_classes = (IsAuthenticated, DefaultRolePermission, AdminEditPermission)
   # TODO cek lagi permissionnya
   http_methods = ('get', 'post')
-  queryset = Assignment.objects.all()
+  queryset = Assignment.objects.all().order_by('-id')
   serializer_class = AssignmentSerializer
   filter_class = AssignmentFilter
   filterset_fields = ['user_dinilai', 'user_penilai', 'paket_pertanyaan', 'periode']
@@ -31,11 +31,11 @@ class AssignmentView(viewsets.ReadOnlyModelViewSet, mixins.CreateModelMixin):
   def retrieve(self, request, *args, **kwargs):
     self.serializer_class = AssignmentDetailSerializer
     if not request.user.has_role('Admin'):
-      self.queryset = Assignment.objects.filter(user_penilai=request.user)
+      self.queryset = Assignment.objects.filter(user_penilai=request.user).order_by('-id')
     return super().retrieve(request, *args, **kwargs)
   
   """Karyawan List own Assignment, Admin list all Assignment"""
   def list(self, request, *args, **kwargs):
     if not request.user.has_role('Admin'):
-      self.queryset = Assignment.objects.filter(user_penilai=request.user)
+      self.queryset = Assignment.objects.filter(user_penilai=request.user).order_by('-id')
     return super().list(request, *args, **kwargs)
