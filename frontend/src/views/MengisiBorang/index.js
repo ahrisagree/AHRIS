@@ -1,5 +1,5 @@
 // import { connect } from 'react-redux';
-import DaftarBorang from './DaftarBorang';
+import DaftarBorang from './DaftarKaryawanDinilai';
 
 // const mapStateToProps = state => ({
 // })

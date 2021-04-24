@@ -20,12 +20,11 @@ import {
 } from '@material-ui/core';
 import { StyledTableCell, StyledTableRow } from "components/Table";
 import MainTitle from "components/MainTitle";
-import { getDetailAssignment } from 'api/borang';
+import { getListAssignment } from 'api/borang';
 import { PAGE_SIZE, ROLES } from 'utils/constant';
 import CircularProgress from 'components/Loading/CircularProgress';
 import { setQueryParams } from 'utils/setQueryParams';
 import TextField from 'components/CustomTextField';
-import { PanoramaSharp } from '@material-ui/icons';
 
 
 
@@ -91,7 +90,7 @@ const useStyles = makeStyles((theme) =>({
       },
 }));
 
-const DaftarBorang = ({history}) => {
+const DaftarKaryawanDinilai = ({history}) => {
     const classes = useStyles();
     const [loading, setLoading] = useState(false);
     const [listItem, setListItem] = useState([]);
@@ -102,27 +101,22 @@ const DaftarBorang = ({history}) => {
     const [roleFilter, setFilterRole] = useState(params.get("role"));
     const [searchFilter, setFilterSearch] = useState(params.get("search"));
     const [role, setRole] = React.useState("");
-    const [listBorang, setPaketBorang] = React.useState([]);
-
-  
 
     useEffect(()=>{
       setLoading(true)
       const search = params.get("search");
-      const {id} = params;
-      getDetailAssignment(({
+      const id = params.idUser;
+      getListAssignment({
         page, role, search, id 
-      })).then(res=>{
-        setListItem(res.data);
-        setPaketBorang(res.data?.list_paket_pertanyaan);
+      }).then(res=>{
+        setListItem(res.data?.results);
         setCount(Math.ceil(res.data?.count/PAGE_SIZE));
-        console.log(res.data?.list_paket_pertanyaan);
       }).catch(err=>{
       // Handle ERROR
       }).finally(()=>{
         setLoading(false);
       })
-    }, []);
+    }, [page, update]);
 
 
     const doQuery = () => {
@@ -151,7 +145,7 @@ const DaftarBorang = ({history}) => {
       <Grid item xs={12} container>
           <Grid item xs={4} alignContent="flex-start">
             {/* <div className="m-12"> */}
-            <MainTitle title="Daftar Borang" className={classes.title} />
+            <MainTitle title="Daftar Karyawan yang Dinilai" className={classes.title} />
             {/* </div> */}
           </Grid>
           <Grid item xs={8}/>
@@ -216,9 +210,9 @@ const DaftarBorang = ({history}) => {
             <TableHead>
               <TableRow>
                 <StyledTableCell align="left">No </StyledTableCell>
-                <StyledTableCell align="left">Nama Borang </StyledTableCell>
-                <StyledTableCell align="left">Jenis Paket </StyledTableCell>
-                <StyledTableCell align="left">Kategori</StyledTableCell>
+                <StyledTableCell align="left">Nama </StyledTableCell>
+                <StyledTableCell align="left">Role </StyledTableCell>
+                <StyledTableCell align="left">Divisi</StyledTableCell>
                 <StyledTableCell align="left"></StyledTableCell>
               </TableRow>
             </TableHead>
@@ -230,30 +224,30 @@ const DaftarBorang = ({history}) => {
                 </StyledTableCell>
               </StyledTableRow>
               : (
-                listBorang?.length === 0 ? 
+                listItem?.length === 0 ? 
                 <StyledTableRow>
                   <StyledTableCell align="center" colSpan="5">
                     Tidak ada borang yang perlu diisi
                   </StyledTableCell>
                 </StyledTableRow>
                 :
-                listBorang.map((row, i) => (
+                listItem.map((row, i) => (
                   <StyledTableRow key={row.username}>
                     <StyledTableCell component="th" scope="row">
                       {`${i+1}.`}
                     </StyledTableCell>
-                    <StyledTableCell align="left">{row.nama}</StyledTableCell>
-                    <StyledTableCell align="left">{row.jenis}</StyledTableCell>
-                    <StyledTableCell align="left">{row.kategori.nama}</StyledTableCell>
+                    <StyledTableCell align="left">{row.user_dinilai.username}</StyledTableCell>
+                    <StyledTableCell align="left">{row.user_dinilai.role}</StyledTableCell>
+                    <StyledTableCell align="left">{row.user_dinilai.divisi.map(x=> x.nama_divisi+", ")}</StyledTableCell>
                     <StyledTableCell align="left">
                     <Grid item sm={10}>
                     <TemplateButton
-                        // onClick={()=>history.push(`/akun/${row.pk}`)}
+                        onClick={()=>history.push(`/daftar-borang/${row.user_dinilai.pk}`)}
                         type="button"
                         buttonStyle="btnGreen"
                         buttonSize="btnLong"
                     >
-                        Isi Penilaian
+                        Lihat Borang
                     </TemplateButton>
                     </Grid>
                     </StyledTableCell>
@@ -274,4 +268,4 @@ const DaftarBorang = ({history}) => {
   );
 }
 
-export default DaftarBorang;
+export default DaftarKaryawanDinilai;

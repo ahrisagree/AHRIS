@@ -10,7 +10,8 @@ import Register from "./views/Register";
 import DaftarKaryawan from "views/DaftarKaryawan";
 import DaftarPaketPertanyaan from "views/DaftarPakerPertanyaan";
 import DetailEditPaketPertanyaan from "views/DetailEditPaketPertanyaan";
-import DaftarBorang from "views/MengisiBorang";
+import DaftarBorang from "views/MengisiBorang/DaftarBorang";
+import DaftarKaryawanDinilai from "views/MengisiBorang/DaftarKaryawanDinilai"
 import MengisiBorang from "views/MengisiBorang/MengisiBorang";
 import EditLogAktivitas from "views/LogAktivitas/EditLogAktivitas";
 import DetailEditUser from "views/DetailEditUser";
@@ -62,9 +63,14 @@ export default [
     component: DaftarKaryawan
   },
   {
-    path: '/daftar-borang',
+    path: '/daftar-borang/:id',
     exact: true,
     component: DaftarBorang
+  },
+  {
+    path: '/daftar-karyawan-dinilai/:id',
+    exact: true,
+    component: DaftarKaryawanDinilai
   },
   {
     path: '/mengisi-borang/:id',
