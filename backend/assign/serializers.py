@@ -5,6 +5,7 @@ from borang.models import PaketPertanyaan
 from borang.serializers import PaketPertanyaanSerializer
 from jawaban.serializers import PaketJawabanSerializer
 from auth_app.serializers import UserListSerializer
+from datetime import date
 
 class AssignmentSerializer(serializers.ModelSerializer):
   user_penilai = UserListSerializer()
@@ -50,8 +51,9 @@ class AssignRespondenSerializer(serializers.Serializer):
   periode = serializers.DateField()
 
   def validate_periode(self, periode):
-    # TODO normalize periodenya nanti
-    return periode
+    # standarized period from normal date, auto day = 1
+    standarized_period = periode.replace(day=1)
+    return standarized_period
 
   def validate_list_penilai(self, list_penilai):
     list_penilai_obj = []
