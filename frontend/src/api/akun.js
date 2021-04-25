@@ -14,3 +14,6 @@ export const getListDaftarKaryawan= query => {
 
 export const getKaryawan = id =>
     axios.get(`${baseUrl}/user/${id}/`);
+
+export const editUser = (id, data) => 
+    axios.patch(`${baseUrl}/user/${id}/`, data)

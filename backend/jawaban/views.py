@@ -10,7 +10,7 @@ from auth_app.permissions import *
 class PaketJawabanViewSet(viewsets.GenericViewSet, mixins.CreateModelMixin):
   permission_classes = (IsAuthenticated, DefaultRolePermission)
   http_methods = ('post')
-  queryset = PaketJawaban.objects.all()
+  queryset = PaketJawaban.objects.all().order_by('-id')
   serializer_class = PaketJawabanSerializer
 
   def create(self, request, *args, **kwargs):
