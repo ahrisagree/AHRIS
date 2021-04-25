@@ -75,12 +75,12 @@ export default [
     component: DaftarLog
   },
   {
-    path: '/detail-log',
+    path: '/detail-log/:id',
     exact: true,
     component: DetailLogAktivitas
   },
   {
-    path: '/edit-log',
+    path: '/edit-log/:id',
     exact: true,
     component: EditLogAktivitas
   }

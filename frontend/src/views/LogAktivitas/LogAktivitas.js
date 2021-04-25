@@ -14,7 +14,7 @@ import DialogFail from 'components/DialogFail';
 import TemplateButton from 'components/TemplateButton';
 import { buatLogAPI } from 'api/log';
 import Loading from 'components/Loading';
-
+import Moment from 'moment';
 
 
 const daftar_tipe = [
@@ -65,13 +65,13 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const LogAktivitas = props => {
+const LogAktivitas = () => {
   const classes = useStyles();
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState({});
-
-
-  // const [tanggal, setTanggal] = React.useState("");
+  const date = new Date();
+  const new_date = Moment(date).format('YYYY-MM-DD');
+  const [selectedDate, setSelectedDate] = React.useState(new_date);
   const [jamMasuk, setJamMasuk] = React.useState("");
   const [jamKeluar, setJamKeluar] = React.useState("");
   const [tipe, setTipe] = React.useState(false);
@@ -79,19 +79,15 @@ const LogAktivitas = props => {
   const [aktivitas, setAktivitas] = React.useState("");
   const [linkDeliverables, setLinkDeliverables] = React.useState("");
   const [statusDeliverables, setStatusDeliverables] = React.useState("");
+  const [alasanLembur, setAlasanLembur] = React.useState("");
   const [notes, setNotes] = React.useState("");
   const [createLog, setCreateLog] = React.useState(false);
   const [update, setUpdate] = React.useState(0);
 
-
-  const [selectedDate, setSelectedDate] = React.useState(new Date(''));
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
 
-  const handleChange = (event) => {
-    setTipe(event.target.value);
-  };
 
   const onSubmit = () => {
     buatLogAPI(
@@ -123,6 +119,38 @@ const LogAktivitas = props => {
     })
   }
 
+  const onSubmitLembur = () => {
+    buatLogAPI(
+      {tanggal: selectedDate,
+      jam_masuk: jamMasuk,
+      jam_keluar: jamKeluar,
+      is_lembur: tipe,
+      keterangan: keterangan,
+      aktivitas: aktivitas,
+      link_deliverable: linkDeliverables,
+      status_deliverable: statusDeliverables,
+      notes: notes,
+      alasan_lembur: alasanLembur},
+    ).then(res=>{
+      setSelectedDate("");
+      setJamMasuk("");
+      setJamKeluar("");
+      setTipe("");
+      setKeterangan("");
+      setAktivitas("");
+      setLinkDeliverables("");
+      setStatusDeliverables("");
+      setNotes("");
+      setAlasanLembur("");
+      setCreateLog(true);
+    }).catch(err=>{
+      console.error(err.response);
+      setError(err.response && err.response.data);
+    }).finally(()=>{
+      setLoading(false);
+    })
+  }
+
   
     return (
       <div className="m-10">
@@ -139,16 +167,6 @@ const LogAktivitas = props => {
           
           
             <Grid item xs={12}>
-              {/* <TextField id="outlined-full-width"
-              required="true"
-              label="Tanggal"
-              style={{ margin: 8, width: "31%" }}
-              margin="normal"
-              variant="outlined"
-              className={classes.textField}
-
-              /> */}
-
               <TextField
               variant="outlined"
               id="date"
@@ -185,7 +203,7 @@ const LogAktivitas = props => {
               className={classes.textField}
               /> */}
 
-          <TextField
+            <TextField
               variant="outlined"
               id="time"
               label="Jam masuk"
@@ -240,8 +258,6 @@ const LogAktivitas = props => {
             margin="normal"
             variant="outlined"
             className={classes.textField}
-            value={tipe}
-            onChange={handleChange}
             value={tipe}
             onChange={e=>{setTipe(e.target.value); delete error.tipe}}
             error={!!error.tipe}
@@ -330,10 +346,28 @@ const LogAktivitas = props => {
             disabled={loading}
             />
           </Grid>
+          
+          {tipe &&
+          <Grid item xs={12}>
+            <TextField id="outlined-multiline-static"
+            label="Alasan Lembur"
+            multiline
+            rows={2}
+            variant="outlined"
+            required="true"
+            style={{ margin: 8, width: "98%" }}
+            margin="normal"
+            onChange={e=>{setAlasanLembur(e.target.value); delete error.alasanLembur}}
+            error={!!error.alasanLembur}
+            helperText={error.alasanLembur && error.alasanLembur[0]}
+            disabled={loading}
+            />
+          </Grid>
+          }
 
           <div className="flex justify-center py-6">
           <TemplateButton
-              onClick={onSubmit}
+              onClick={!tipe ? onSubmit : onSubmitLembur}
               type="button"
               buttonStyle="btnBlue"
               buttonSize="btnLong"
