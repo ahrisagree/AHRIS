@@ -1,8 +1,5 @@
 import React, { useEffect, useState  } from 'react';
 import Pagination from "@material-ui/lab/Pagination";
-import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
-import CreateIcon from '@material-ui/icons/Create';
-import Breadcrumbs from 'components/Breadcrumbs';
 import TemplateButton from 'components/TemplateButton';
 import CustomTextField from 'components/CustomTextField';
 import Button  from "components/Button";
@@ -109,10 +106,10 @@ const DaftarBorang = ({history}) => {
     useEffect(()=>{
       setLoading(true)
       const search = params.get("search");
-      const {id} = params;
-      getDetailAssignment(({
-        page, role, search, id 
-      })).then(res=>{
+      const id = params.idUser;
+      getDetailAssignment({
+        page, role, search, id
+      }).then(res=>{
         setListItem(res.data);
         setPaketBorang(res.data?.list_paket_pertanyaan);
         setCount(Math.ceil(res.data?.count/PAGE_SIZE));
@@ -122,24 +119,24 @@ const DaftarBorang = ({history}) => {
       }).finally(()=>{
         setLoading(false);
       })
-    }, []);
+    }, [page,update]);
 
 
-    const doQuery = () => {
-      setQueryParams({
-        role: roleFilter || "",
-        search: searchFilter || ""
-      }, history);
-      setPage(1);
-      setUpdate(update+1);
-    }
+    // const doQuery = () => {
+    //   setQueryParams({
+    //     role: roleFilter || "",
+    //     search: searchFilter || ""
+    //   }, history);
+    //   setPage(1);
+    //   setUpdate(update+1);
+    // }
   
-    const resetQuery = () => {
-      setQueryParams({}, history);
-      setPage(1);
-      setFilterRole(null)
-      setFilterSearch(null)
-    }
+    // const resetQuery = () => {
+    //   setQueryParams({}, history);
+    //   setPage(1);
+    //   setFilterRole(null)
+    //   setFilterSearch(null)
+    // }
 
    
     return (
@@ -155,10 +152,10 @@ const DaftarBorang = ({history}) => {
             {/* </div> */}
           </Grid>
           <Grid item xs={8}/>
-        </Grid>
+      </Grid>
 
-        <Grid item xs={12} container>
-        <Grid item xs={2} alignContent="">
+      <Grid item xs={12} container>
+        {/* <Grid item xs={2} alignContent="">
         <div style={{position: 'relative', padding: 2}}>
              <TextField
             label="Role"
@@ -207,7 +204,7 @@ const DaftarBorang = ({history}) => {
             buttonSize="btnMedium" onClick={resetQuery}>Reset</TemplateButton>  
           }
         </div>
-        </Grid>
+        </Grid> */}
         </Grid>
       </Grid>
 
@@ -248,7 +245,7 @@ const DaftarBorang = ({history}) => {
                     <StyledTableCell align="left">
                     <Grid item sm={10}>
                     <TemplateButton
-                        // onClick={()=>history.push(`/akun/${row.pk}`)}
+                        onClick={()=>history.push(`/akun/${row.id}`)}
                         type="button"
                         buttonStyle="btnGreen"
                         buttonSize="btnLong"

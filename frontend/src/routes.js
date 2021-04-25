@@ -68,7 +68,7 @@ export default [
     component: DaftarBorang
   },
   {
-    path: '/daftar-karyawan-dinilai/:id',
+    path: '/daftar-karyawan-dinilai/',
     exact: true,
     component: DaftarKaryawanDinilai
   },

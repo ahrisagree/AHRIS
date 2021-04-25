@@ -105,9 +105,9 @@ const DaftarKaryawanDinilai = ({history}) => {
     useEffect(()=>{
       setLoading(true)
       const search = params.get("search");
-      const id = params.idUser;
+      // const id = params.idUser;
       getListAssignment({
-        page, role, search, id 
+        page, role, search, 
       }).then(res=>{
         setListItem(res.data?.results);
         setCount(Math.ceil(res.data?.count/PAGE_SIZE));
