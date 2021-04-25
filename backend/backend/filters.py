@@ -59,11 +59,15 @@ class AssignmentFilter(FilterSet):
 class PresensiFilter(FilterSet):
   tanggal = filters.DateFilter()
   user = NumberMultipleFilter(
-    field_name='id_user__id',
+    field_name='user__id',
     lookup_expr='in'
   )
+  periode = PeriodeFilter(field_name='tanggal')
 
 class LogAktivitasFilter(FilterSet):
   tanggal = filters.DateFilter()
   user = filters.NumberFilter(field_name='user__id')
+  periode = PeriodeFilter(field_name='tanggal')
+  status = filters.NumberFilter(field_name='status_log')
+  is_lembur = filters.BooleanFilter(field_name='is_lembur')
   
