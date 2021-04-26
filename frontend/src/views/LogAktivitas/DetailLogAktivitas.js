@@ -1,22 +1,29 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   makeStyles,
   Paper,
   Container,
   Grid,
   Typography,
+  MenuItem,
 } from '@material-ui/core';
 import TextField from 'components/CustomTextField';
 import MainTitle from 'components/MainTitle';
 import TemplateButton from 'components/TemplateButton';
+import { buatLogAPI, editLogAPI, getLog } from 'api/log';
+import Loading from 'components/Loading';
+import Dialog from 'components/Dialog';
+import DialogFail from 'components/DialogFail';
 
 
 const daftar_tipe = [
   {
-    value: 'reguler',
+    value: false,
+    label: 'Reguler',
   },
   {
-    value: 'lembur',
+    value: true,
+    label: 'Lembur',
   },
 ];
 
@@ -57,18 +64,81 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const DetailLogAktivitas = props => {
-  const classes = useStyles();
-  const [tipe, setTipe] = React.useState('reguler');
 
-  const [selectedDate, setSelectedDate] = React.useState(new Date(''));
+
+const DetailLogAktivitas = (props) => {
+  const classes = useStyles();
+  const [loading, setLoading] = React.useState(false);
+  const [error, setError] = React.useState({});
+  const [success, setSuccess] = useState(false);
+
+  const [selectedDate, setSelectedDate] = React.useState("");
+  const [jamMasuk, setJamMasuk] = React.useState("");
+  const [jamKeluar, setJamKeluar] = React.useState("");
+  const [tipe, setTipe] = React.useState(false);
+  const [keterangan, setKeterangan] = React.useState("");
+  const [aktivitas, setAktivitas] = React.useState("");
+  const [linkDeliverables, setLinkDeliverables] = React.useState("");
+  const [statusDeliverables, setStatusDeliverables] = React.useState("");
+  const [alasanLembur, setAlasanLembur] = React.useState("");
+  const [komentar, setKomentar] = React.useState("");
+  const [notes, setNotes] = React.useState("");
+  const [createLog, setCreateLog] = React.useState(false);
+  const [update, setUpdate] = React.useState(0);
+
+  
+
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
 
-  const handleChange = (event) => {
-    setTipe(event.target.value);
-  };
+  useEffect(() => {
+    // setLoading(true);
+    const id = props.match.params.id;
+    getLog(id).then(res => {
+      const { data } = res
+      setSelectedDate(data.tanggal);
+      setJamMasuk(data.jam_masuk);
+      setJamKeluar(data.jam_keluar);
+      setTipe(data.is_lembur);
+      setKeterangan(data.keterangan);
+      setAktivitas(data.aktivitas);
+      setLinkDeliverables(data.link_deliverable);
+      setStatusDeliverables(data.status_deliverable);
+      setNotes(data.notes);
+      setAlasanLembur(data.alasan_lembur);
+    }).catch(err => {
+      // HANDLE ERROR
+    }).finally(() => {
+      setLoading(false)
+    })
+    
+  })
+
+  const sendKomentar = () => {
+    const { id } = props.match.params;
+    setLoading(true)
+    editLogAPI(id, {
+      tanggal: selectedDate,
+      jam_masuk: jamMasuk,
+      jam_keluar: jamKeluar,
+      is_lembur: tipe,
+      keterangan: keterangan,
+      aktivitas: aktivitas,
+      link_deliverable: linkDeliverables,
+      status_deliverable: statusDeliverables,
+      notes: notes,
+      alasan_lembur: alasanLembur,
+      komentar: komentar
+    }).then(res => {
+      setSuccess(true);
+    }).catch(err => {
+      setError(err.response && err.response.data);
+    }).finally(() => {
+      setLoading(false);
+    })
+  }
+
   
     return (
       <div className="m-10">
@@ -86,101 +156,139 @@ const DetailLogAktivitas = props => {
           
             <Grid item xs={12}>
 
-            <TextField
-              id="standard-read-only-input"
+              <TextField
+              id="date"
               label="Tanggal"
-              defaultValue="21/01/2021"
+              type="date"
               style= {{margin: 8, width: "30%"}}
-              InputProps={{
-                readOnly: true,
+              className={classes.textField}
+              InputLabelProps={{
+                shrink: true,
               }}
+              value={selectedDate}
+              disabled={true}
+              />
+            
+
+            <TextField
+              id="time"
+              label="Jam masuk"
+              type="time"
+              style= {{margin: 8, width: "34%"}}
+              className={classes.textField}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              inputProps={{
+                step: 300, 
+              }}
+              value={jamMasuk}
+              disabled={true}
             />
 
-            <TextField
-              id="standard-read-only-input"
-              label="Jam masuk"
-              defaultValue="11.11"
-              style= {{margin: 8, width: "34%"}}
-              InputProps={{
-                readOnly: true,
-              }}
-            /> 
 
             <TextField
-              id="standard-read-only-input"
+              id="time"
               label="Jam keluar"
-              defaultValue="16.11"
+              type="time"
               style= {{margin: 8, width: "30%"}}
-              InputProps={{
-                readOnly: true,
+              className={classes.textField}
+              InputLabelProps={{
+                shrink: true,
               }}
-            />  
-            
+              inputProps={{
+                step: 300, 
+              }}
+              value={jamKeluar}
+              disabled={true}
+            />
+
             </Grid>
 
 
           <Grid item xs={12}>
-            <TextField
-              id="standard-read-only-input"
-              label="Tipe log"
-              defaultValue="Reguler"
-              style= {{margin: 8, width: "30%"}}
-              InputProps={{
-                readOnly: true,
-              }}
-            /> 
+            <TextField id="outlined-full-width"
+            select
+            required="true"
+            label="Tipe Log"
+            style={{ margin: 10, width: "30%" }}
+            margin="normal"
+            className={classes.textField}
+            value={tipe}
+            disabled={true}
+            >
+              {daftar_tipe.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </TextField>
 
-            <TextField
-              id="standard-read-only-input"
-              label="Keterangan"
-              defaultValue="Selesai dikerjakan"
-              style= {{margin: 8, width: "34%"}}
-              InputProps={{
-                readOnly: true,
-              }}
-            /> 
-        
-            <TextField
-              id="standard-read-only-input"
-              label="Aktivitas"
-              defaultValue="Rapat, belajar, rapat, belajar, rapat, belajar, sampe gumoh"
-              style= {{margin: 8, width: "30%"}}
-              InputProps={{
-                readOnly: true,
-              }}
-            /> 
+
+            <TextField id="outlined-full-width"
+            required="true"
+            label="Keterangan"
+            style={{ margin: 10, width: "34%" }}
+            margin="normal"
+            className={classes.textField}
+            value={keterangan}
+            disabled={true}
+            />
+
+            <TextField id="outlined-multiline-static"
+            label="Aktivitas"
+            required="true"
+            style={{ margin: 8, width: "30%" }}
+            margin="normal"
+            className={classes.textField}
+            value={aktivitas}
+            disabled={true}
+            />
+            
           </Grid>
 
           <Grid item xs={12}>
-            <TextField
-              id="standard-read-only-input"
+            <TextField id="outlined-full-width"
+              required="true"
               label="Link Deliverables"
-              defaultValue="www.google.com"
-              style= {{margin: 8, width: "30%"}}
-              InputProps={{
-                readOnly: true,
-              }}
-            /> 
+              style={{ margin: 8, width: "30%" }}
+              margin="normal"
+              className={classes.textField}
+              value={linkDeliverables}
+              disabled={true}
+              />
 
-            <TextField
-              id="standard-read-only-input"
+            <TextField id="outlined-full-width"
+              required="true"
               label="Status Deliverables"
-              defaultValue="Berhasil dikerjakan"
-              style= {{margin: 8, width: "34%"}}
-              InputProps={{
-                readOnly: true,
-              }}
-            /> 
+              style={{ margin: 8, width: "34%" }}
+              margin="normal"
+              className={classes.textField}
+              value={statusDeliverables}
+              disabled={true}
+              />
 
-            <TextField
-              id="standard-read-only-input"
-              label="Notes"
-              defaultValue="Butuh review"
-              style= {{margin: 8, width: "30%"}}
-              InputProps={{
-                readOnly: true,
-              }}
-            /> 
+            <TextField id="outlined-multiline-static"
+            label="Notes"
+            required="true"
+            style={{ margin: 8, width: "30%" }}
+            margin="normal"
+            className={classes.textField}
+            value={notes}
+            disabled={true}
+            />
+
+          {tipe &&
+            <TextField id="outlined-multiline-static"
+            label="Alasan Lembur"
+            required="true"
+            style={{ margin: 8, width: "30%" }}
+            margin="normal"
+            className={classes.textField}
+            value={alasanLembur}
+            disabled={true}
+            />
+          }
           </Grid>
 
           <Grid item xs={12}>
@@ -193,31 +301,204 @@ const DetailLogAktivitas = props => {
               className={classes.textField}
               multiline
               rows={2}
+              onChange={e=>{setKomentar(e.target.value); delete error.komentar}}
+              error={!!error.komentar}
+              helperText={error.komentar && error.komentar[0]}
+              disabled={false}
               />
           </Grid>
 
-          <div className="flex justify-end py-6">
-              <TemplateButton
-                type="button"
-                buttonStyle="btnGreen"
-                buttonSize="btnMedium"
-              >
-                Setujui
-              </TemplateButton>
-
-              <TemplateButton
-                type="button"
-                buttonStyle="btnDanger"
-                buttonSize="btnMedium"
-                
-              >
-                Tolak
-              </TemplateButton>
-            </div>
-        
+          <div className="flex justify-center py-6">
+          <TemplateButton
+              onClick={sendKomentar}
+              type="button"
+              buttonStyle="btnBlue"
+              buttonSize="btnLong"
+              disabled={false}
+          >
+              Simpan
+          </TemplateButton>
+          </div>
 
         </Container>
+        <Loading open={loading} />
+        <Dialog open={success} handleClose={()=>setSuccess(false)} ></Dialog>
+        <DialogFail
+          open={!!error.detail} 
+          handleClose={()=>{
+            setError({});
+          }} 
+          text={error.detail}
+          />
       </div>
     )
 };
 export default DetailLogAktivitas; 
+
+
+
+
+// const DetailLogAktivitas = props => {
+//   const classes = useStyles();
+//   const [tipe, setTipe] = React.useState('reguler');
+
+//   const [selectedDate, setSelectedDate] = React.useState(new Date(''));
+//   const handleDateChange = (date) => {
+//     setSelectedDate(date);
+//   };
+
+//   const handleChange = (event) => {
+//     setTipe(event.target.value);
+//   };
+  
+//     return (
+//       <div className="m-10">
+//         <MainTitle title="Detail Log Aktivitas" className="mb-8" />
+//         <Container component={Paper} className={classes.paper}>
+
+//           <Grid item xs={12}>
+//             <Typography style={{ fontWeight: 600, marginLeft: '1%', marginBottom: '3%', fontFamily: 'IBM Plex Sans', fontStyle: 'normal', 
+//             fontWeight: 600, fontSize: 24, lineHeight: '138%', display: 'flex', alignItems: 'center', letterSpacing: '0.0075em', color: '#0A3142' }} 
+//             variant="subtitle1">
+//               Log Aktivitas
+//             </Typography>
+//           </Grid>
+          
+          
+//             <Grid item xs={12}>
+
+//             <TextField
+//               id="standard-read-only-input"
+//               label="Tanggal"
+//               defaultValue="21/01/2021"
+//               style= {{margin: 8, width: "30%"}}
+//               InputProps={{
+//                 readOnly: true,
+//               }}
+//             />
+
+//             <TextField
+//               id="standard-read-only-input"
+//               label="Jam masuk"
+//               defaultValue="11.11"
+//               style= {{margin: 8, width: "34%"}}
+//               InputProps={{
+//                 readOnly: true,
+//               }}
+//             /> 
+
+//             <TextField
+//               id="standard-read-only-input"
+//               label="Jam keluar"
+//               defaultValue="16.11"
+//               style= {{margin: 8, width: "30%"}}
+//               InputProps={{
+//                 readOnly: true,
+//               }}
+//             />  
+            
+//             </Grid>
+
+
+//           <Grid item xs={12}>
+//             <TextField
+//               id="standard-read-only-input"
+//               label="Tipe log"
+//               defaultValue="Reguler"
+//               style= {{margin: 8, width: "30%"}}
+//               InputProps={{
+//                 readOnly: true,
+//               }}
+//             /> 
+
+//             <TextField
+//               id="standard-read-only-input"
+//               label="Keterangan"
+//               defaultValue="Selesai dikerjakan"
+//               style= {{margin: 8, width: "34%"}}
+//               InputProps={{
+//                 readOnly: true,
+//               }}
+//             /> 
+        
+//             <TextField
+//               id="standard-read-only-input"
+//               label="Aktivitas"
+//               defaultValue="Rapat, belajar, rapat, belajar, rapat, belajar, sampe gumoh"
+//               style= {{margin: 8, width: "30%"}}
+//               InputProps={{
+//                 readOnly: true,
+//               }}
+//             /> 
+//           </Grid>
+
+//           <Grid item xs={12}>
+//             <TextField
+//               id="standard-read-only-input"
+//               label="Link Deliverables"
+//               defaultValue="www.google.com"
+//               style= {{margin: 8, width: "30%"}}
+//               InputProps={{
+//                 readOnly: true,
+//               }}
+//             /> 
+
+//             <TextField
+//               id="standard-read-only-input"
+//               label="Status Deliverables"
+//               defaultValue="Berhasil dikerjakan"
+//               style= {{margin: 8, width: "34%"}}
+//               InputProps={{
+//                 readOnly: true,
+//               }}
+//             /> 
+
+//             <TextField
+//               id="standard-read-only-input"
+//               label="Notes"
+//               defaultValue="Butuh review"
+//               style= {{margin: 8, width: "30%"}}
+//               InputProps={{
+//                 readOnly: true,
+//               }}
+//             /> 
+//           </Grid>
+
+//           <Grid item xs={12}>
+//             <TextField id="outlined-full-width"
+//               required="true"
+//               label="Komentar"
+//               style={{ margin: 10, width: "98%" }}
+//               margin="normal"
+//               variant="outlined"
+//               className={classes.textField}
+//               multiline
+//               rows={2}
+//               />
+//           </Grid>
+
+//           <div className="flex justify-end py-6">
+//               <TemplateButton
+//                 type="button"
+//                 buttonStyle="btnGreen"
+//                 buttonSize="btnMedium"
+//               >
+//                 Setujui
+//               </TemplateButton>
+
+//               <TemplateButton
+//                 type="button"
+//                 buttonStyle="btnDanger"
+//                 buttonSize="btnMedium"
+                
+//               >
+//                 Tolak
+//               </TemplateButton>
+//             </div>
+        
+
+//         </Container>
+//       </div>
+//     )
+// };
+// export default DetailLogAktivitas; 
