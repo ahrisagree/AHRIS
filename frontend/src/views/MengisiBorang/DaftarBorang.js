@@ -88,56 +88,28 @@ const useStyles = makeStyles((theme) =>({
       },
 }));
 
-const DaftarBorang = ({history}) => {
+const DaftarBorang = ({history, match}) => {
     const classes = useStyles();
     const [loading, setLoading] = useState(false);
-    const [listItem, setListItem] = useState([]);
-    const [page, setPage] = useState(1);
-    const [count, setCount] = useState(0);
-    const [update, setUpdate] = useState(0);
-    const params = new URLSearchParams(history.location.search);
-    const [roleFilter, setFilterRole] = useState(params.get("role"));
-    const [searchFilter, setFilterSearch] = useState(params.get("search"));
-    const [role, setRole] = React.useState("");
+    const [assignment, setAssignment] = useState(null);
     const [listBorang, setPaketBorang] = React.useState([]);
 
   
 
     useEffect(()=>{
       setLoading(true)
-      const search = params.get("search");
-      const id = params.idUser;
-      getDetailAssignment({
-        page, role, search, id
-      }).then(res=>{
-        setListItem(res.data);
+      const { id } = match.params;
+      getDetailAssignment(id).then(res=>{
+        setAssignment(res.data);
         setPaketBorang(res.data?.list_paket_pertanyaan);
-        setCount(Math.ceil(res.data?.count/PAGE_SIZE));
         console.log(res.data?.list_paket_pertanyaan);
       }).catch(err=>{
       // Handle ERROR
       }).finally(()=>{
         setLoading(false);
       })
-    }, [page,update]);
-
-
-    // const doQuery = () => {
-    //   setQueryParams({
-    //     role: roleFilter || "",
-    //     search: searchFilter || ""
-    //   }, history);
-    //   setPage(1);
-    //   setUpdate(update+1);
-    // }
-  
-    // const resetQuery = () => {
-    //   setQueryParams({}, history);
-    //   setPage(1);
-    //   setFilterRole(null)
-    //   setFilterSearch(null)
-    // }
-
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
    
     return (
 
@@ -148,63 +120,14 @@ const DaftarBorang = ({history}) => {
       <Grid item xs={12} container>
           <Grid item xs={4} alignContent="flex-start">
             {/* <div className="m-12"> */}
-            <MainTitle title="Daftar Borang" className={classes.title} />
+            <MainTitle title={`Daftar Borang Penilaian | ${assignment?.user_dinilai?.username}`} className={classes.title} />
             {/* </div> */}
           </Grid>
           <Grid item xs={8}/>
       </Grid>
 
       <Grid item xs={12} container>
-        {/* <Grid item xs={2} alignContent="">
-        <div style={{position: 'relative', padding: 2}}>
-             <TextField
-            label="Role"
-            variant="outlined"
-            size="small"
-            className={classes.mb}
-            fullWidth
-            select
-            bordered={true}
-            value={roleFilter}
-            onChange={e=>setFilterRole(e.target.value)}
-          >
-            {ROLES.map(r=>(
-            <MenuItem value={r}>{r}</MenuItem>
-          ))}
-          </TextField>
-          </div>
-          </Grid>
-        <Grid item xs={2} alignContent="">
-        <div style={{position: 'relative', padding: 2}}>
-          <TextField
-            label="Search"
-            variant="outlined"
-            size="small"
-            className={classes.mb}
-            fullWidth
-            bordered={true}
-            value={searchFilter}
-            onChange={e=>setFilterSearch(e.target.value)}
-          />
-          </div>
-        </Grid>
-        <Grid item xs={2}>
-        <div style={{position: 'relative', padding: 2}}>
-          {!(params.get("role") === roleFilter && 
-          params.get("search") === searchFilter) &&
-            <TemplateButton 
-            type="button"
-            buttonStyle="btnBlueOutline"
-            buttonSize="btnMedium" onClick={doQuery}>Apply</TemplateButton>  
-          }
-          {(params.get("search") ||
-            params.get("role")) &&
-            <TemplateButton type="button"
-            buttonStyle="btnBlueOutline"
-            buttonSize="btnMedium" onClick={resetQuery}>Reset</TemplateButton>  
-          }
-        </div>
-        </Grid> */}
+        
         </Grid>
       </Grid>
 
@@ -216,6 +139,7 @@ const DaftarBorang = ({history}) => {
                 <StyledTableCell align="left">Nama Borang </StyledTableCell>
                 <StyledTableCell align="left">Jenis Paket </StyledTableCell>
                 <StyledTableCell align="left">Kategori</StyledTableCell>
+                <StyledTableCell align="left"></StyledTableCell>
                 <StyledTableCell align="left"></StyledTableCell>
               </TableRow>
             </TableHead>
@@ -243,9 +167,15 @@ const DaftarBorang = ({history}) => {
                     <StyledTableCell align="left">{row.jenis}</StyledTableCell>
                     <StyledTableCell align="left">{row.kategori.nama}</StyledTableCell>
                     <StyledTableCell align="left">
+                      {assignment.list_paket_jawaban.find(x=>x.id===row.id) ? 
+                    "Sudah Diisi":
+                    "Belum Diisi"  
+                    }
+                    </StyledTableCell>
+                    <StyledTableCell align="left">
                     <Grid item sm={10}>
                     <TemplateButton
-                        onClick={()=>history.push(`/akun/${row.id}`)}
+                        onClick={()=>history.push(`/mengisi-borang/${assignment.id}/${row.id}`)}
                         type="button"
                         buttonStyle="btnGreen"
                         buttonSize="btnLong"
@@ -259,13 +189,6 @@ const DaftarBorang = ({history}) => {
             </TableBody>
           </MuiTable>
         </TableContainer>
-        <div className={classes.pagination}>
-          <Pagination 
-            count={count} 
-            page={page} 
-            onChange={(_e,val)=>setPage(val)}
-            />
-        </div>
     </div>
     </div>
   );

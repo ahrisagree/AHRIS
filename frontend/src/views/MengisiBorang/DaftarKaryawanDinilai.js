@@ -213,6 +213,7 @@ const DaftarKaryawanDinilai = ({history}) => {
                 <StyledTableCell align="left">Nama </StyledTableCell>
                 <StyledTableCell align="left">Role </StyledTableCell>
                 <StyledTableCell align="left">Divisi</StyledTableCell>
+                <StyledTableCell align="left">Progress</StyledTableCell>
                 <StyledTableCell align="left"></StyledTableCell>
               </TableRow>
             </TableHead>
@@ -232,7 +233,7 @@ const DaftarKaryawanDinilai = ({history}) => {
                 </StyledTableRow>
                 :
                 listItem.map((row, i) => (
-                  <StyledTableRow key={row.username}>
+                  <StyledTableRow key={row.id}>
                     <StyledTableCell component="th" scope="row">
                       {`${i+1}.`}
                     </StyledTableCell>
@@ -240,9 +241,13 @@ const DaftarKaryawanDinilai = ({history}) => {
                     <StyledTableCell align="left">{row.user_dinilai.role}</StyledTableCell>
                     <StyledTableCell align="left">{row.user_dinilai.divisi.map(x=> x.nama_divisi+", ")}</StyledTableCell>
                     <StyledTableCell align="left">
+                      {row.list_paket_jawaban.length} / 
+                      {row.list_paket_pertanyaan.length}
+                    </StyledTableCell>
+                    <StyledTableCell align="left">
                     <Grid item sm={10}>
                     <TemplateButton
-                        onClick={()=>history.push(`/daftar-borang/${row.user_dinilai.pk}`)}
+                        onClick={()=>history.push(`/mengisi-borang/${row.id}`)}
                         type="button"
                         buttonStyle="btnGreen"
                         buttonSize="btnLong"

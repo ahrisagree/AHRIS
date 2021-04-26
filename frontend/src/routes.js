@@ -64,17 +64,17 @@ export default [
     component: DaftarKaryawan
   },
   {
-    path: '/daftar-borang/:id',
+    path: '/mengisi-borang/:id',
     exact: true,
     component: DaftarBorang
   },
   {
-    path: '/daftar-karyawan-dinilai/',
+    path: '/mengisi-borang/',
     exact: true,
     component: DaftarKaryawanDinilai
   },
   {
-    path: '/mengisi-borang/:id',
+    path: '/mengisi-borang/:id/:idPaket',
     exact: true,
     component: MengisiBorang
   },

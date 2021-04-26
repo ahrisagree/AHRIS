@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import Button  from "components/TemplateButton";
 import {
   makeStyles,
   Table as MuiTable,
@@ -9,127 +8,79 @@ import {
   TableRow,
   Paper,
   Grid,
-  IconButton,
-  Tooltip,
-  MenuItem,
   Radio,
+  FormControlLabel,
 } from '@material-ui/core';
-import DeleteOutlineIcon from '@material-ui/icons/DeleteOutlineRounded';
-import CreateIcon from '@material-ui/icons/CreateRounded';
-import { StyledTableCell, StyledTableRow } from "components/Table";
+import { StyledTableCell } from "components/Table";
 import MainTitle from "components/MainTitle";
-import Pagination from '@material-ui/lab/Pagination';
-import { getListPaketPertanyaanAPI, deletePaketPertanyaanAPI, getKategoriAPI, getDetailAssignment } from 'api/borang';
-import { JENIS_PAKET, PAGE_SIZE } from 'utils/constant';
+import { getDetailAssignment } from 'api/borang';
+import { postJawabanAPI } from 'api/jawaban';
 import CircularProgress from 'components/Loading/CircularProgress';
-import DeleteConfirmationDialog from 'components/DialogConf';
-import { Link } from 'react-router-dom';
+import SuccessDialog from 'components/Dialog';
+import FailDialog from 'components/DialogFail';
 import Loading from 'components/Loading';
-import { setQueryParams } from 'utils/setQueryParams';
-import CustomTextField from 'components/CustomTextField';
 import TextField from 'components/CustomTextField';
+import TemplateButton from 'components/TemplateButton';
 
 const useStyles = makeStyles({})
-const DaftarPaketPertanyaan = ({match}) => {
-    const [selectedValue, setSelectedValue] = React.useState('a');
-
-    const handleChange = (event) => {
-        setSelectedValue(event.target.value);
-    };
+const DaftarPaketPertanyaan = ({match, history}) => {
   const classes = useStyles();
   const [loading, setLoading] = useState(false);
-  const [listItem, setListItem] = useState([]);
-  const [optionKategori, setOptionKategori] = useState([]);
-  const [page, setPage] = useState(1);
-  const [count, setCount] = useState(0);
-  const [deletePaket, setDeletePaket] = useState(null);
   const [fullLoading, setFullLoading] = useState(false);
-  const [update, setUpdate] = useState(0);
+  // const [update, setUpdate] = useState(0);
+  const [success, setSuccess] = useState(false);
+  const [fail, setFail] = useState(null); 
 
-  // FILTER
-//   const params = new URLSearchParams(history.location.search);
-
-//   const [kategoriFilter, setFilterKategori] = useState(params.get("kategori"));
-//   const [jenisFilter, setFilterJenis] = useState(params.get("jenis"));
-//   const [searchFilter, setFilterSearch] = useState(params.get("search"));
-  const [list_paket_pertanyaan, setListPaketPertanyaan] = useState([]);
+  
   const [assignment, setAssignment] = useState(null);
-
+  const [paketPertanyaan, setPaketPertanyaan] = useState(null)
+  
+  const { id } = match.params;
+  const { idPaket } = match.params; // cek routes.js
   useEffect(()=>{
-    const { id } = match.params;
     setLoading(true)
     getDetailAssignment(id).then(res=>{
-      setAssignment(res.data)
-      setListPaketPertanyaan(res.data?.list_paket_pertanyaan);
+      const assignmentData = res.data;
+      setAssignment(assignmentData);
+      const paketPertanyaanData = assignmentData?.list_paket_pertanyaan.find(x=>x.id===idPaket/1);
+      delete paketPertanyaanData.id;
+      setPaketPertanyaan(paketPertanyaanData);
     }).catch(err=>{
-
-    }).finally(()=>{
-      setLoading(false);
-    })
-  }, [match]);
-
-  useEffect(()=>{
-    setLoading(true)
-    // const params = new URLSearchParams(history.location.search)
-    // const kategori = params.get("kategori");
-    // const jenis = params.get("jenis");
-    // const search = params.get("search");
-
-    // console.log(history.location.search)
-    // console.log(params.get("page"))z
-    getListPaketPertanyaanAPI({
-      page, 
-    }).then(res=>{
-      setListItem(res.data?.results);
-      setCount(Math.ceil(res.data?.count/PAGE_SIZE));
-    }).catch(err=>{
-    // Handle ERROR
+      console.log(err.response && err.response.data);
     }).finally(()=>{
       setLoading(false);
     })
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, update]);
+  }, []);
 
-  useEffect(()=>{
-      
-    getKategoriAPI().then(res=>{
-      setOptionKategori(res.data);
-    })
-
-  },[])
-
-  
-  
-
-//   const doQuery = () => {
-//     setQueryParams({
-//       kategori: kategoriFilter || "", 
-//       jenis: jenisFilter || "", 
-//       search: searchFilter || ""
-//     }, history);
-//     setPage(1);
-//     setUpdate(update+1);
-//   }
-
-//   const resetQuery = () => {
-//     setQueryParams({}, history);
-//     setPage(1);
-//     setUpdate(update+1);
-//     setFilterJenis(null);
-//     setFilterSearch(null);
-//     setFilterKategori(null);
-//   }
-  
-  const handleDeletePaket = () => {
+  const sendData = () => {
     setFullLoading(true);
-    deletePaketPertanyaanAPI(deletePaket.id).then(()=>{
-      setDeletePaket(null);
-      setUpdate(update+1);
+    postJawabanAPI({
+      ...paketPertanyaan,
+      paketPertanyaan: idPaket,
+      kategori: paketPertanyaan.kategori.nama_kategori,
+      assignment: assignment.id
+    }).then(res=>{
+      setSuccess(true)
     }).catch(err=>{
-    // Handle ERROR
+      console.error(err.response && err.response.data)
+      setFail(err && err.response && err.response.data.detail);
     }).finally(()=>{
       setFullLoading(false);
-    });
+    })
+  }
+
+  console.log(history)
+
+  const handleChange = (indexAspek, indexPertanyaan, jawaban) => {
+    console.log(indexAspek, indexPertanyaan, jawaban)
+    const newPaket =  {...paketPertanyaan};
+    newPaket.list_aspek[indexAspek].list_pertanyaan[indexPertanyaan].jawaban = jawaban
+    // const newJawaban = {
+    //   ...paketPertanyaan.list_aspek[indexAspek].list_jawaban[indexPertanyaan],
+    //   jawaban
+    // }
+    setPaketPertanyaan(newPaket);
   }
 
   return (
@@ -139,7 +90,7 @@ const DaftarPaketPertanyaan = ({match}) => {
         <Grid item xs={12} container>
           <Grid item alignContent="flex-start">
             {/* <div className="m-12"> */}
-            <MainTitle title="Isi Borang | nama yg dinilai" className={classes.title} />
+            <MainTitle title={`Isi Borang | ${assignment?.user_dinilai?.username}`} className={classes.title} />
             {/* </div> */}
           </Grid>
         </Grid>
@@ -205,134 +156,97 @@ const DaftarPaketPertanyaan = ({match}) => {
       </Grid>
         <TableContainer component={Paper}>
           <MuiTable className={classes.table} aria-label="customized table">
-            <TableHead>
-            <TableRow>
-                <StyledTableCell align="left">Skala </StyledTableCell>
-                <StyledTableCell align="left"> 1 2 3 4 5</StyledTableCell>
-              </TableRow>
-              <TableRow>
-                <StyledTableCell align="left">Nama Aspek </StyledTableCell>
-                <StyledTableCell align="left"> </StyledTableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {loading ? 
-              <StyledTableRow>
-                <StyledTableCell align="center" colSpan="5">
-                  <CircularProgress />
-                </StyledTableCell>
-              </StyledTableRow>
-              : (
-                list_paket_pertanyaan?.length === 0 ? 
-                <StyledTableRow>
-                  <StyledTableCell align="center" colSpan="5">
-                    Tidak ada Paket Pertanyaan
-                  </StyledTableCell>
-                </StyledTableRow>
-                :
-                list_paket_pertanyaan.map((row, i) => (
-                  <StyledTableRow key={row.name}>
-                    {/* ini harusnya per pertanyaan per baris gitu tp blm nemu caranya */}
-                    <StyledTableCell align="left">{row.list_aspek.map(x=> x.list_pertanyaan.map(r=> r.pertanyaan))}</StyledTableCell>
-                    <StyledTableCell align="left">
-                    <Grid item sm={10}>
-                    <Radio
-                        checked={selectedValue === '1'}
-                        onChange={handleChange}
-                        value="1"
-                        name="radio-button-demo"
-                        inputProps={{ 'aria-label': '1' }}
-                    />
-                    <Radio
-                        checked={selectedValue === '2'}
-                        onChange={handleChange}
-                        value="2"
-                        name="radio-button-demo"
-                        inputProps={{ 'aria-label': '2' }}
-                    />
-                    <Radio
-                        checked={selectedValue === '3'}
-                        onChange={handleChange}
-                        value="3"
-                        name="radio-button-demo"
-                        inputProps={{ 'aria-label': '3' }}
-                    />
-                    <Radio
-                        checked={selectedValue === '4'}
-                        onChange={handleChange}
-                        value="4"
-                        name="radio-button-demo"
-                        inputProps={{ 'aria-label': '4' }}
-                    />
-                    <Radio
-                        checked={selectedValue === '5'}
-                        onChange={handleChange}
-                        value="5"
-                        name="radio-button-demo"
-                        inputProps={{ 'aria-label': '5' }}
-                    />
-                    </Grid>
+            {loading ?
+                <TableBody>
+                  <TableRow>
+                    <StyledTableCell>
+                      <CircularProgress />
                     </StyledTableCell>
-                  </StyledTableRow>
-                )))}
-            </TableBody>
-          </MuiTable>
-        </TableContainer>
-        <TableContainer component={Paper}>
-          <MuiTable className={classes.table} aria-label="customized table">
-            <TableHead>
-              <TableRow>
-                <StyledTableCell align="left"> Pertanyaan </StyledTableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {loading ? 
-              <StyledTableRow>
-                <StyledTableCell align="center" colSpan="5">
-                  <CircularProgress />
-                </StyledTableCell>
-              </StyledTableRow>
-              : (
-                listItem?.length === 0 ? 
-                <StyledTableRow>
-                  <StyledTableCell align="center" colSpan="5">
-                    Tidak ada Paket Pertanyaan
-                  </StyledTableCell>
-                </StyledTableRow>
-                :
-                listItem.map((row, i) => (
-                  <StyledTableRow key={row.name}>
-                    {/* <StyledTableCell component="th" scope="row">
-                      {`${i+1}.`}
-                    </StyledTableCell> */}
-                    <StyledTableCell align="left">
+                  </TableRow>
+                </TableBody>
+            : !paketPertanyaan  ? "Not Found" : 
+              paketPertanyaan.list_aspek.map((aspek, indexAspek)=>(
+              <>
+                <TableHead>
+                  <TableRow>
+                    <StyledTableCell align="left">{aspek.nama}</StyledTableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {aspek.list_pertanyaan.map((pertanyaan, indexPertanyaan)=>(
+                    <>
+                      <TableRow>
+                        <StyledTableCell align="left">
+                        <Grid container>
+                          <Grid item xs={12} md={8}>
+                            {pertanyaan.pertanyaan}
+                          </Grid>
+                          <Grid item xs={12} md={4} container justify="center">
+                            {pertanyaan.tipe === 1 ? 
+                              ( // paragraf
                                 <TextField
-                        required
-                        label="Jawaban"
-                        margin="normal"
-                        style={{width: '50%', minWidth: '20rem', marginBottom: '2rem'}}
-                    />
-                    </StyledTableCell>
-                  </StyledTableRow>
-                )))}
+                                  required
+                                  value={pertanyaan.jawaban}
+                                  onChange={e=>handleChange(indexAspek, indexPertanyaan, e.target.value)}
+                                  label="Jawaban"
+                                  margin="normal"
+                                  fullWidth
+                                  multiline
+                                />
+                              )
+                              :
+                              ( // Radio
+                                  <>
+                                    {[...Array(5)].map((_x, i) => (
+                                      <FormControlLabel
+                                        onChange={e=>handleChange(indexAspek, indexPertanyaan, e.target.value)}
+                                        checked={pertanyaan.jawaban === `${i+1}`}
+                                        value={i+1}
+                                        label={i+1}
+                                        labelPlacement="bottom"
+                                        style={{marginLeft: 0}}
+                                        control={
+                                          <Radio
+                                            color="primary"
+                                            name="radio-button-demo"
+                                            inputProps={{ 'aria-label': `${i+1}` }}
+                                          />}
+                                      />
+                                    ))
+                                    }
+                                  </>
+                              )
+                            }
+                            </Grid>
+                          </Grid>
+                        </StyledTableCell>
+                      </TableRow>
+                    </>
+                  ))}
+                </TableBody>
+              </>
+            ))}
+            <TableBody>
+              <TableRow>
+                <StyledTableCell align="center">
+                  <TemplateButton 
+                    onClick={sendData}
+                    type="button"
+                    buttonStyle="btnBlue"
+                    buttonSize="btnLong"
+                    disabled={loading}
+                    style={{marginTop: "3rem", marginBottom: '1rem'}}
+                  >
+                    Submit
+                  </TemplateButton>
+                </StyledTableCell>
+              </TableRow>
             </TableBody>
           </MuiTable>
         </TableContainer>
-        <h1>Test</h1>
-        <TextField
-            required
-            label="Jawaban"
-            margin="normal"
-            style={{width: '50%', minWidth: '20rem', marginBottom: '2rem'}}
-          />
-        <div className={classes.pagination}>
-          <Pagination 
-            count={count} 
-            page={page} 
-            onChange={(_e,val)=>setPage(val)}
-            />
-        </div>
         <Loading open={fullLoading} />
+        <SuccessDialog open={success} handleClose={()=>history.push(`/mengisi-borang/${id}`)} />
+        <FailDialog open={!!fail} handleClose={()=>setFail(null)} />
     </div>
   );
 };
