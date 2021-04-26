@@ -15,6 +15,8 @@ import DaftarKaryawanDinilai from "views/MengisiBorang/DaftarKaryawanDinilai"
 import MengisiBorang from "views/MengisiBorang/MengisiBorang";
 import EditLogAktivitas from "views/LogAktivitas/EditLogAktivitas";
 import DetailEditUser from "views/DetailEditUser";
+import DaftarKaryawanPerforma from "views/KelolaHasilPerforma/DaftarKaryawanPerforma";
+import DaftarBorangPerforma from "views/KelolaHasilPerforma/DaftarBorangPerforma";
 import AssignmentManager from "views/AssignmentManager";
 
 export default [
@@ -99,9 +101,14 @@ export default [
     component: EditLogAktivitas
   },
   {
-    path: '/assign',
+    path: '/daftar-karyawan-performa',
     exact: true,
-    component: AssignmentManager,
+    component: DaftarKaryawanPerforma,
+  },
+  {
+    path: '/daftar-karyawan-performa/:id',
+    exact: true,
+    component: DaftarBorangPerforma,
   },
   {
     path: '/akun/:idUser',
