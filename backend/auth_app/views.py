@@ -50,7 +50,7 @@ class UserViewSet(
         viewsets.ReadOnlyModelViewSet):
     permission_classes = (IsAuthenticated, DefaultRolePermission, AdminEditPermission)
     http_method_names = ('get', 'patch', 'delete')
-    queryset = AppUser.objects.all()
+    queryset = AppUser.objects.all().order_by('username')
     filter_class = UserFilter
     filterset_fields = ['divisi', 'role']
     search_fields = ['username']

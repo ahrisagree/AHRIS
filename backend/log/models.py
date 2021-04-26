@@ -29,7 +29,7 @@ class LogAktivitas(models.Model):
     user = models.ForeignKey(AppUser,
         on_delete=models.SET_NULL,
         null=True,
-        related_name='user')
+        related_name='log')
     alasan_lembur = models.CharField(max_length=250, blank=True, null=True)
 
 
@@ -46,15 +46,15 @@ class Presensi(models.Model):
     tanggal = models.DateField(default = datetime.date.today)
     jam_masuk = models.TimeField(default = now)
     keterangan = models.CharField(max_length=100)
-    # id_user = models.ForeignKey(AppUser,
-    #     on_delete=models.SET_NULL,
-    #     null=True,
-    #     related_name='id_user') 
-    # log = models.ForeignKey(LogAktivitas,
-    #     on_delete=models.SET_NULL,
-    #     null=True,
-    #     related_name='log')
+    user = models.ForeignKey(AppUser,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name='presensi') 
+    log = models.OneToOneField(LogAktivitas,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name='presensi')
     
     def __str__(self):
-        return "{} - {}-{}".format(self.id_user, self.tanggal, self.jam_masuk) 
+        return "{} - {}-{}".format(self.user, self.tanggal, self.jam_masuk) 
 
