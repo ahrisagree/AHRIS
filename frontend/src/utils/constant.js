@@ -18,7 +18,7 @@ export const STATUS_LOG = [
 "Menunggu Persetujuan", "Disetujui", "Ditolak"
 ]
 
-export const PAGE_SIZE = 2;
+export const PAGE_SIZE = 5;
 
 export const newPertanyaanTemplate = { 
   pertanyaan: "", 

@@ -1,11 +1,6 @@
 import React, { useEffect, useState  } from 'react';
 import Pagination from "@material-ui/lab/Pagination";
-import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
-import CreateIcon from '@material-ui/icons/Create';
-import Breadcrumbs from 'components/Breadcrumbs';
 import TemplateButton from 'components/TemplateButton';
-import CustomTextField from 'components/CustomTextField';
-import Button  from "components/Button";
 import {
   makeStyles,
   Table as MuiTable,
@@ -15,15 +10,13 @@ import {
   TableRow,
   Paper,
   Grid,
-  Tooltip,
-  MenuItem,
 } from '@material-ui/core';
 import { StyledTableCell, StyledTableRow } from "components/Table";
 import MainTitle from "components/MainTitle";
 import { getListAssignment } from 'api/borang';
-import { PAGE_SIZE, ROLES } from 'utils/constant';
+import { PAGE_SIZE } from 'utils/constant';
 import CircularProgress from 'components/Loading/CircularProgress';
-import { setQueryParams } from 'utils/setQueryParams';
+// import { setQueryParams } from 'utils/setQueryParams';
 import TextField from 'components/CustomTextField';
 
 
@@ -96,18 +89,21 @@ const DaftarKaryawanDinilai = ({history}) => {
     const [listItem, setListItem] = useState([]);
     const [page, setPage] = useState(1);
     const [count, setCount] = useState(0);
-    const [update, setUpdate] = useState(0);
-    const params = new URLSearchParams(history.location.search);
-    const [roleFilter, setFilterRole] = useState(params.get("role"));
-    const [searchFilter, setFilterSearch] = useState(params.get("search"));
-    const [role, setRole] = React.useState("");
+    // const [update, setUpdate] = useState(0);
+    // const params = new URLSearchParams(history.location.search);
+    // const [roleFilter, setFilterRole] = useState(params.get("role"));
+    // const [searchFilter, setFilterSearch] = useState(params.get("search"));
+    const [periodeFilter, setPeriodeFilter] = useState(new Date().toISOString().substr(0,10));
 
     useEffect(()=>{
       setLoading(true)
-      const search = params.get("search");
+      // const search = params.get("search");
+      const periode = periodeFilter
       // const id = params.idUser;
       getListAssignment({
-        page, role, search, 
+        page, 
+        periode,
+        // search, 
       }).then(res=>{
         setListItem(res.data?.results);
         setCount(Math.ceil(res.data?.count/PAGE_SIZE));
@@ -116,24 +112,28 @@ const DaftarKaryawanDinilai = ({history}) => {
       }).finally(()=>{
         setLoading(false);
       })
-    }, [page, update]);
+    }, [page, periodeFilter]);
 
 
-    const doQuery = () => {
-      setQueryParams({
-        role: roleFilter || "",
-        search: searchFilter || ""
-      }, history);
+    const handleChangePeriod = (val) => {
+      setPeriodeFilter(val);
       setPage(1);
-      setUpdate(update+1);
     }
+    // const doQuery = () => {
+    //   setQueryParams({
+    //     periode: periodeFilter || "",
+    //     search: searchFilter || ""
+    //   }, history);
+    //   setPage(1);
+    //   setUpdate(update+1);
+    // }
   
-    const resetQuery = () => {
-      setQueryParams({}, history);
-      setPage(1);
-      setFilterRole(null)
-      setFilterSearch(null)
-    }
+    // const resetQuery = () => {
+    //   setQueryParams({}, history);
+    //   setPage(1);
+    //   setPeriodeFilter(null)
+    //   setFilterSearch(null)
+    // }
 
    
     return (
@@ -152,26 +152,22 @@ const DaftarKaryawanDinilai = ({history}) => {
         </Grid>
 
         <Grid item xs={12} container>
-        <Grid item xs={2} alignContent="">
+        <Grid item xs={4} md={3} alignContent="">
         <div style={{position: 'relative', padding: 2}}>
              <TextField
-            label="Role"
+            label="Periode"
             variant="outlined"
             size="small"
             className={classes.mb}
             fullWidth
-            select
+            type="date"
             bordered={true}
-            value={roleFilter}
-            onChange={e=>setFilterRole(e.target.value)}
-          >
-            {ROLES.map(r=>(
-            <MenuItem value={r}>{r}</MenuItem>
-          ))}
-          </TextField>
+            value={periodeFilter}
+            onChange={e=>handleChangePeriod(e.target.value)}
+         />
           </div>
           </Grid>
-        <Grid item xs={2} alignContent="">
+        {/* <Grid item xs={6} md={4} alignContent="">
         <div style={{position: 'relative', padding: 2}}>
           <TextField
             label="Search"
@@ -184,10 +180,10 @@ const DaftarKaryawanDinilai = ({history}) => {
             onChange={e=>setFilterSearch(e.target.value)}
           />
           </div>
-        </Grid>
-        <Grid item xs={2}>
+        </Grid> */}
+        {/* <Grid item xs={2}>
         <div style={{position: 'relative', padding: 2}}>
-          {!(params.get("role") === roleFilter && 
+          {!(params.get("periode") === periodeFilter && 
           params.get("search") === searchFilter) &&
             <TemplateButton 
             type="button"
@@ -195,13 +191,13 @@ const DaftarKaryawanDinilai = ({history}) => {
             buttonSize="btnMedium" onClick={doQuery}>Apply</TemplateButton>  
           }
           {(params.get("search") ||
-            params.get("role")) &&
+            params.get("periode")) &&
             <TemplateButton type="button"
             buttonStyle="btnBlueOutline"
             buttonSize="btnMedium" onClick={resetQuery}>Reset</TemplateButton>  
           }
         </div>
-        </Grid>
+        </Grid> */}
         </Grid>
       </Grid>
 
