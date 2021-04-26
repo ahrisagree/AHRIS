@@ -71,7 +71,7 @@ export default [
     component: DaftarBorang
   },
   {
-    path: '/mengisi-borang/',
+    path: '/mengisi-borang',
     exact: true,
     component: DaftarKaryawanDinilai
   },
@@ -101,12 +101,12 @@ export default [
     component: EditLogAktivitas
   },
   {
-    path: '/daftar-karyawan-performa',
+    path: '/kelola-performa',
     exact: true,
     component: DaftarKaryawanPerforma,
   },
   {
-    path: '/daftar-karyawan-performa/:id',
+    path: '/kelola-performa/:id',
     exact: true,
     component: DaftarBorangPerforma,
   },
