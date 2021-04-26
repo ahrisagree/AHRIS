@@ -114,5 +114,10 @@ export default [
     path: '/akun/:idUser',
     exact: true,
     component: DetailEditUser
+  },
+  {
+    path: '/assign',
+    exact: true,
+    component: AssignmentManager
   }
 ]
