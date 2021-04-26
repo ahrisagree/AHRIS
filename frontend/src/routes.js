@@ -12,6 +12,7 @@ import DaftarPaketPertanyaan from "views/DaftarPakerPertanyaan";
 import DetailEditPaketPertanyaan from "views/DetailEditPaketPertanyaan";
 import DaftarBorang from "views/MengisiBorang";
 import EditLogAktivitas from "views/LogAktivitas/EditLogAktivitas";
+import DetailEditUser from "views/DetailEditUser";
 import DaftarKaryawanPerforma from "views/KelolaHasilPerforma/DaftarKaryawanPerforma";
 import DaftarBorangPerforma from "views/KelolaHasilPerforma/DaftarBorangPerforma";
 export default [
@@ -95,4 +96,9 @@ export default [
     exact: true,
     component: DaftarBorangPerforma,
   },
+  {
+    path: '/akun/:idUser',
+    exact: true,
+    component: DetailEditUser
+  }
 ]

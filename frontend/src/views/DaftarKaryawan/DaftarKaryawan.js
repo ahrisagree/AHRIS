@@ -23,9 +23,10 @@ import { getDivisiAPI, getListDaftarKaryawan } from 'api/akun';
 import { PAGE_SIZE, ROLES } from 'utils/constant';
 import CircularProgress from 'components/Loading/CircularProgress';
 import DeleteConfirmationDialog from 'components/DialogConf';
-import { setQueryParams } from 'utils/setQueryParams';
 import SearchIcon from '@material-ui/icons/Search';
 import _, {debounce} from 'lodash';
+import { setQueryParams } from 'utils/setQueryParams';
+// import { PinDropSharp } from '@material-ui/icons';
 
 
 const useStyles = makeStyles({
@@ -34,7 +35,6 @@ const useStyles = makeStyles({
   }
 })
 const DaftarKaryawan = ({history}) => {
-  
   const classes = useStyles();
   const [loading, setLoading] = useState(false);
   const [listItem, setListItem] = useState([]);
@@ -236,7 +236,7 @@ const DaftarKaryawan = ({history}) => {
                     <StyledTableCell align="left">
                     <Grid item sm={10}>
                       <Tooltip title="Edit">
-                        <IconButton size="small">
+                        <IconButton size="small" onClick={()=>history.push(`/akun/${row.pk}`)}>
                           <CreateIcon style={{ color: "green"}}/>
                         </IconButton>
                       </Tooltip>

@@ -1,15 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from 'react';
 import Pagination from "@material-ui/lab/Pagination";
-import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
-import CreateIcon from '@material-ui/icons/Create';
-import Breadcrumbs from 'components/Breadcrumbs';
-import CustomButton from 'components/CustomButton';
-import CustomTextField from 'components/CustomTextField';
-import Button  from "components/Button";
+import Button  from "components/TemplateButton";
 import TemplateButton  from "components/TemplateButton";
 import {
   makeStyles,
-  withStyles,
   Table as MuiTable,
   TableBody,
   TableContainer,
@@ -18,23 +12,13 @@ import {
   Paper,
   Grid,
 } from '@material-ui/core';
+import { getListLog } from 'api/log';
+import { PAGE_SIZE, STATUS_LOG } from 'utils/constant';
 import { StyledTableCell, StyledTableRow } from "components/Table";
 import MainTitle from "components/MainTitle";
-
-
-function createData(no, tanggal, tipeLog, status) {
-  return { no, tanggal, tipeLog, status };
-}
-
-const rows = [
-  createData(1, "27/12/20", "Reguler", "Disetujui"),
-  createData(2, "27/12/20", "Reguler", "Disetujui"),
-  createData(3, "27/12/20", "Reguler", "Disetujui"),
-  createData(4, "27/12/20", "Reguler", "Disetujui"),
-  createData(5, "27/12/20", "Reguler", "Disetujui"),
-  createData(6, "27/12/20", "Reguler", "Disetujui"),
-  createData(7, "27/12/20", "Reguler", "Disetujui"),
-];
+import CircularProgress from 'components/Loading/CircularProgress';
+import { Link } from 'react-router-dom';
+import Loading from 'components/Loading';
 
 const useStyles = makeStyles((theme) =>({
   root: {
@@ -88,8 +72,31 @@ const useStyles = makeStyles((theme) =>({
     }
 }));
 
-  export default function BasicPagination() {
-    const classes = useStyles();
+const DaftarLog = ({history}) => {
+  
+  const classes = useStyles();
+  const [loading, setLoading] = useState(false);
+  const [listItem, setListItem] = useState([]);
+  const [page, setPage] = useState(1);
+  const [count, setCount] = useState(0);
+  const [fullLoading, setFullLoading] = useState(false);
+  const [update, setUpdate] = useState(0);
+
+  useEffect(()=>{
+    setLoading(true)
+    
+    getListLog({
+      page
+    }).then(res=>{
+      setListItem(res.data?.results);
+      setCount(Math.ceil(res.data?.count/PAGE_SIZE));
+    }).catch(err=>{
+    // Handle ERROR
+    }).finally(()=>{
+      setLoading(false);
+    })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page, update]);
 
     return (
     <div className={classes.root1}>
@@ -136,23 +143,39 @@ const useStyles = makeStyles((theme) =>({
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows.map((row) => (
-                <StyledTableRow key={row.name}>
-                  <StyledTableCell style={{ width: "10%" }} component="th" scope="row">
-                    {row.no}
+              {loading ? 
+              <StyledTableRow>
+                <StyledTableCell align="center" colSpan="5">
+                  <CircularProgress />
+                </StyledTableCell>
+              </StyledTableRow>
+              : (
+                listItem?.length === 0 ? 
+                <StyledTableRow>
+                  <StyledTableCell align="center" colSpan="5">
+                    Tidak ada Log Aktivitas
                   </StyledTableCell>
-                  <StyledTableCell  align="left">{row.tanggal}</StyledTableCell>
-                  <StyledTableCell  align="left">{row.tipeLog}</StyledTableCell>
-                  <StyledTableCell  align="left">{row.status}</StyledTableCell>
-                  
-                  <StyledTableCell align="center"> 
-                      <TemplateButton 
+                </StyledTableRow>
+                :
+                listItem.map((row, i) => (
+                  <StyledTableRow key={row.tanggal}>
+                    <StyledTableCell component="th" scope="row">
+                      {`${i+1}.`}
+                    </StyledTableCell>
+                    <StyledTableCell align="left">{row.tanggal}</StyledTableCell>
+                    <StyledTableCell align="left">{row.is_lembur ? "Lembur" : "Reguler"}</StyledTableCell>
+                    <StyledTableCell align="left">{STATUS_LOG[row.status_log]}</StyledTableCell>
+                    <StyledTableCell align="center">
+                    
+                    <Link to={`/detail-log/${row.id}`}>
+                    <TemplateButton 
                       type="button" 
                       buttonStyle="btnGreen" 
                       buttonSize="btnMedium"
                       >
                       View
                       </TemplateButton>
+                    </Link>
  
                       <TemplateButton
                       type="button"
@@ -169,17 +192,23 @@ const useStyles = makeStyles((theme) =>({
                       >
                       Delete
                     </TemplateButton>
-                    
+                  
                     </StyledTableCell>
-                    
-                </StyledTableRow>
-              ))}
+                  </StyledTableRow>
+                )))}
             </TableBody>
           </MuiTable>
         </TableContainer>
         <div className={classes.pagination}>
-          <Pagination count={5} />
+          <Pagination 
+            count={count} 
+            page={page} 
+            onChange={(_e,val)=>setPage(val)}
+            />
         </div>
+        <Loading open={fullLoading} />
     </div>
   );
 }
+
+export default DaftarLog;

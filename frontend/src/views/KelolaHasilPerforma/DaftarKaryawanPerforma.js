@@ -21,7 +21,8 @@ import CreateIcon from '@material-ui/icons/CreateRounded';
 import { StyledTableCell, StyledTableRow } from "components/Table";
 import MainTitle from "components/MainTitle";
 import Pagination from '@material-ui/lab/Pagination';
-import { getDivisiAPI, getListDaftarKaryawan } from 'api/akun';
+import { getDivisiAPI } from 'api/akun';
+import { getListAssignment } from 'api/borang';
 import { PAGE_SIZE, ROLES } from 'utils/constant';
 import CircularProgress from 'components/Loading/CircularProgress';
 import DeleteConfirmationDialog from 'components/DialogConf';
@@ -30,10 +31,10 @@ import { setQueryParams } from 'utils/setQueryParams';
 import DaftarKaryawan from 'views/DaftarKaryawan';
 
 const useStyles = makeStyles({
-    mb: {
-      marginBottom: '1rem'
-    }
-  })
+  mb: {
+    marginBottom: '1rem'
+  }
+})
   const DaftarKaryawanPerforma = ({history}) => {
     
     const classes = useStyles();
@@ -55,12 +56,10 @@ const useStyles = makeStyles({
     
     useEffect(()=>{
       setLoading(true)
-
       const search = params.get("search");
       const role = params.get("role");
       const divisi = params.get("divisi");
-
-      getListDaftarKaryawan({
+      getListAssignment({
         page, search, role, divisi 
       }).then(res=>{
         setListItem(res.data?.results);
@@ -94,17 +93,17 @@ const useStyles = makeStyles({
       setQueryParams({}, history);
       setPage(1);
       setUpdate(update+1);
-      setFilterDivisi(null)
-      setFilterSearch(null)
-      setFilterRole(null)
+      setFilterDivisi(null);
+      setFilterSearch(null);
+      setFilterRole(null);
     }
 
     
-    const handleDeleteKaryawan = () => {
-      setDeleteKaryawan(null);
-      console.log(deleteKaryawan)
-      // DElete trus confirmation
-    }
+    // const handleDeleteKaryawan = () => {
+    //   setDeleteKaryawan(null);
+    //   console.log(deleteKaryawan)
+    //   // DElete trus confirmation
+    // }
 
   return (
     <div className={classes.root1}>
@@ -188,6 +187,23 @@ const useStyles = makeStyles({
             params.get("divisi")) &&
             <button onClick={resetQuery}>Reset</button>  
           }
+          {/* <div style={{position: 'relative', padding: 2}}>
+          {!(params.get("role") === roleFilter && 
+          params.get("divisi") === searchFilter &&
+          params.get("search") === divisiFilter) &&
+            <TemplateButton 
+            type="button"
+            buttonStyle="btnBlueOutline"
+            buttonSize="btnMedium" onClick={doQuery}>Apply</TemplateButton>  
+          }
+          {(params.get("role") ||
+            params.get("divisi") &&
+            params.get("search")) &&
+            <TemplateButton type="button"
+            buttonStyle="btnBlueOutline"
+            buttonSize="btnMedium" onClick={resetQuery}>Reset</TemplateButton>  
+          }
+        </div> */}
         </Grid>
         </Grid>
       </Grid>
@@ -223,16 +239,13 @@ const useStyles = makeStyles({
                     <StyledTableCell component="th" scope="row">
                       {`${i+1}.`}
                     </StyledTableCell>
-                    <StyledTableCell align="left">{row.username}</StyledTableCell>
-                    <StyledTableCell align="left">{row.role}</StyledTableCell>
-                    {/* <StyledTableCell align="left">{row.nama_divisi?.username}</StyledTableCell> */}
-                    <StyledTableCell align="left">{row.divisi.map(x=> x.nama_divisi+", ")}</StyledTableCell>
+                    <StyledTableCell align="left">{row.user_dinilai.username}</StyledTableCell>
+                    <StyledTableCell align="left">{row.user_dinilai.role}</StyledTableCell>
+                    <StyledTableCell align="left">{row.user_dinilai.divisi.map(x=> x.nama_divisi+", ")}</StyledTableCell>
                     <StyledTableCell align="left">
                     <Grid item sm={10}>
                         <TemplateButton
-                        onClick={() => {
-                        console.log("Ini nanti diganti");
-                        }}
+                        onClick={()=>history.push(`/daftar-borang/${row.user_dinilai.pk}`)}
                         type="button"
                         buttonStyle="btnGreen"
                         buttonSize="btnLong"
@@ -254,11 +267,11 @@ const useStyles = makeStyles({
             />
         </div>
         {/* </Paper> */}
-        <DeleteConfirmationDialog 
+        {/* <DeleteConfirmationDialog 
           open={!!deleteKaryawan}
           handleCancel={()=>setDeleteKaryawan(null)}
           handleConfirm={handleDeleteKaryawan}
-        />
+        /> */}
     </div>
   );
 };  

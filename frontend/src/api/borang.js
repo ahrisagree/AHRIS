@@ -33,3 +33,8 @@ export const getListAssignment = query => {
     Object.keys(query).forEach(qkey=>formatedQuery+=query[qkey]?`${qkey}=${query[qkey]}&`:'');
     return axios.get(`${baseUrl}/evaluation/assign/?${formatedQuery}`);
 }
+
+export const getDetailAssignment = (id, data) => {
+    return axios.get(`${baseUrl}/evaluation/assign/${id}/`, data);
+
+}

@@ -26,6 +26,16 @@ class CharMultipleFilter(filters.BaseInFilter, filters.CharFilter):
 class NumberMultipleFilter(filters.BaseInFilter, filters.NumberFilter):
   pass
 
+class PeriodeFilter(filters.DateFilter):
+  def filter(self, qs, value):
+    if value:
+        filter_lookups = {
+            "%s__month" % (self.field_name, ): value.month,
+            "%s__year" % (self.field_name, ): value.year
+        }
+        qs = qs.filter(**filter_lookups)
+    return qs
+
 class UserFilter(FilterSet):
   divisi = CharMultipleFilter(
     field_name='divisi__nama_divisi',
@@ -43,7 +53,7 @@ class BorangFilter(FilterSet):
 class AssignmentFilter(FilterSet):
   user_dinilai = filters.NumberFilter(field_name='user_dinilai__id')
   user_penilai = filters.NumberFilter(field_name='user_penilai__id')
-  periode = filters.DateFilter()
+  periode = PeriodeFilter(field_name='periode')
   paket_pertanyaan = filters.NumberFilter(field_name='list_paket_pertanyaan__id')
 
 class PresensiFilter(FilterSet):
