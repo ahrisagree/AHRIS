@@ -14,7 +14,7 @@ export const getListLog= query => {
 }
 
 export const editLogAPI = (id, data) => 
-    axios.put(`${baseUrl}/log/${id}/`, data);
+    axios.patch(`${baseUrl}/log/${id}/`, data);
 
 export const getLog = id =>
     axios.get(`${baseUrl}/log/${id}/`);

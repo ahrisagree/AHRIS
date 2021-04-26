@@ -80,8 +80,6 @@ const EditLogAktivitas = (props) => {
   const [statusDeliverables, setStatusDeliverables] = React.useState("");
   const [alasanLembur, setAlasanLembur] = React.useState("");
   const [notes, setNotes] = React.useState("");
-  const [createLog, setCreateLog] = React.useState(false);
-  const [update, setUpdate] = React.useState(0);
 
 
   const handleDateChange = (date) => {
@@ -175,7 +173,6 @@ const EditLogAktivitas = (props) => {
               id="time"
               label="Jam masuk"
               type="time"
-              defaultValue=""
               style= {{margin: 8, width: "33%"}}
               className={classes.textField}
               InputLabelProps={{
@@ -198,7 +195,6 @@ const EditLogAktivitas = (props) => {
               id="time"
               label="Jam keluar"
               type="time"
-              defaultValue=""
               style= {{margin: 8, width: "31%"}}
               className={classes.textField}
               InputLabelProps={{
@@ -325,7 +321,7 @@ const EditLogAktivitas = (props) => {
             />
           </Grid>
           
-
+          {tipe &&
           <Grid item xs={12}>
             <TextField id="outlined-multiline-static"
             label="Alasan Lembur"
@@ -343,7 +339,7 @@ const EditLogAktivitas = (props) => {
             disabled={!tipe}
             />
           </Grid>
-      
+          }
 
           <div className="flex justify-center py-6">
           <TemplateButton
