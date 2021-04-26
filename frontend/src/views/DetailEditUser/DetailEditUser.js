@@ -102,6 +102,7 @@ const DetailEditUser = (props) => {
     }).catch(err=>{
       // HANDLE ERRROR
     })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const cancelEdit = () => {

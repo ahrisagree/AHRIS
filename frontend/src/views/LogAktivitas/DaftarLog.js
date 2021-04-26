@@ -12,13 +12,14 @@ import {
   Paper,
   Grid,
 } from '@material-ui/core';
-import { getListLog } from 'api/log';
+import { getListLog, deleteLog } from 'api/log';
 import { PAGE_SIZE, STATUS_LOG } from 'utils/constant';
 import { StyledTableCell, StyledTableRow } from "components/Table";
 import MainTitle from "components/MainTitle";
 import CircularProgress from 'components/Loading/CircularProgress';
 import { Link } from 'react-router-dom';
 import Loading from 'components/Loading';
+import DeleteConfirmationDialog from 'components/DialogConf';
 
 const useStyles = makeStyles((theme) =>({
   root: {
@@ -72,7 +73,7 @@ const useStyles = makeStyles((theme) =>({
     }
 }));
 
-const DaftarLog = ({history}) => {
+const DaftarLog = (props) => {
   
   const classes = useStyles();
   const [loading, setLoading] = useState(false);
@@ -81,6 +82,8 @@ const DaftarLog = ({history}) => {
   const [count, setCount] = useState(0);
   const [fullLoading, setFullLoading] = useState(false);
   const [update, setUpdate] = useState(0);
+  const [deleteLog, setDeleteLog] = useState(null);
+  const history = props.match.params.history;
 
   useEffect(()=>{
     setLoading(true)
@@ -95,8 +98,13 @@ const DaftarLog = ({history}) => {
     }).finally(()=>{
       setLoading(false);
     })
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, update]);
+
+  const handleDeleteLog = () => {
+    // const id = props.match.params.id;
+    // deleteLog(id)
+  }
+
 
     return (
     <div className={classes.root1}>
@@ -110,6 +118,7 @@ const DaftarLog = ({history}) => {
 
         <Grid item container direction="row" justify="space-between">
           <Grid item xs={10}>
+          <Link to={`/log-aktivitas`}>
             <Button
                 variant="outlined"
                 color="primary" 
@@ -117,15 +126,18 @@ const DaftarLog = ({history}) => {
                 >
             + Create Log
             </Button>
+          </Link>
           </Grid>
 
           <Grid item xs={2}>
-                <TemplateButton size="small"
-                    type="button"
-                    buttonStyle="btnGreenOutline"
-                    >
-                    Daftar Karyawan
-                </TemplateButton>
+            <Link to={`/akun`}>
+              <TemplateButton size="small"
+                  type="button"
+                  buttonStyle="btnGreenOutline"
+                  >
+                  Daftar Karyawan
+              </TemplateButton>
+              </Link>
           </Grid>
 
         </Grid>
@@ -176,19 +188,22 @@ const DaftarLog = ({history}) => {
                       View
                       </TemplateButton>
                     </Link>
- 
-                      <TemplateButton
+                    
+                    <Link to={`/edit-log/${row.id}`}>
+                    <TemplateButton
                       type="button"
                       buttonStyle="btnYellow"
                       buttonSize="btnMedium"
                       >
                       Edit
-                      </TemplateButton>
+                    </TemplateButton>
+                    </Link>
  
                       <TemplateButton
                       type="button"
                       buttonStyle="btnDanger"
                       buttonSize="btnMedium"
+                      onClick={()=>setDeleteLog(row)}
                       >
                       Delete
                     </TemplateButton>
@@ -206,6 +221,11 @@ const DaftarLog = ({history}) => {
             onChange={(_e,val)=>setPage(val)}
             />
         </div>
+        <DeleteConfirmationDialog 
+          open={!!deleteLog}
+          handleCancel={()=>setDeleteLog(null)}
+          handleConfirm={handleDeleteLog}
+        />
         <Loading open={fullLoading} />
     </div>
   );

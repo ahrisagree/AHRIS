@@ -10,11 +10,15 @@ import Register from "./views/Register";
 import DaftarKaryawan from "views/DaftarKaryawan";
 import DaftarPaketPertanyaan from "views/DaftarPakerPertanyaan";
 import DetailEditPaketPertanyaan from "views/DetailEditPaketPertanyaan";
-import DaftarBorang from "views/MengisiBorang";
+import DaftarBorang from "views/MengisiBorang/DaftarBorang";
+import DaftarKaryawanDinilai from "views/MengisiBorang/DaftarKaryawanDinilai"
+import MengisiBorang from "views/MengisiBorang/MengisiBorang";
 import EditLogAktivitas from "views/LogAktivitas/EditLogAktivitas";
 import DetailEditUser from "views/DetailEditUser";
 import DaftarKaryawanPerforma from "views/KelolaHasilPerforma/DaftarKaryawanPerforma";
 import DaftarBorangPerforma from "views/KelolaHasilPerforma/DaftarBorangPerforma";
+import AssignmentManager from "views/AssignmentManager";
+
 export default [
   {
     path: '/',
@@ -62,9 +66,19 @@ export default [
     component: DaftarKaryawan
   },
   {
-    path: '/daftar-borang',
+    path: '/mengisi-borang/:id',
     exact: true,
     component: DaftarBorang
+  },
+  {
+    path: '/mengisi-borang/',
+    exact: true,
+    component: DaftarKaryawanDinilai
+  },
+  {
+    path: '/mengisi-borang/:id/:idPaket',
+    exact: true,
+    component: MengisiBorang
   },
   {
     path: '/log-aktivitas',
@@ -77,12 +91,12 @@ export default [
     component: DaftarLog
   },
   {
-    path: '/detail-log',
+    path: '/detail-log/:id',
     exact: true,
     component: DetailLogAktivitas
   },
   {
-    path: '/edit-log',
+    path: '/edit-log/:id',
     exact: true,
     component: EditLogAktivitas
   },
@@ -92,7 +106,7 @@ export default [
     component: DaftarKaryawanPerforma,
   },
   {
-    path: '/daftar-borang-performa',
+    path: '/daftar-karyawan-performa/:id',
     exact: true,
     component: DaftarBorangPerforma,
   },
