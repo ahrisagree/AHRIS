@@ -36,7 +36,7 @@ const styles = (theme) => ({
     borderColor: '#FFFFFF',
     position: "relative",
     top: 10,
-    right : -53
+    right : -60
   },
   judul: {
     fontFamily: "IBM Plex Sans",

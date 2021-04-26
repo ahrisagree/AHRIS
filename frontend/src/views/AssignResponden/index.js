@@ -1,5 +1,5 @@
 // import { connect } from 'react-redux';
-import DaftarBorang from './DaftarKaryawanDinilai';
+import AssignResponden from './AssignResponden';
 
 // const mapStateToProps = state => ({
 // })
@@ -8,4 +8,4 @@ import DaftarBorang from './DaftarKaryawanDinilai';
 // }
 
 // export default connect(mapStateToProps, mapActionToProps)(Home);
-export default DaftarBorang;
+export default AssignResponden;
