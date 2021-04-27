@@ -18,6 +18,8 @@ import DetailEditUser from "views/DetailEditUser";
 import DaftarKaryawanPerforma from "views/KelolaHasilPerforma/DaftarKaryawanPerforma";
 import DaftarBorangPerforma from "views/KelolaHasilPerforma/DaftarBorangPerforma";
 import AssignmentManager from "views/AssignmentManager";
+import EvaluasiDiri from "views/EvaluasiDiri";
+import Pembobotan from "views/KelolaHasilPerforma/Pembobotan";
 
 export default [
   {
@@ -71,7 +73,7 @@ export default [
     component: DaftarBorang
   },
   {
-    path: '/mengisi-borang/',
+    path: '/mengisi-borang',
     exact: true,
     component: DaftarKaryawanDinilai
   },
@@ -101,14 +103,19 @@ export default [
     component: EditLogAktivitas
   },
   {
-    path: '/daftar-karyawan-performa',
+    path: '/kelola-performa',
     exact: true,
     component: DaftarKaryawanPerforma,
   },
   {
-    path: '/daftar-karyawan-performa/:id',
+    path: '/kelola-performa/:idDinilai',
     exact: true,
     component: DaftarBorangPerforma,
+  },
+  {
+    path: '/kelola-performa/:idDinilai/:idPaket',
+    exact: true,
+    component: Pembobotan
   },
   {
     path: '/akun/:idUser',
@@ -124,5 +131,10 @@ export default [
     path: '/assign',
     exact: true,
     component: AssignmentManager
-  }
+  },
+  {
+    path: '/evaluasi-diri/add',
+    exact: true,
+    component: EvaluasiDiri
+  },
 ]

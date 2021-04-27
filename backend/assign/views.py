@@ -36,6 +36,8 @@ class AssignmentView(viewsets.ReadOnlyModelViewSet, mixins.CreateModelMixin):
   
   """Karyawan List own Assignment, Admin list all Assignment"""
   def list(self, request, *args, **kwargs):
+    if request.query_params.get('disablepagination') != None:
+      self.pagination_class = None
     if not request.user.has_role('Admin'):
       self.queryset = Assignment.objects.filter(user_penilai=request.user).order_by('-id')
-    return super().list(request, *args, **kwargs)
+    return super().list(request, *args, **kwargs)  
