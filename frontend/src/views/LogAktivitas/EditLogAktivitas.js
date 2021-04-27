@@ -12,7 +12,7 @@ import MainTitle from 'components/MainTitle';
 import Dialog from 'components/Dialog';
 import DialogFail from 'components/DialogFail';
 import TemplateButton from 'components/TemplateButton';
-import { buatLogAPI, editLogAPI, getLog } from 'api/log';
+import { editLogAPI, getLog } from 'api/log';
 import Loading from 'components/Loading';
 
 const daftar_tipe = [
@@ -109,6 +109,7 @@ const EditLogAktivitas = (props) => {
       setLoading(false);
     })
     
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
 
@@ -143,7 +144,7 @@ const EditLogAktivitas = (props) => {
 
           <Grid item xs={12}>
             <Typography style={{ fontWeight: 600, marginLeft: '1%', marginBottom: '3%', fontFamily: 'IBM Plex Sans', fontStyle: 'normal', 
-            fontWeight: 600, fontSize: 24, lineHeight: '138%', display: 'flex', alignItems: 'center', letterSpacing: '0.0075em', color: '#0A3142' }} 
+            fontSize: 24, lineHeight: '138%', display: 'flex', alignItems: 'center', letterSpacing: '0.0075em', color: '#0A3142' }} 
             variant="subtitle1">
               Log Aktivitas
             </Typography>
