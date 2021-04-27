@@ -70,7 +70,8 @@ const DetailLogAktivitas = (props) => {
   const classes = useStyles();
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState({});
-  const [success, setSuccess] = useState(false);
+  const [success, setSuccess] = useState(false);  
+
 
   const [selectedDate, setSelectedDate] = React.useState("");
   const [jamMasuk, setJamMasuk] = React.useState("");
@@ -93,7 +94,7 @@ const DetailLogAktivitas = (props) => {
   };
 
   useEffect(() => {
-    // setLoading(true);
+    setLoading(true);
     const id = props.match.params.id;
     getLog(id).then(res => {
       const { data } = res
@@ -113,7 +114,7 @@ const DetailLogAktivitas = (props) => {
       setLoading(false)
     })
     
-  })
+  }, [])
 
   const sendKomentar = () => {
     const { id } = props.match.params;

@@ -12,7 +12,7 @@ import {
   Paper,
   Grid,
 } from '@material-ui/core';
-import { getListLog, deleteLog } from 'api/log';
+import { getListLog, deleteLogAPI } from 'api/log';
 import { PAGE_SIZE, STATUS_LOG } from 'utils/constant';
 import { StyledTableCell, StyledTableRow } from "components/Table";
 import MainTitle from "components/MainTitle";
@@ -101,8 +101,15 @@ const DaftarLog = (props) => {
   }, [page, update]);
 
   const handleDeleteLog = () => {
-    // const id = props.match.params.id;
-    // deleteLog(id)
+    setFullLoading(true);
+    deleteLogAPI(deleteLog.id).then(()=>{
+      setDeleteLog(null);
+      setUpdate(update+1);
+    }).catch(err=>{
+    // Handle ERROR
+    }).finally(()=>{
+      setFullLoading(false);
+    });
   }
 
 
@@ -221,6 +228,11 @@ const DaftarLog = (props) => {
             onChange={(_e,val)=>setPage(val)}
             />
         </div>
+        <DeleteConfirmationDialog 
+          open={!!deleteLog}
+          handleCancel={()=>setDeleteLog(null)}
+          handleConfirm={handleDeleteLog}
+        />
         <DeleteConfirmationDialog 
           open={!!deleteLog}
           handleCancel={()=>setDeleteLog(null)}
