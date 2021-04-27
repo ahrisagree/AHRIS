@@ -8,7 +8,7 @@ import { setQueryParams } from 'utils/setQueryParams';
 import CircularProgress from 'components/Loading/CircularProgress';
 
 
-const DaftarPemberi = ({classes, history, match}) => {
+const DaftarPemberi = ({classes, history, match, selectJawaban}) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState({});
   const [listItem, setListItem] = useState([]);
@@ -82,7 +82,7 @@ const DaftarPemberi = ({classes, history, match}) => {
           <StyledTableCell align="left">Nama Karyawan </StyledTableCell>
           <StyledTableCell align="left">Role </StyledTableCell>
           <StyledTableCell align="left">Divisi</StyledTableCell>
-
+          <StyledTableCell align="left"></StyledTableCell>
         </TableRow>
       </TableHead>
       <TableBody>
@@ -108,6 +108,11 @@ const DaftarPemberi = ({classes, history, match}) => {
               <StyledTableCell align="left">{row.user_penilai.username}</StyledTableCell>
               <StyledTableCell align="left">{row.user_penilai.role}</StyledTableCell>
               <StyledTableCell align="left">{row.user_penilai.divisi.map(x=> x.nama_divisi+", ")}</StyledTableCell>
+              <StyledTableCell align="left">
+                  <button
+                  onClick={()=>selectJawaban(row.id)}
+                  >Lihat</button>
+              </StyledTableCell>
             </StyledTableRow>
           )))}
       </TableBody>
