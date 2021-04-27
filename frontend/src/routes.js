@@ -89,5 +89,10 @@ export default [
     path: '/akun/:idUser',
     exact: true,
     component: DetailEditUser
+  },
+  {
+    path: '/log/presensi',
+    exact: true,
+    component: Home
   }
 ]
