@@ -34,7 +34,7 @@ const PembobotanForm = ({classes}) => {
 
       <Grid item xs={12}>
 
-      <TextField id="outlined-full-width"
+      <TextField
         label="Rata-rata Skor"
         style={{ margin: 8, width: "30%" }}
         margin="normal"
@@ -43,8 +43,8 @@ const PembobotanForm = ({classes}) => {
         disabled
         />
 
-      <TextField id="outlined-full-width"
-        required="true"
+      <TextField
+        required={true}
         label="Bobot"
         style={{ margin: 8, width: "30%" }}
         margin="normal"
@@ -53,7 +53,7 @@ const PembobotanForm = ({classes}) => {
         /> 
 
 
-      <TextField id="outlined-full-width"
+      <TextField
         label="Skor Akhir"
         style={{ margin: 8, width: "30%" }}
         margin="normal"
@@ -86,7 +86,7 @@ const PembobotanForm = ({classes}) => {
 
       <Grid item xs={12}>
 
-      <TextField id="outlined-full-width"
+      <TextField
         label="Rata-rata Skor"
         style={{ margin: 8, width: "30%" }}
         margin="normal"
@@ -95,8 +95,8 @@ const PembobotanForm = ({classes}) => {
         disabled
         />
 
-      <TextField id="outlined-full-width"
-        required="true"
+      <TextField
+        required={true}
         label="Bobot"
         style={{ margin: 8, width: "30%" }}
         margin="normal"
@@ -105,7 +105,7 @@ const PembobotanForm = ({classes}) => {
         /> 
 
 
-      <TextField id="outlined-full-width"
+      <TextField
         label="Skor Akhir"
         style={{ margin: 8, width: "30%" }}
         margin="normal"
@@ -138,7 +138,7 @@ const PembobotanForm = ({classes}) => {
 
       <Grid item xs={12}>
 
-      <TextField id="outlined-full-width"
+      <TextField
         label="Rata-rata Skor"
         style={{ margin: 8, width: "30%" }}
         margin="normal"
@@ -147,8 +147,8 @@ const PembobotanForm = ({classes}) => {
         disabled
         />
 
-      <TextField id="outlined-full-width"
-        required="true"
+      <TextField
+        required={true}
         label="Bobot"
         style={{ margin: 8, width: "30%" }}
         margin="normal"
@@ -157,7 +157,7 @@ const PembobotanForm = ({classes}) => {
         /> 
 
 
-      <TextField id="outlined-full-width"
+      <TextField
         label="Skor Akhir"
         style={{ margin: 8, width: "30%" }}
         margin="normal"
@@ -190,7 +190,7 @@ const PembobotanForm = ({classes}) => {
 
       <Grid item xs={12}>
 
-      <TextField id="outlined-full-width"
+      <TextField
         label="Skor Kumulatif"
         style={{ margin: 8, width: "30%" }}
         margin="normal"
@@ -199,7 +199,7 @@ const PembobotanForm = ({classes}) => {
         disabled
         />
 
-      <TextField id="outlined-full-width"
+      <TextField
         label="Catatan"
         style={{ margin: 8, width: "63%" }}
         margin="normal"

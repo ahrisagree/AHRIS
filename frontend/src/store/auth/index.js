@@ -35,7 +35,7 @@ const formSlice = createSlice({
     },
     [loginThunk.rejected]: (state, error) => {
       state.loading = false;
-      state.error = error.payload.data || {};
+      state.error = error.payload?.data || {};
     },
     [logoutThunk.pending]: state => {
       state.token = null;

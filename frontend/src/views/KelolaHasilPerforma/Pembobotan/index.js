@@ -5,6 +5,7 @@ import {
 
 import PembobotanForm from './PembobotanForm';
 import DaftarPemberi from './DaftarPemberi';
+import JawabanBorang from './JawabanBorang';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -79,7 +80,11 @@ const useStyles = makeStyles((theme) => ({
 
 const Pembobotan = props => {
   const classes = useStyles();
-  
+  const [idAssignment, setIdAssignment] = useState(null);
+  // const handlesetDetailJawaban = val => {
+  //   setDetailJawaban(val);
+  //   console.log(val)
+  // }
   // useEffect(()=>{
   //   getDivisiAPI().then(res=>{
   //     setDivisiOptions(res.data);
@@ -110,7 +115,20 @@ const Pembobotan = props => {
     return (
       <div className={classes.splitScreen}>
         <div className={classes.topPane}>
-          <DaftarPemberi classes={classes} {...props} />
+          {idAssignment ? 
+            <JawabanBorang
+              classes={classes}
+              idAssignment={idAssignment}
+              back={()=>setIdAssignment(null)}
+              {...props}
+            />
+          :
+            <DaftarPemberi
+              classes={classes}
+              selectJawaban={setIdAssignment}
+              {...props} 
+            />
+          }
         </div>
         <div className={classes.bottomPane}>
           <PembobotanForm classes={classes} />
