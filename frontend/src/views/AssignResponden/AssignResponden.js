@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Button  from "components/TemplateButton";
+import TemplateButton  from "components/TemplateButton";
 import {
   makeStyles,
   Table as MuiTable,
@@ -9,55 +9,97 @@ import {
   TableRow,
   Paper,
   Grid,
-  IconButton,
-  Tooltip,
   MenuItem,
+  Checkbox,
+  withStyles
 } from '@material-ui/core';
 import TextField from 'components/CustomTextField';
-import DeleteOutlineIcon from '@material-ui/icons/DeleteOutlineRounded';
-import CreateIcon from '@material-ui/icons/CreateRounded';
 import { StyledTableCell, StyledTableRow } from "components/Table";
 import MainTitle from "components/MainTitle";
 import Pagination from '@material-ui/lab/Pagination';
 import { getDivisiAPI, getListDaftarKaryawan } from 'api/akun';
 import { PAGE_SIZE, ROLES } from 'utils/constant';
 import CircularProgress from 'components/Loading/CircularProgress';
-import DeleteConfirmationDialog from 'components/DialogConf';
-import SearchIcon from '@material-ui/icons/Search';
-import _, {debounce} from 'lodash';
 import { setQueryParams } from 'utils/setQueryParams';
-// import { PinDropSharp } from '@material-ui/icons';
 
 
-const useStyles = makeStyles({
-  mb: {
-    marginBottom: '1rem'
-  }
-})
-const DaftarKaryawan = ({history}) => {
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+      '& > *': {
+        margin: theme.spacing(1),
+      },
+    },
+    
+  root1: {
+      flexGrow: 1,
+  
+  },
+title: {
+  /*position: "relative",*/
+  top: 0,
+},
+table: {
+  minWidth: 500,
+},
+pagination: {
+  '& > *': {
+    marginTop: theme.spacing(1),
+    color: "#0B3242",
+    marginLeft: "90%",
+    // color: "primary",
+  },
+},
+button: {
+    position: "relative",
+    alignSelf: "center",
+    alignItems: "center",
+    marginLeft: "35%"
+    
+},
+
+}));
+const CustomCheckbox = withStyles({
+  root: {
+    color: '#0A3142',
+    '&$checked': {
+      color: '#0A3142',
+    },
+  },
+  checked: {},
+})((props) => <Checkbox color="default" {...props} />);
+const AssignResponden = ({
+  history,
+  selectedPenilai,
+  setSelectedPenilai,
+  onSelect,
+  prevStep,
+  submit
+}) => {
+  
   const classes = useStyles();
   const [loading, setLoading] = useState(false);
   const [listItem, setListItem] = useState([]);
   const [divisiOptions, setDivisiOptions] = useState([]);
   const [page, setPage] = useState(1);
   const [count, setCount] = useState(0);
-  const [deleteKaryawan, setDeleteKaryawan] = useState(null);
+  // const [deleteKaryawan, setDeleteKaryawan] = useState(null);
 
   // buat ngefilter
   const [update, setUpdate] = useState(0);
   
   const params = new URLSearchParams(history.location.search);
 
-  const [roleFilter, setFilterRole] = useState(params.get("role"));
-  const [divisiFilter, setFilterDivisi] = useState(params.get("divisi"));
-  const [searchFilter, setFilterSearch] = useState(params.get("search"));
+  const [roleFilter, setFilterRole] = useState(params.get("rolePenilai"));
+  const [divisiFilter, setFilterDivisi] = useState(params.get("divisiPenilai"));
+  const [searchFilter, setFilterSearch] = useState(params.get("searchPenilai"));
 
   useEffect(()=>{
     setLoading(true)
     
-    const search = params.get("search");
-    const role = params.get("role");
-    const divisi = params.get("divisi");
+    const search = params.get("searchPenilai");
+    const role = params.get("rolePenilai");
+    const divisi = params.get("divisiPenilai");
 
 
     getListDaftarKaryawan({
@@ -70,6 +112,7 @@ const DaftarKaryawan = ({history}) => {
     }).finally(()=>{
       setLoading(false);
     })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, update]);
 
   useEffect(()=>{
@@ -82,9 +125,9 @@ const DaftarKaryawan = ({history}) => {
 
   const doQuery = () => {
     setQueryParams({
-      role: roleFilter || "",
-      divisi: divisiFilter || "",
-      search: searchFilter || ""
+      rolePenilai: roleFilter || "",
+      divisiPenilai: divisiFilter || "",
+      searchPenilai: searchFilter || ""
     }, history);
     setPage(1);
     setUpdate(update+1);
@@ -98,11 +141,9 @@ const DaftarKaryawan = ({history}) => {
     setFilterSearch(null)
     setFilterRole(null)
   }
-  
-  const handleDeleteKaryawan = () => {
-    setDeleteKaryawan(null);
-    console.log(deleteKaryawan)
-    // DElete trus confirmation
+
+  const handleSelect = val => () => {
+    onSelect(setSelectedPenilai, selectedPenilai, val, 'pk')
   }
 
   return (
@@ -111,31 +152,27 @@ const DaftarKaryawan = ({history}) => {
       <Grid container spacing={2} direction="column">
       <Grid item xs={12} container>
           <Grid item xs={4} alignContent="flex-start">
-            <MainTitle title="Kelola Akun" className={classes.title} />
+            {/* <div className="m-12"> */}
+            <MainTitle title="Pilih Pemberi Evaluasi" className={classes.title} />
+            {/* </div> */}
           </Grid>
-          <Grid item xs={8}/>
+        </Grid>
         </Grid>
 
-        <Grid item xs={12} container>
-
-        <Grid item xs={2} alignContent="">
-        <div style={{position: 'relative', display: 'inline-block', padding: 2}}>
-                <SearchIcon style={{position: 'absolute', right: 0, top: 10, width: 25, height: 25}}/>
-                <TextField
-                    label="Search"
-                    fullWidth
-                    bordered={true}
-                    value={searchFilter}
-                    onChange={e=>setFilterSearch(e.target.value)}
-                    variant="outlined"
-                    className={classes.mb}
-                    size="small"
-                    hintText="Search by Name"
-                  />
+        <div className="flex w-full flex-wrap p-2">
+          <div className="w-full md:w-1/3 my-2 md:mr-2">
+          <TextField
+            label="Search"
+            variant="outlined"
+            size="small"
+            className={classes.mb}
+            fullWidth
+            bordered={true}
+            value={searchFilter}
+            onChange={e=>setFilterSearch(e.target.value)}
+          />
           </div>
-        </Grid>
-          <Grid item xs={2} alignContent="">
-          <div style={{position: 'relative', padding: 2}}>
+          <div className="w-1/4 md:w-1/6 my-2 md:mx-2">
           <TextField
             label="Role"
             variant="outlined"
@@ -151,11 +188,8 @@ const DaftarKaryawan = ({history}) => {
               <MenuItem value={r}>{r}</MenuItem>
             ))}
           </TextField>
-          </div>
-        </Grid>
-
-        <Grid item xs={2} alignContent="">
-        <div style={{position: 'relative', padding: 2}}>
+        </div>
+        <div className="w-1/4 md:w-1/6 m-2">
         <TextField
           label="Divisi"
           variant="outlined"
@@ -173,44 +207,42 @@ const DaftarKaryawan = ({history}) => {
           ))}
         </TextField>
         </div>
-        </Grid>
-        <Grid item xs={4}>
-          {!(params.get("search") === searchFilter &&
-            params.get("role") === roleFilter && 
-            params.get("divisi") === divisiFilter) &&
+        <div className="flex items-center">
+          {!(params.get("searchPenilai") === searchFilter &&
+            params.get("rolePenilai") === roleFilter && 
+            params.get("divisiPenilai") === divisiFilter) &&
             <button onClick={doQuery}>Apply</button>  
           }
-          {(params.get("search") ||
-            params.get("role") || 
-            params.get("divisi")) &&
+          {(params.get("searchPenilai") ||
+            params.get("rolePenilai") || 
+            params.get("divisiPenilai")) &&
             <button onClick={resetQuery}>Reset</button>  
           }
-        </Grid>
-
-          <Grid item xs={2} alignContent="">
-          <Button
-          variant="outlined"
-          color="primary" 
-          size="small"
-          >
-          + Tambah Akun
-        </Button>
-          </Grid>
-        </Grid>
-      </Grid>
+        </div>
+      </div>
 
         <TableContainer component={Paper}>
           <MuiTable className={classes.table} aria-label="customized table">
             <TableHead>
               <TableRow>
-                <StyledTableCell align="left">No </StyledTableCell>
+                <StyledTableCell align="left"></StyledTableCell>
                 <StyledTableCell align="left">Nama </StyledTableCell>
                 <StyledTableCell align="left">Role </StyledTableCell>
                 <StyledTableCell align="left">Divisi</StyledTableCell>
-                <StyledTableCell align="left"></StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>
+              {/* INI yang selected yah */}
+              {selectedPenilai.map(row => (
+                <StyledTableRow key={row.username}>
+                  <StyledTableCell component="th" scope="row">
+                      <CustomCheckbox checked={true} onChange={handleSelect(row)}/>
+                  </StyledTableCell>
+                  <StyledTableCell align="left">{row.username}</StyledTableCell>
+                  <StyledTableCell align="left">{row.role}</StyledTableCell>
+                  <StyledTableCell align="left">{row.divisi.map(x=> x.nama_divisi+", ")}</StyledTableCell>
+                </StyledTableRow>
+              ))}
               {loading ? 
               <StyledTableRow>
                 <StyledTableCell align="center" colSpan="5">
@@ -225,28 +257,15 @@ const DaftarKaryawan = ({history}) => {
                   </StyledTableCell>
                 </StyledTableRow>
                 :
-                listItem.map((row, i) => (
+                listItem.map(row => !selectedPenilai.find(x=>x.pk===row.pk) && (
                   <StyledTableRow key={row.username}>
                     <StyledTableCell component="th" scope="row">
-                      {`${i+1}.`}
+                    <CustomCheckbox onChange={handleSelect(row)}/>
                     </StyledTableCell>
                     <StyledTableCell align="left">{row.username}</StyledTableCell>
                     <StyledTableCell align="left">{row.role}</StyledTableCell>
+                    {/* <StyledTableCell align="left">{row.nama_divisi?.username}</StyledTableCell> */}
                     <StyledTableCell align="left">{row.divisi.map(x=> x.nama_divisi+", ")}</StyledTableCell>
-                    <StyledTableCell align="left">
-                    <Grid item sm={10}>
-                      <Tooltip title="Edit">
-                        <IconButton size="small" onClick={()=>history.push(`/akun/${row.pk}`)}>
-                          <CreateIcon style={{ color: "green"}}/>
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip title="Delete">
-                        <IconButton size="small" onClick={()=>setDeleteKaryawan(row)}>
-                          <DeleteOutlineIcon style={{ color: "red"}}/>
-                        </IconButton>
-                      </Tooltip>
-                    </Grid>
-                    </StyledTableCell>
                   </StyledTableRow>
                 )))}
             </TableBody>
@@ -259,14 +278,26 @@ const DaftarKaryawan = ({history}) => {
             onChange={(_e,val)=>setPage(val)}
             />
         </div>
-        {/* </Paper> */}
-        <DeleteConfirmationDialog 
-          open={!!deleteKaryawan}
-          handleCancel={()=>setDeleteKaryawan(null)}
-          handleConfirm={handleDeleteKaryawan}
-        />
+        <Grid item xs={12} className={classes.button}>
+        <TemplateButton 
+                    onClick={prevStep}
+                    type="button"
+                    buttonStyle="btnBlue"
+                    buttonSize="btnLong"
+                  >
+                    Sebelumnya
+                  </TemplateButton>
+                  <TemplateButton 
+                    onClick={submit}
+                    type="button"
+                    buttonStyle="btnBlue"
+                    buttonSize="btnLong"
+                  >
+                    Simpan
+                  </TemplateButton>
+        </Grid>
     </div>
   );
 };
 
-export default DaftarKaryawan;
+export default AssignResponden;
