@@ -94,5 +94,10 @@ export default [
     path: '/log/presensi',
     exact: true,
     component: Home
+  },
+  {
+    path: '/assign',
+    exact: true,
+    component: AssignmentManager
   }
 ]
