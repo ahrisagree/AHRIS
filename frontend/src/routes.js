@@ -18,6 +18,8 @@ import DetailEditUser from "views/DetailEditUser";
 import DaftarKaryawanPerforma from "views/KelolaHasilPerforma/DaftarKaryawanPerforma";
 import DaftarBorangPerforma from "views/KelolaHasilPerforma/DaftarBorangPerforma";
 import AssignmentManager from "views/AssignmentManager";
+import EvaluasiDiri from "views/EvaluasiDiri";
+import Pembobotan from "views/Pembobotan";
 
 export default [
   {
@@ -119,5 +121,15 @@ export default [
     path: '/assign',
     exact: true,
     component: AssignmentManager
-  }
+  },
+  {
+    path: '/evaluasi-diri/add',
+    exact: true,
+    component: EvaluasiDiri
+  },
+  {
+    path: '/pembobotan',
+    exact: true,
+    component: Pembobotan
+  },
 ]
