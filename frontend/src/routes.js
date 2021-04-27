@@ -16,6 +16,8 @@ import DetailEditUser from "views/DetailEditUser";
 import AssignPaket from "./views/AssignPaket";
 import AssignResponden from "views/AssignResponden";
 import AssignPenerima from "views/AssignPenerima";
+import EvaluasiDiri from "./views/EvaluasiDiri";
+import Pembobotan from "views/Pembobotan";
 
 export default [
   {
@@ -107,5 +109,15 @@ export default [
     path: '/assign/penerima/',
     exact: true,
     component: AssignPenerima,
+  },
+  {
+    path: '/evaluasi-diri/add',
+    exact: true,
+    component: EvaluasiDiri,
+  },
+  {
+    path: '/pembobotan',
+    exact: true,
+    component: Pembobotan,
   },
 ]
