@@ -69,6 +69,7 @@ const EditLogAktivitas = (props) => {
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState({});
   const [success, setSuccess] = useState(false);
+  
 
   const [selectedDate, setSelectedDate] = React.useState("");
   const [jamMasuk, setJamMasuk] = React.useState("");
@@ -86,8 +87,9 @@ const EditLogAktivitas = (props) => {
     setSelectedDate(date);
   };
 
+
   useEffect(() => {
-    // setLoading(true);
+    setLoading(true);
     const id = props.match.params.id;
     getLog(id).then(res => {
       const { data } = res
@@ -104,10 +106,10 @@ const EditLogAktivitas = (props) => {
     }).catch(err => {
       // HANDLE ERROR
     }).finally(() => {
-      setLoading(false)
+      setLoading(false);
     })
     
-  })
+  }, [])
 
 
   const sendEditData = () => {
