@@ -61,7 +61,7 @@ const Login = ({
                     <div className="m-7 p-2" style={{ textAlign: "left", paddingBottom: "10%", paddingLeft: 0 }}> 
                         <h1>E-mail</h1>
                         <TextField
-                            id="outlined-full-width"
+                            id="email"
                             style={{ background: "#FFFF", borderRadius: 8, width: 456, height: 55, position: "absolute", boxShadow: "8px 4px 30px 1px rgba(0, 0, 0, 0.25)"}}
                             placeholder="E-mail"
                             margin="normal"
@@ -79,7 +79,7 @@ const Login = ({
                     <div className="m-7 p-2" style={{ textAlign: "left", paddingBottom: "10%", paddingLeft: 0 }}>
                         <h1>Password</h1>
                         <TextField
-                            id="outlined-full-width"
+                            id="password"
                             style={{ background: "#FFFF", borderRadius: 8, width: 456, height: 55, position: "absolute", boxShadow: "8px 4px 30px 1px rgba(0, 0, 0, 0.25)" }}
                             placeholder="Password"
                             margin="normal"

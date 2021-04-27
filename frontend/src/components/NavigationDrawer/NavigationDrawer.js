@@ -195,14 +195,18 @@ const navigationMenu = [
     path: '/assign'
   },
   {
-    menu: 'Kelola Hasil Performa',
+    menu: 'Performa',
     icon: <LocalAtmRoundedIcon style={{ color: 'white' }}/>,
-    path: '/kelola-performa'
-  },
-  {
-    menu: 'Isi Borang',
-    icon: <LocalAtmRoundedIcon style={{ color: 'white' }}/>,
-    path: '/mengisi-borang'
+    children: [
+      {
+        menu: 'Kelola Hasil Performa',
+        path: '/kelola-performa'
+      },
+      {
+        menu: 'Isi Borang',
+        path: '/mengisi-borang'
+      },
+    ]
   },
   {
     menu: 'Gaji',

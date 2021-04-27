@@ -19,7 +19,7 @@ import DaftarKaryawanPerforma from "views/KelolaHasilPerforma/DaftarKaryawanPerf
 import DaftarBorangPerforma from "views/KelolaHasilPerforma/DaftarBorangPerforma";
 import AssignmentManager from "views/AssignmentManager";
 import EvaluasiDiri from "views/EvaluasiDiri";
-import Pembobotan from "views/Pembobotan";
+import Pembobotan from "views/KelolaHasilPerforma/Pembobotan";
 
 export default [
   {
@@ -108,9 +108,14 @@ export default [
     component: DaftarKaryawanPerforma,
   },
   {
-    path: '/kelola-performa/:id',
+    path: '/kelola-performa/:idDinilai',
     exact: true,
     component: DaftarBorangPerforma,
+  },
+  {
+    path: '/kelola-performa/:idDinilai/:idPaket',
+    exact: true,
+    component: Pembobotan
   },
   {
     path: '/akun/:idUser',
@@ -126,10 +131,5 @@ export default [
     path: '/evaluasi-diri/add',
     exact: true,
     component: EvaluasiDiri
-  },
-  {
-    path: '/pembobotan',
-    exact: true,
-    component: Pembobotan
   },
 ]
