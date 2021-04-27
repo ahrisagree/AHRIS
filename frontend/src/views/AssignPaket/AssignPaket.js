@@ -16,7 +16,7 @@ import {
 import { StyledTableCell, StyledTableRow } from "components/Table";
 import MainTitle from "components/MainTitle";
 import Pagination from '@material-ui/lab/Pagination';
-import { getListPaketPertanyaanAPI, deletePaketPertanyaanAPI, getKategoriAPI } from 'api/borang';
+import { getListPaketPertanyaanAPI, getKategoriAPI } from 'api/borang';
 import { JENIS_PAKET, PAGE_SIZE } from 'utils/constant';
 import CircularProgress from 'components/Loading/CircularProgress';
 import { setQueryParams } from 'utils/setQueryParams';
@@ -66,7 +66,13 @@ const CustomCheckbox = withStyles({
   checked: {},
 })((props) => <Checkbox color="default" {...props} />);
 
-const AssignPaket = ({history}) => {
+const AssignPaket = ({
+  history,
+  selectedBorang,
+  setSelectedBorang,
+  onSelect,
+  nextStep
+}) => {
   
   const classes = useStyles();
   const [loading, setLoading] = useState(false);
@@ -80,13 +86,13 @@ const AssignPaket = ({history}) => {
 
   const [kategoriFilter, setFilterKategori] = useState(params.get("kategori"));
   const [jenisFilter, setFilterJenis] = useState(params.get("jenis"));
-  const [searchFilter, setFilterSearch] = useState(params.get("search"));
+  const [searchFilter, setFilterSearch] = useState(params.get("searchPaket"));
 
   useEffect(()=>{
     setLoading(true)
     const kategori = params.get("kategori");
     const jenis = params.get("jenis");
-    const search = params.get("search");
+    const search = params.get("searchPaket");
 
     getListPaketPertanyaanAPI({
       page, kategori, jenis, search
@@ -98,6 +104,7 @@ const AssignPaket = ({history}) => {
     }).finally(()=>{
       setLoading(false);
     })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, update]);
 
   useEffect(()=>{
@@ -110,7 +117,7 @@ const AssignPaket = ({history}) => {
     setQueryParams({
       kategori: kategoriFilter || "", 
       jenis: jenisFilter || "", 
-      search: searchFilter || ""
+      searchPaket: searchFilter || ""
     }, history);
     setPage(1);
     setUpdate(update+1);
@@ -123,6 +130,11 @@ const AssignPaket = ({history}) => {
     setFilterJenis(null);
     setFilterSearch(null);
     setFilterKategori(null);
+  }
+
+  const handleSelect = val => () => {
+    // console.log(onSelect, selectedBor)
+    onSelect(setSelectedBorang, selectedBorang, val)
   }
 
   return (
@@ -183,12 +195,12 @@ const AssignPaket = ({history}) => {
             </CustomTextField>
           </div>
           <div className="flex items-center">
-            {!(params.get("search") === searchFilter &&
+            {!(params.get("searchPaket") === searchFilter &&
               params.get("kategori") === kategoriFilter && 
               params.get("jenis") === jenisFilter) &&
               <button onClick={doQuery} className="m-1">Apply</button>  
             }
-            {(params.get("search") ||
+            {(params.get("searchPaket") ||
               params.get("kategori") || 
               params.get("jenis")) &&
               <button onClick={resetQuery} className="m-1">Reset</button>  
@@ -208,6 +220,17 @@ const AssignPaket = ({history}) => {
               </TableRow>
             </TableHead>
             <TableBody>
+              {/* INI yang selected yah */}
+              {selectedBorang.map(row => (
+                <StyledTableRow key={row.id}>
+                <StyledTableCell component="th" scope="row">
+                <CustomCheckbox checked={true} onChange={handleSelect(row)}/>
+                </StyledTableCell>
+                <StyledTableCell align="left">{row.nama}</StyledTableCell>
+                <StyledTableCell align="left">{row.jenis}</StyledTableCell>
+                <StyledTableCell align="left">{row.kategori?.nama}</StyledTableCell>
+              </StyledTableRow>
+              ))}
               {loading ? 
               <StyledTableRow>
                 <StyledTableCell align="center" colSpan="5">
@@ -222,10 +245,10 @@ const AssignPaket = ({history}) => {
                   </StyledTableCell>
                 </StyledTableRow>
                 :
-                listItem.map((row, i) => (
-                  <StyledTableRow key={row.name}>
+                listItem.map(row => !selectedBorang.find(x=>x.id===row.id) && ( // check gada di selected
+                  <StyledTableRow key={row.id}>
                     <StyledTableCell component="th" scope="row">
-                    <CustomCheckbox/>
+                    <CustomCheckbox onChange={handleSelect(row)}/>
                     </StyledTableCell>
                     <StyledTableCell align="left">{row.nama}</StyledTableCell>
                     <StyledTableCell align="left">{row.jenis}</StyledTableCell>
@@ -245,10 +268,11 @@ const AssignPaket = ({history}) => {
 
         <Grid item xs={12} className={classes.button}>
                   <TemplateButton 
-                    onClick={()=>history.push(`/assign/penerima`)}
+                    onClick={nextStep}
                     type="button"
                     buttonStyle="btnBlue"
                     buttonSize="btnLong"
+                    disabled={loading}
                   >
                     Selanjutnya
                   </TemplateButton>

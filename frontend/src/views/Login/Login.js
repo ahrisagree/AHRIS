@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { makeStyles, Paper, Grid, Button } from '@material-ui/core';
 import AHRIS from 'images/agree.png';
 import logo from 'images/logo.png';
-import Breadcrumbs from 'components/Breadcrumbs';
 import TextField from 'components/CustomTextField';
 import Loading from 'components/Loading';
 
@@ -90,6 +89,7 @@ const Login = ({
                             type="password"
                             value={password}
                             onChange={(e)=>setPassword(e.target.value)}
+                            onKeyDown={e=>e.key==='Enter' && goLogin()}
                             variant="outlined"
                             error={!!error.password}
                             helperText={error.password && error.password[0]}

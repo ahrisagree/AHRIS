@@ -10,13 +10,15 @@ import Register from "./views/Register";
 import DaftarKaryawan from "views/DaftarKaryawan";
 import DaftarPaketPertanyaan from "views/DaftarPakerPertanyaan";
 import DetailEditPaketPertanyaan from "views/DetailEditPaketPertanyaan";
-import DaftarBorang from "views/MengisiBorang";
+import DaftarBorang from "views/MengisiBorang/DaftarBorang";
+import DaftarKaryawanDinilai from "views/MengisiBorang/DaftarKaryawanDinilai"
+import MengisiBorang from "views/MengisiBorang/MengisiBorang";
 import EditLogAktivitas from "views/LogAktivitas/EditLogAktivitas";
 import DetailEditUser from "views/DetailEditUser";
-import AssignPaket from "./views/AssignPaket";
-import AssignResponden from "views/AssignResponden";
-import AssignPenerima from "views/AssignPenerima";
-import EvaluasiDiri from "./views/EvaluasiDiri";
+import DaftarKaryawanPerforma from "views/KelolaHasilPerforma/DaftarKaryawanPerforma";
+import DaftarBorangPerforma from "views/KelolaHasilPerforma/DaftarBorangPerforma";
+import AssignmentManager from "views/AssignmentManager";
+import EvaluasiDiri from "views/EvaluasiDiri";
 import Pembobotan from "views/Pembobotan";
 
 export default [
@@ -41,7 +43,7 @@ export default [
     component: Profil,
   },
   {
-    path: "/register",
+    path: "/akun/register",
     exact: true,
     component: Register,
   },
@@ -63,12 +65,22 @@ export default [
   {
     path: '/akun',
     exact: true,
-    component: DaftarKaryawan,
+    component: DaftarKaryawan
   },
   {
-    path: '/daftar-borang',
+    path: '/mengisi-borang/:id',
     exact: true,
     component: DaftarBorang
+  },
+  {
+    path: '/mengisi-borang/',
+    exact: true,
+    component: DaftarKaryawanDinilai
+  },
+  {
+    path: '/mengisi-borang/:id/:idPaket',
+    exact: true,
+    component: MengisiBorang
   },
   {
     path: '/log-aktivitas',
@@ -81,14 +93,24 @@ export default [
     component: DaftarLog
   },
   {
-    path: '/detail-log',
+    path: '/detail-log/:id',
     exact: true,
     component: DetailLogAktivitas
   },
   {
-    path: '/edit-log',
+    path: '/edit-log/:id',
     exact: true,
     component: EditLogAktivitas
+  },
+  {
+    path: '/daftar-karyawan-performa',
+    exact: true,
+    component: DaftarKaryawanPerforma,
+  },
+  {
+    path: '/daftar-karyawan-performa/:id',
+    exact: true,
+    component: DaftarBorangPerforma,
   },
   {
     path: '/akun/:idUser',
@@ -98,26 +120,16 @@ export default [
   {
     path: '/assign',
     exact: true,
-    component: AssignPaket,
-  },
-  {
-    path: '/assign/penerima/responden',
-    exact: true,
-    component: AssignResponden,
-  },
-  {
-    path: '/assign/penerima/',
-    exact: true,
-    component: AssignPenerima,
+    component: AssignmentManager
   },
   {
     path: '/evaluasi-diri/add',
     exact: true,
-    component: EvaluasiDiri,
+    component: EvaluasiDiri
   },
   {
     path: '/pembobotan',
     exact: true,
-    component: Pembobotan,
+    component: Pembobotan
   },
 ]
