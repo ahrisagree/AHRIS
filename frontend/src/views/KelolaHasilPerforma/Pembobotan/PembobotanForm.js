@@ -60,6 +60,7 @@ const PembobotanForm = ({classes, match}) => {
             className={classes.disabledtextField}
             disabled
             /> */}
+            {/* DISABLE DULU YA BENTAR SAMPE UDA TAU CARA NGITUNG SKORNYA */}
     
           <TextField
             required
