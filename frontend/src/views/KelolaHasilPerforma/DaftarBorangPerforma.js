@@ -10,13 +10,12 @@ import {
   TableRow,
   Paper,
   Grid,
-  Tooltip,
-  MenuItem,
 } from '@material-ui/core';
 import { StyledTableCell, StyledTableRow } from "components/Table";
 import MainTitle from "components/MainTitle";
-import { getDetailAssignment, getKategoriAPI } from 'api/borang';
+import { getListPaketPertanyaanAPI } from 'api/borang';
 import CircularProgress from 'components/Loading/CircularProgress';
+import CustomTextField from 'components/CustomTextField';
 
 
 
@@ -85,28 +84,33 @@ const useStyles = makeStyles((theme) =>({
 const DaftarBorangPerforma = ({history, match}) => {
     const classes = useStyles();
     const [loading, setLoading] = useState(false);
-    const [assignment, setAssignment] = useState(null);
+    // const [assignment, setAssignment] = useState(null);
     const [listBorang, setPaketBorang] = React.useState([]);
+    const [periodeFilter, setPeriodeFilter] = useState(new Date().toISOString().substr(0,10));
 
-  
+    const { idDinilai } = match.params;
 
     useEffect(()=>{
       setLoading(true)
       // const kategori = params.get("kategori");
       // const jenis = params.get("jenis");
       // const search = params.get("search");
-      const {id} = match.params;
-      getDetailAssignment(id).then(res=>{
-        setAssignment(res.data);
-        setPaketBorang(res.data?.list_paket_pertanyaan);
-        console.log(res.data?.list_paket_pertanyaan);
+      getListPaketPertanyaanAPI({
+        disablepagination: true, 
+        dinilaiAssigned: idDinilai,
+        periodeAssigned: periodeFilter
+      }).then(res=>{
+        // setAssignment(res.data);
+        setPaketBorang(res.data);
+        console.log(res.data);
       }).catch(err=>{
         // Handle ERROR
         }).finally(()=>{
           setLoading(false);
         })
       // eslint-disable-next-line react-hooks/exhaustive-deps
-      },[]);
+      },[periodeFilter]);
+      
     //     page, jenis, search, kategori, id 
     //   })).then(res=>{
     //     setListItem(res.data);
@@ -151,9 +155,27 @@ const DaftarBorangPerforma = ({history, match}) => {
       <Grid container spacing={2} direction="column">
       <Grid item xs={12} container>
           <Grid item xs={4} alignContent="flex-start">
-            <MainTitle title={`Daftar Borang | ${assignment?.user_dinilai?.username}`} className={classes.title} />
+            <MainTitle title={`Daftar Borang |`} className={classes.title} />
           </Grid>
-          <Grid item xs={8}/>
+          <Grid item xs={8} />
+
+        </Grid>
+        <Grid item xs={12} justify="flex-end" container>
+          <Grid item xs={4} md={3} >
+            <div style={{position: 'relative', padding: 2}}>
+                <CustomTextField
+                label="Periode"
+                variant="outlined"
+                size="small"
+                className={classes.mb}
+                fullWidth
+                type="date"
+                bordered={true}
+                value={periodeFilter}
+                onChange={e=>setPeriodeFilter(e.target.value)}
+                />
+            </div>
+          </Grid>
         </Grid>
         {/* <Grid item xs={12} spacing={2} direction="row" container>
         <Grid item xs={2} alignContent="">
@@ -270,12 +292,12 @@ const DaftarBorangPerforma = ({history, match}) => {
                     <StyledTableCell align="left">
                     <Grid item sm={10}>
                     <TemplateButton
-                        // onClick={()=>history.push(`/akun/${row.pk}`)}
+                        onClick={()=>history.push(`/kelola-performa/${idDinilai}/${row.id}/?periode=${periodeFilter}`)}
                         type="button"
                         buttonStyle="btnGreen"
                         buttonSize="btnLong"
                     >
-                        Isi Penilaian
+                        Lihat Penilaian
                     </TemplateButton>
                     </Grid>
                     </StyledTableCell>

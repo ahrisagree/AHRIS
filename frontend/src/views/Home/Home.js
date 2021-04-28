@@ -13,8 +13,8 @@ import {
   Grid,
   Container,
 } from '@material-ui/core';
-import { getListDaftarKaryawan } from 'api/akun';
-import { buatPresensiAPI } from 'api/log';
+import { getKaryawan, getListDaftarKaryawan } from 'api/akun';
+import { buatPresensiAPI, getListPresensi } from 'api/log';
 import { PAGE_SIZE } from 'utils/constant';
 import { StyledTableCell, StyledTableRow } from "components/Table";
 import MainTitle from "components/MainTitle";
@@ -102,26 +102,42 @@ const Home = (props) => {
   const [jamMasuk, setJamMasuk] = useState(new_time.toString());
   const [keterangan, setKeterangan] = useState("");
   const [createPresensi, setCreatePresensi] = React.useState(false);
+  const [id, setId] = React.useState("");
+  const [username, setUsername] = React.useState("");
+  const [role, setRole] = React.useState("");
 
   const [error, setError] = React.useState({});
 
   const history = props.match.params.history;
 
   useEffect(()=>{
-    setLoading(true)
+    // setLoading(true)
     
-    getListDaftarKaryawan({
+    // getListDaftarKaryawan({
+    //   page
+    // }).then(res=>{
+    //   setListItem(res.data?.results);
+    //   setCount(Math.ceil(res.data?.count/PAGE_SIZE));
+    // }).catch(err=>{
+    // // Handle ERROR
+    // }).finally(()=>{
+    //   setLoading(false);
+    // })
+
+    getListPresensi({
       page
     }).then(res=>{
       setListItem(res.data?.results);
+      console.log(res.data?.results);
       setCount(Math.ceil(res.data?.count/PAGE_SIZE));
     }).catch(err=>{
     // Handle ERROR
     }).finally(()=>{
       setLoading(false);
     })
-  }, [page, update]);
+    
 
+  }, [page, update]);
 
   const onSubmit = () => {
     buatPresensiAPI(
@@ -132,16 +148,27 @@ const Home = (props) => {
       setTanggal("");
       setJamMasuk("");
       setKeterangan("");
-      setCreatePresensi(true);
-      setHadir(true);
+      setCreatePresensi(true); 
+      setId(res.data.user);
+      // console.log(res.data.user);    
+      // console.log(res.data.tanggal);
+      // console.log(res.data.jam_masuk);
+      // console.log(res.data.keterangan); 
     }).catch(err=>{
       console.error(err.response);
       setError(err.response && err.response.data);
     }).finally(()=>{
       setLoading(false);
     })
-  }
 
+    getKaryawan(id).then(res => {
+      const { data } = res
+      setId(data.pk);
+      setUsername(data.username);
+      setRole(data.role);
+    })
+
+  }
 
 
     return (
@@ -241,6 +268,7 @@ const Home = (props) => {
                 <StyledTableCell align="left">No </StyledTableCell>
                 <StyledTableCell align="left">Nama </StyledTableCell>
                 <StyledTableCell align="left">Role </StyledTableCell>
+                <StyledTableCell align="left">Status Presensi</StyledTableCell>
                 <StyledTableCell align="left">Keterangan</StyledTableCell>
               </TableRow>
             </TableHead>
@@ -258,27 +286,28 @@ const Home = (props) => {
                     Tidak ada karyawan
                   </StyledTableCell>
                 </StyledTableRow>
-                :
+                : 
                 listItem.map((row, i) => (
-                  <StyledTableRow key={row.username}>
+                  <StyledTableRow key={row.user.pk}>
                     <StyledTableCell component="th" scope="row">
                       {`${i+1}.`}
                     </StyledTableCell>
-                    <StyledTableCell align="left">{row.username}</StyledTableCell>
-                    <StyledTableCell align="left">{row.role}</StyledTableCell>
-                    <StyledTableCell align="left">{hadir ? "Hadir" : "Absen"}</StyledTableCell>
+                    <StyledTableCell align="left">{row.user.username}</StyledTableCell>
+                    <StyledTableCell align="left">{row.user.role}</StyledTableCell>
+                    <StyledTableCell align="left">Hadir</StyledTableCell>
+                    <StyledTableCell align="left">{row.keterangan}</StyledTableCell>
                   </StyledTableRow>
-                )))}
+                ))) }
             </TableBody>
           </MuiTable>
         </TableContainer>
-        <div className={classes.pagination}>
+        {/* <div className={classes.pagination}>
           <Pagination 
             count={count} 
             page={page} 
             onChange={(_e,val)=>setPage(val)}
             />
-        </div>
+        </div> */}
         <Loading open={loading} />
         <Dialog open={!!createPresensi} handleClose={()=>setCreatePresensi(false)} ></Dialog>
         <DialogFail

@@ -20,7 +20,13 @@ class PaketPertanyaanViewSet(viewsets.ModelViewSet):
   queryset = PaketPertanyaan.objects.all().order_by('-id')
   serializer_class = PaketPertanyaanSerializer
   filter_class = BorangFilter
-  filterset_fields = ['kategori', 'jenis']
+  filterset_fields = [
+    'kategori',
+    'jenis',
+    'dinilaiAssigned',
+    'penilaiAssigned',
+    'periodeAssigned'
+    ]
   search_fields = ['nama']
 
   def list(self, request, *args, **kwargs):

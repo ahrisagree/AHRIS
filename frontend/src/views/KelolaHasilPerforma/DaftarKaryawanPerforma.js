@@ -21,7 +21,7 @@ import CreateIcon from '@material-ui/icons/CreateRounded';
 import { StyledTableCell, StyledTableRow } from "components/Table";
 import MainTitle from "components/MainTitle";
 import Pagination from '@material-ui/lab/Pagination';
-import { getDivisiAPI } from 'api/akun';
+import { getDivisiAPI, getListDaftarKaryawan } from 'api/akun';
 import { getListAssignment } from 'api/borang';
 import { PAGE_SIZE, ROLES } from 'utils/constant';
 import CircularProgress from 'components/Loading/CircularProgress';
@@ -101,7 +101,6 @@ const useStyles = makeStyles((theme) =>({
     const [update, setUpdate] = useState(0);
     const [divisiOptions, setDivisiOptions] = useState([]);
     const params = new URLSearchParams(history.location.search);
-    const [deleteKaryawan, setDeleteKaryawan] = useState(null);
 
       // buat ngefiltet
 
@@ -114,7 +113,7 @@ const useStyles = makeStyles((theme) =>({
       const search = params.get("search");
       const role = params.get("role");
       const divisi = params.get("divisi");
-      getListAssignment({
+      getListDaftarKaryawan({
         page, search, role, divisi 
       }).then(res=>{
         setListItem(res.data?.results);
@@ -124,6 +123,7 @@ const useStyles = makeStyles((theme) =>({
       }).finally(()=>{
         setLoading(false);
       })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [page, update]);
 
     useEffect(()=>{
@@ -279,13 +279,13 @@ const useStyles = makeStyles((theme) =>({
                     <StyledTableCell component="th" scope="row">
                       {`${i+1}.`}
                     </StyledTableCell>
-                    <StyledTableCell align="left">{row.user_dinilai.username}</StyledTableCell>
-                    <StyledTableCell align="left">{row.user_dinilai.role}</StyledTableCell>
-                    <StyledTableCell align="left">{row.user_dinilai.divisi.map(x=> x.nama_divisi+", ")}</StyledTableCell>
+                    <StyledTableCell align="left">{row.username}</StyledTableCell>
+                    <StyledTableCell align="left">{row.role}</StyledTableCell>
+                    <StyledTableCell align="left">{row.divisi.map(x=> x.nama_divisi+", ")}</StyledTableCell>
                     <StyledTableCell align="left">
                     <Grid item sm={10}>
                         <TemplateButton
-                        onClick={()=>history.push(`/daftar-karyawan-performa/${row.id}`)}
+                        onClick={()=>history.push(`/kelola-performa/${row.pk}`)}
                         type="button"
                         buttonStyle="btnGreen"
                         buttonSize="btnLong"
@@ -299,6 +299,13 @@ const useStyles = makeStyles((theme) =>({
             </TableBody>
           </MuiTable>
         </TableContainer>
+        <div className={classes.pagination}>
+          <Pagination 
+            count={count} 
+            page={page} 
+            onChange={(_e,val)=>setPage(val)}
+            />
+        </div>
     </div>
     </div>
   );
