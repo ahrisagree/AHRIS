@@ -1,8 +1,5 @@
 import React, { useEffect, useState  } from 'react';
-import Pagination from "@material-ui/lab/Pagination";
 import TemplateButton from 'components/TemplateButton';
-import CustomTextField from 'components/CustomTextField';
-import Button  from "components/Button";
 import {
   makeStyles,
   Table as MuiTable,
@@ -12,18 +9,11 @@ import {
   TableRow,
   Paper,
   Grid,
-  Tooltip,
-  MenuItem,
 } from '@material-ui/core';
 import { StyledTableCell, StyledTableRow } from "components/Table";
 import MainTitle from "components/MainTitle";
 import { getDetailAssignment } from 'api/borang';
-import { PAGE_SIZE, ROLES } from 'utils/constant';
 import CircularProgress from 'components/Loading/CircularProgress';
-import { setQueryParams } from 'utils/setQueryParams';
-import TextField from 'components/CustomTextField';
-import { PanoramaSharp } from '@material-ui/icons';
-
 
 
 const useStyles = makeStyles((theme) =>({
@@ -93,29 +83,23 @@ const DaftarBorang = ({history, match}) => {
     const [loading, setLoading] = useState(false);
     const [assignment, setAssignment] = useState(null);
     const [listBorang, setPaketBorang] = React.useState([]);
-    const [page, setPage] = useState(1);
-    const [count, setCount] = useState(0);
-    const [update, setUpdate] = useState(0);
 
   
 
     useEffect(()=>{
       setLoading(true)
       const { id } = match.params;
-      getDetailAssignment(id , {
-        page,  
-      }).then(res=>{
+      getDetailAssignment(id).then(res=>{
         setAssignment(res.data);
         setPaketBorang(res.data?.list_paket_pertanyaan);
         console.log(res.data?.list_paket_pertanyaan);
-        setCount(Math.ceil(res.data?.count/PAGE_SIZE));
       }).catch(err=>{
       // Handle ERROR
       }).finally(()=>{
         setLoading(false);
       })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [page,update]);
+    }, []);
    
     return (
 
@@ -145,7 +129,6 @@ const DaftarBorang = ({history, match}) => {
                 <StyledTableCell align="left">Nama Borang </StyledTableCell>
                 <StyledTableCell align="left">Jenis Paket </StyledTableCell>
                 <StyledTableCell align="left">Kategori</StyledTableCell>
-                <StyledTableCell align="left">Status</StyledTableCell>
                 <StyledTableCell align="left"></StyledTableCell>
               </TableRow>
             </TableHead>
@@ -172,22 +155,20 @@ const DaftarBorang = ({history, match}) => {
                     <StyledTableCell align="left">{row.nama}</StyledTableCell>
                     <StyledTableCell align="left">{row.jenis}</StyledTableCell>
                     <StyledTableCell align="left">{row.kategori.nama}</StyledTableCell>
-                    <StyledTableCell align="left">
-                      {assignment.list_paket_jawaban.find(x=>x.id===row.id) ? 
-                    "Sudah Diisi":
-                    "Belum Diisi"  
-                    }
-                    </StyledTableCell>
+                    
                     <StyledTableCell align="left">
                     <Grid item sm={10}>
-                    <TemplateButton
-                        onClick={()=>history.push(`/mengisi-borang/${assignment.id}/${row.id}`)}
-                        type="button"
-                        buttonStyle="btnGreen"
-                        buttonSize="btnLong"
-                    >
-                        Isi Penilaian
-                    </TemplateButton>
+                    {assignment.list_paket_jawaban.find(x=>x.paket_pertanyaan===row.id) ? 
+                    "Sudah Diisi":
+                      <TemplateButton
+                          onClick={()=>history.push(`/mengisi-borang/${assignment.id}/${row.id}`)}
+                          type="button"
+                          buttonStyle="btnGreen"
+                          buttonSize="btnLong"
+                      >
+                          Isi Penilaian
+                      </TemplateButton>
+                    }
                     </Grid>
                     </StyledTableCell>
                   </StyledTableRow>
@@ -195,13 +176,6 @@ const DaftarBorang = ({history, match}) => {
             </TableBody>
           </MuiTable>
         </TableContainer>
-        <div className={classes.pagination}>
-          <Pagination 
-            count={count} 
-            page={page} 
-            onChange={(_e,val)=>setPage(val)}
-            />
-        </div>
     </div>
     </div>
   );

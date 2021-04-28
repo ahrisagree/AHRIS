@@ -12,7 +12,7 @@ import MainTitle from 'components/MainTitle';
 import Dialog from 'components/Dialog';
 import DialogFail from 'components/DialogFail';
 import TemplateButton from 'components/TemplateButton';
-import { buatLogAPI, editLogAPI, getLog } from 'api/log';
+import { editLogAPI, getLog } from 'api/log';
 import Loading from 'components/Loading';
 
 const daftar_tipe = [
@@ -69,6 +69,7 @@ const EditLogAktivitas = (props) => {
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState({});
   const [success, setSuccess] = useState(false);
+  
 
   const [selectedDate, setSelectedDate] = React.useState("");
   const [jamMasuk, setJamMasuk] = React.useState("");
@@ -86,8 +87,9 @@ const EditLogAktivitas = (props) => {
     setSelectedDate(date);
   };
 
+
   useEffect(() => {
-    // setLoading(true);
+    setLoading(true);
     const id = props.match.params.id;
     getLog(id).then(res => {
       const { data } = res
@@ -104,10 +106,11 @@ const EditLogAktivitas = (props) => {
     }).catch(err => {
       // HANDLE ERROR
     }).finally(() => {
-      setLoading(false)
+      setLoading(false);
     })
     
-  })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
 
   const sendEditData = () => {
@@ -141,7 +144,7 @@ const EditLogAktivitas = (props) => {
 
           <Grid item xs={12}>
             <Typography style={{ fontWeight: 600, marginLeft: '1%', marginBottom: '3%', fontFamily: 'IBM Plex Sans', fontStyle: 'normal', 
-            fontWeight: 600, fontSize: 24, lineHeight: '138%', display: 'flex', alignItems: 'center', letterSpacing: '0.0075em', color: '#0A3142' }} 
+            fontSize: 24, lineHeight: '138%', display: 'flex', alignItems: 'center', letterSpacing: '0.0075em', color: '#0A3142' }} 
             variant="subtitle1">
               Log Aktivitas
             </Typography>

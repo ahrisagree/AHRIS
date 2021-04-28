@@ -55,31 +55,29 @@ const DaftarPaketPertanyaan = ({match, history}) => {
 
   const sendData = () => {
     setFullLoading(true);
+    const formatedListAspek = paketPertanyaan.list_aspek.map(aspek=>({
+      nama: aspek.nama,
+      list_jawaban: aspek.list_pertanyaan
+    }));
     postJawabanAPI({
       ...paketPertanyaan,
-      paketPertanyaan: idPaket,
-      kategori: paketPertanyaan.kategori.nama_kategori,
-      assignment: assignment.id
-    }).then(res=>{
-      setSuccess(true)
+      paket_pertanyaan: idPaket,
+      kategori: paketPertanyaan.kategori.nama,
+      assignment: assignment.id,
+      list_aspek: formatedListAspek
+    }).then(()=>{
+      setSuccess(true);
     }).catch(err=>{
       console.error(err.response && err.response.data)
-      setFail(err && err.response && err.response.data.detail);
+      setFail(err && err.response && err.response.data);
     }).finally(()=>{
       setFullLoading(false);
     })
   }
 
-  console.log(history)
-
   const handleChange = (indexAspek, indexPertanyaan, jawaban) => {
-    console.log(indexAspek, indexPertanyaan, jawaban)
     const newPaket =  {...paketPertanyaan};
-    newPaket.list_aspek[indexAspek].list_pertanyaan[indexPertanyaan].jawaban = jawaban
-    // const newJawaban = {
-    //   ...paketPertanyaan.list_aspek[indexAspek].list_jawaban[indexPertanyaan],
-    //   jawaban
-    // }
+    newPaket.list_aspek[indexAspek].list_pertanyaan[indexPertanyaan].jawaban = jawaban;
     setPaketPertanyaan(newPaket);
   }
 
@@ -246,7 +244,7 @@ const DaftarPaketPertanyaan = ({match, history}) => {
         </TableContainer>
         <Loading open={fullLoading} />
         <SuccessDialog open={success} handleClose={()=>history.push(`/mengisi-borang/${id}`)} />
-        <FailDialog open={!!fail} handleClose={()=>setFail(null)} />
+        <FailDialog open={!!fail} handleClose={()=>setFail(null)} text={fail?.detail} />
     </div>
   );
 };

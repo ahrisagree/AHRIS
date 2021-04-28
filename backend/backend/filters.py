@@ -33,7 +33,7 @@ class PeriodeFilter(filters.DateFilter):
             "%s__month" % (self.field_name, ): value.month,
             "%s__year" % (self.field_name, ): value.year
         }
-        qs = qs.filter(**filter_lookups)
+        qs = qs.filter(**filter_lookups).distinct()
     return qs
 
 class UserFilter(FilterSet):
@@ -49,6 +49,9 @@ class BorangFilter(FilterSet):
     lookup_expr='in'
   )
   jenis = filters.CharFilter()
+  dinilaiAssigned = filters.NumberFilter(field_name='list_assignment__user_dinilai__id', distinct=True)
+  penilaiAssigned = filters.NumberFilter(field_name='list_assignment__user_penilai__id', distinct=True)
+  periodeAssigned = PeriodeFilter(field_name='list_assignment__periode', distinct=True)
 
 class AssignmentFilter(FilterSet):
   user_dinilai = filters.NumberFilter(field_name='user_dinilai__id')

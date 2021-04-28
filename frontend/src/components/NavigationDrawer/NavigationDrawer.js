@@ -190,6 +190,25 @@ const navigationMenu = [
     ]
   },
   {
+    menu: 'Assign Borang',
+    icon: <LocalAtmRoundedIcon style={{ color: 'white' }}/>,
+    path: '/assign'
+  },
+  {
+    menu: 'Performa',
+    icon: <LocalAtmRoundedIcon style={{ color: 'white' }}/>,
+    children: [
+      {
+        menu: 'Kelola Hasil Performa',
+        path: '/kelola-performa'
+      },
+      {
+        menu: 'Isi Borang',
+        path: '/mengisi-borang'
+      },
+    ]
+  },
+  {
     menu: 'Gaji',
     path: '/',
     icon: <LocalAtmRoundedIcon style={{ color: 'white' }}/>,
