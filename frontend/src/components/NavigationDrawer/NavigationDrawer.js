@@ -191,12 +191,12 @@ const navigationMenu = [
   },
   {
     menu: 'Assign Borang',
-    icon: <LocalAtmRoundedIcon style={{ color: 'white' }}/>,
+    icon: <InsertDriveFileOutlinedIcon style={{ color: 'white' }}/>,
     path: '/assign'
   },
   {
     menu: 'Performa',
-    icon: <LocalAtmRoundedIcon style={{ color: 'white' }}/>,
+    icon: <InsertDriveFileOutlinedIcon style={{ color: 'white' }}/>,
     children: [
       {
         menu: 'Kelola Hasil Performa',

@@ -332,6 +332,7 @@ const BuatPaketPertanyaan = ({paket, isEdit, isDetail, setEditMode}) => {
         open={!!errorState.detail || !!errorState.list_aspek} 
         handleClose={()=>{
           delete errorState.detail;
+          delete errorState.list_aspek;
           setUpdate(update+1);
         }} 
         text={errorState.detail}

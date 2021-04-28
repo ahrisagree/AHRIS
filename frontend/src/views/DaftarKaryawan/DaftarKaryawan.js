@@ -103,7 +103,7 @@ const DaftarKaryawan = ({history}) => {
   
   const handleDeleteKaryawan = () => {
     setFullLoading(true);
-    deleteKaryawanAPI(deleteKaryawan.id).then(()=>{
+    deleteKaryawanAPI(deleteKaryawan.pk).then(()=>{
      setDeleteKaryawan(null);
      setUpdate(update+1);
     }).catch(err=>{
