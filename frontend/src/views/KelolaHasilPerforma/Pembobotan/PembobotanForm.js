@@ -14,6 +14,7 @@ import CircularProgress from 'components/Loading/CircularProgress';
 const PembobotanForm = ({classes, match}) => {
   const [loading, setLoading] = useState(false);
   const [paketPertanyaan, setPaketPertanyaan] = useState(null);
+  // const [kumulatif, setKumulatif] = useState(0);
 
   useEffect(()=>{
     setLoading(true);
@@ -69,6 +70,7 @@ const PembobotanForm = ({classes, match}) => {
             margin="normal"
             variant="outlined"
             disabled={loading}
+            type="number"
             /> 
     
     
@@ -114,7 +116,8 @@ const PembobotanForm = ({classes, match}) => {
             margin="normal"
             variant="outlined"
             className={classes.disabledtextField}
-            disabled
+            disabled={loading}
+            type="number"
             />
     
           <TextField
