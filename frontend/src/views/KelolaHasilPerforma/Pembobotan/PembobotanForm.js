@@ -30,8 +30,8 @@ const PembobotanForm = ({classes, match}) => {
   }, [])
   
   return (
-    // {/* <MainTitle title="Rekap Hasil Performa" className="mb-8"></MainTitle> */}
-      <Container component={Paper} className={classes.paper} style={{minHeight: '100%'}}>
+    <Container component={Paper} className={classes.paper} style={{minHeight: '100%'}}>
+      {/* <MainTitle title="Rekap Hasil Performa" className="mb-8"></MainTitle> */}
 
       <Grid item xs={12}>
       <Typography style={{ fontWeight: 600, marginLeft: '1%', marginBottom: '3%', fontFamily: 'IBM Plex Sans', fontStyle: 'normal', 
