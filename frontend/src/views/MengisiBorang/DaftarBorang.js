@@ -93,23 +93,29 @@ const DaftarBorang = ({history, match}) => {
     const [loading, setLoading] = useState(false);
     const [assignment, setAssignment] = useState(null);
     const [listBorang, setPaketBorang] = React.useState([]);
+    const [page, setPage] = useState(1);
+    const [count, setCount] = useState(0);
+    const [update, setUpdate] = useState(0);
 
   
 
     useEffect(()=>{
       setLoading(true)
       const { id } = match.params;
-      getDetailAssignment(id).then(res=>{
+      getDetailAssignment(id , {
+        page,  
+      }).then(res=>{
         setAssignment(res.data);
         setPaketBorang(res.data?.list_paket_pertanyaan);
         console.log(res.data?.list_paket_pertanyaan);
+        setCount(Math.ceil(res.data?.count/PAGE_SIZE));
       }).catch(err=>{
       // Handle ERROR
       }).finally(()=>{
         setLoading(false);
       })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [page,update]);
    
     return (
 
@@ -139,7 +145,7 @@ const DaftarBorang = ({history, match}) => {
                 <StyledTableCell align="left">Nama Borang </StyledTableCell>
                 <StyledTableCell align="left">Jenis Paket </StyledTableCell>
                 <StyledTableCell align="left">Kategori</StyledTableCell>
-                <StyledTableCell align="left"></StyledTableCell>
+                <StyledTableCell align="left">Status</StyledTableCell>
                 <StyledTableCell align="left"></StyledTableCell>
               </TableRow>
             </TableHead>
@@ -189,6 +195,13 @@ const DaftarBorang = ({history, match}) => {
             </TableBody>
           </MuiTable>
         </TableContainer>
+        <div className={classes.pagination}>
+          <Pagination 
+            count={count} 
+            page={page} 
+            onChange={(_e,val)=>setPage(val)}
+            />
+        </div>
     </div>
     </div>
   );
