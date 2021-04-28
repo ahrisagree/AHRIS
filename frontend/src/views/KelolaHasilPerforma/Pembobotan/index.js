@@ -131,7 +131,7 @@ const Pembobotan = props => {
           }
         </div>
         <div className={classes.bottomPane}>
-          <PembobotanForm classes={classes} />
+          <PembobotanForm classes={classes} {...props} />
         </div>
       </div>
 
