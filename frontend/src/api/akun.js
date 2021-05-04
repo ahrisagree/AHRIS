@@ -17,3 +17,6 @@ export const getKaryawan = id =>
 
 export const editUser = (id, data) => 
     axios.patch(`${baseUrl}/user/${id}/`, data)
+
+export const deleteKaryawanAPI = id =>
+    axios.delete(`${baseUrl}/user/${id}/`);
