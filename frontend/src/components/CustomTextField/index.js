@@ -32,6 +32,7 @@ const TheTextField = ({type, ...props}) => {
 
 const CustomTextField = withStyles({
   root: {
+    marginBottom: '1rem',
     '& label.Mui-focused': {
       color: '#0B3242',
     },
@@ -40,7 +41,8 @@ const CustomTextField = withStyles({
     },
     '& .MuiFormHelperText-root': {
       position: 'absolute',
-      top: '100%'
+      top: '100%',
+      marginTop: 0,
     },
     '& .MuiOutlinedInput-root': {
       '&:not(.Mui-disabled):hover fieldset': {
