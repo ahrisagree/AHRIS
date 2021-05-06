@@ -26,6 +26,7 @@ import LocalAtmRoundedIcon from '@material-ui/icons/LocalAtmRounded';
 import CheckIcon from '@material-ui/icons/Check';
 import BookIcon from '@material-ui/icons/Book';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import TemplateButton from 'components/TemplateButton';
 
 
 const drawerWidth = 240;
@@ -215,10 +216,10 @@ const navigationMenu = [
   }
 ]
 
-const NavigationDrawer = ({children, history, location, user}) => {
+const NavigationDrawer = ({children, history, location, user, logoutThunk}) => {
   const classes = useStyles();
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(true);
   const [accordion, setAccordion] = React.useState(-1);
   const {pathname} = location;
 
@@ -338,6 +339,16 @@ const NavigationDrawer = ({children, history, location, user}) => {
             </ListItem>
           ))}
 
+        </div>
+        <div className="text-center mt-12">
+          <TemplateButton
+            onClick={logoutThunk}
+            type="button"
+            buttonStyle="btnBlueOutline"
+            buttonSize="btnLong"
+          >
+            Logout
+          </TemplateButton>
         </div>
       </Drawer>
       <main className={classes.content}>
