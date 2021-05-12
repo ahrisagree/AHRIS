@@ -168,6 +168,7 @@ const DetailLogAktivitas = (props) => {
               }}
               value={selectedDate}
               disabled={true}
+              isDetail
               />
             
 
@@ -185,6 +186,7 @@ const DetailLogAktivitas = (props) => {
               }}
               value={jamMasuk}
               disabled={true}
+              isDetail
             />
 
 
@@ -202,6 +204,7 @@ const DetailLogAktivitas = (props) => {
               }}
               value={jamKeluar}
               disabled={true}
+              isDetail
             />
 
             </Grid>
@@ -217,6 +220,7 @@ const DetailLogAktivitas = (props) => {
             className={classes.textField}
             value={tipe}
             disabled={true}
+            isDetail
             >
               {daftar_tipe.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
@@ -234,6 +238,7 @@ const DetailLogAktivitas = (props) => {
             className={classes.textField}
             value={keterangan}
             disabled={true}
+            isDetail
             />
 
             <TextField id="outlined-multiline-static"
@@ -244,6 +249,7 @@ const DetailLogAktivitas = (props) => {
             className={classes.textField}
             value={aktivitas}
             disabled={true}
+            isDetail
             />
             
           </Grid>
@@ -257,6 +263,7 @@ const DetailLogAktivitas = (props) => {
               className={classes.textField}
               value={linkDeliverables}
               disabled={true}
+              isDetail
               />
 
             <TextField id="outlined-full-width"
@@ -267,6 +274,7 @@ const DetailLogAktivitas = (props) => {
               className={classes.textField}
               value={statusDeliverables}
               disabled={true}
+              isDetail
               />
 
             <TextField id="outlined-multiline-static"
@@ -277,6 +285,7 @@ const DetailLogAktivitas = (props) => {
             className={classes.textField}
             value={notes}
             disabled={true}
+            isDetail
             />
 
           {tipe &&
@@ -288,6 +297,7 @@ const DetailLogAktivitas = (props) => {
             className={classes.textField}
             value={alasanLembur}
             disabled={true}
+            isDetail
             />
           }
           </Grid>

@@ -335,7 +335,7 @@ const BuatPaketPertanyaan = ({paket, isEdit, isDetail, setEditMode}) => {
           delete errorState.list_aspek;
           setUpdate(update+1);
         }} 
-        text={errorState.detail}
+        text={errorState.detail || "Terdapat field yang yang belum diisi"}
         />
     </div>
   );
