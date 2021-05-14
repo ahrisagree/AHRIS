@@ -13,6 +13,8 @@ export const getListLog = query => {
     return axios.get(`${baseUrl}/log/?${formatedQuery}`);
 }
 
+export const getListLogKaryawan = () => axios.get(`${baseUrl}/log/`);
+
 export const getListPresensi = query => {
     let formatedQuery = ""
     Object.keys(query).forEach(qkey=>formatedQuery+=query[qkey]?`${qkey}=${query[qkey]}&`:'');
@@ -20,6 +22,9 @@ export const getListPresensi = query => {
 }
 
 export const editLogAPI = (id, data) => 
+    axios.patch(`${baseUrl}/log/${id}/`, data);
+
+export const setujuiLogAPI = (id, data) => 
     axios.patch(`${baseUrl}/log/${id}/`, data);
 
 export const getLog = id =>

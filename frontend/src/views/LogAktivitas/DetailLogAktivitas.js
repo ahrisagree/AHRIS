@@ -10,7 +10,8 @@ import {
 import TextField from 'components/CustomTextField';
 import MainTitle from 'components/MainTitle';
 import TemplateButton from 'components/TemplateButton';
-import { buatLogAPI, editLogAPI, getLog } from 'api/log';
+import { editLogAPI, getLog, setujuiLogAPI } from 'api/log';
+import { STATUS_LOG } from 'utils/constant';
 import Loading from 'components/Loading';
 import Dialog from 'components/Dialog';
 import DialogFail from 'components/DialogFail';
@@ -84,10 +85,8 @@ const DetailLogAktivitas = (props) => {
   const [alasanLembur, setAlasanLembur] = React.useState("");
   const [komentar, setKomentar] = React.useState("");
   const [notes, setNotes] = React.useState("");
-  const [createLog, setCreateLog] = React.useState(false);
-  const [update, setUpdate] = React.useState(0);
+  const [statusLog, setStatusLog] = React.useState("");
 
-  
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
@@ -108,6 +107,8 @@ const DetailLogAktivitas = (props) => {
       setStatusDeliverables(data.status_deliverable);
       setNotes(data.notes);
       setAlasanLembur(data.alasan_lembur);
+      setKomentar(data.komentar);
+      setStatusLog(STATUS_LOG[data.status_log]);
     }).catch(err => {
       // HANDLE ERROR
     }).finally(() => {
@@ -116,21 +117,13 @@ const DetailLogAktivitas = (props) => {
     
   }, [])
 
-  const sendKomentar = () => {
+  const sendKomentarSetuju = () => {
     const { id } = props.match.params;
-    setLoading(true)
-    editLogAPI(id, {
-      tanggal: selectedDate,
-      jam_masuk: jamMasuk,
-      jam_keluar: jamKeluar,
-      is_lembur: tipe,
-      keterangan: keterangan,
-      aktivitas: aktivitas,
-      link_deliverable: linkDeliverables,
-      status_deliverable: statusDeliverables,
-      notes: notes,
-      alasan_lembur: alasanLembur,
-      komentar: komentar
+    setLoading(true);
+    setStatusLog(STATUS_LOG[1]);
+    setujuiLogAPI(id, {
+      komentar: komentar,
+      status_log: 1
     }).then(res => {
       setSuccess(true);
     }).catch(err => {
@@ -139,6 +132,24 @@ const DetailLogAktivitas = (props) => {
       setLoading(false);
     })
   }
+
+  const sendKomentarTolak = () => {
+    const { id } = props.match.params;
+    setLoading(true);
+    setStatusLog(STATUS_LOG[2]);
+    setujuiLogAPI(id, {
+      komentar: komentar,
+      status_log: 2
+    }).then(res => {
+      setSuccess(true);
+    }).catch(err => {
+      setError(err.response && err.response.data);
+    }).finally(() => {
+      setLoading(false);
+    })
+  }
+
+
 
   
     return (
@@ -287,19 +298,45 @@ const DetailLogAktivitas = (props) => {
             disabled={true}
             isDetail
             />
+          </Grid>
 
-          {tipe &&
-            <TextField id="outlined-multiline-static"
-            label="Alasan Lembur"
-            required="true"
-            style={{ margin: 8, width: "30%" }}
-            margin="normal"
-            className={classes.textField}
-            value={alasanLembur}
-            disabled={true}
-            isDetail
-            />
-          }
+          <Grid item xs={12}>
+            {tipe &&
+              <TextField id="outlined-multiline-static"
+              label="Alasan Lembur"
+              required="true"
+              style={{ margin: 8, width: "30%" }}
+              margin="normal"
+              className={classes.textField}
+              value={alasanLembur}
+              disabled={true}
+              isDetail
+              />
+            }
+
+              <TextField id="outlined-multiline-static"
+              label="Komentar"
+              required="true"
+              style={{ margin: 8, width: "30%" }}
+              margin="normal"
+              className={classes.textField}
+              value={komentar}
+              disabled={true}
+              isDetail
+              />
+
+              <TextField id="outlined-multiline-static"
+              label="Status Log"
+              required="true"
+              style={{ margin: 8, width: "30%" }}
+              margin="normal"
+              className={classes.textField}
+              value={statusLog}
+              disabled={true}
+              isDetail
+              />
+
+
           </Grid>
 
           <Grid item xs={12}>
@@ -319,7 +356,7 @@ const DetailLogAktivitas = (props) => {
               />
           </Grid>
 
-          <div className="flex justify-center py-6">
+          {/* <div className="flex justify-center py-6">
           <TemplateButton
               onClick={sendKomentar}
               type="button"
@@ -329,7 +366,30 @@ const DetailLogAktivitas = (props) => {
           >
               Simpan
           </TemplateButton>
-          </div>
+          </div> */
+          
+          }
+
+           <div className="flex justify-end py-6">
+               <TemplateButton
+                onClick={sendKomentarSetuju}
+                type="button"
+                buttonStyle="btnGreen"
+                buttonSize="btnMedium"
+              >
+                Setujui
+              </TemplateButton>
+
+              <TemplateButton
+                onClick={sendKomentarTolak}
+                type="button"
+                buttonStyle="btnDanger"
+                buttonSize="btnMedium"
+                
+              >
+                Tolak
+              </TemplateButton>
+            </div>
 
         </Container>
         <Loading open={loading} />
