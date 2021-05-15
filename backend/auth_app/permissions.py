@@ -47,6 +47,6 @@ class HasilPerformaPermission(BasePermission):
 
 class ManagerOnlyEditPermission(BasePermission):
     def has_permission(self, request, view):
-        if request.method == ['PATCH', 'PUT']:
+        if request.method in ['PATCH', 'PUT']:
             return request.user.has_role('Manager')
         return True
