@@ -2,8 +2,8 @@ from rest_framework import serializers
 from .models import Assignment
 from auth_app.models import AppUser
 from borang.models import PaketPertanyaan
-from borang.serializers import PaketPertanyaanSerializer
-from jawaban.serializers import PaketJawabanSerializer
+from borang.serializers import PaketPertanyaanSerializer, PaketPertanyaanMiniSerializer
+from jawaban.serializers import PaketJawabanSerializer, PaketJawabanMiniSerializer
 from auth_app.serializers import UserListSerializer
 from datetime import date
 
@@ -24,6 +24,8 @@ class AssignmentSerializer(serializers.ModelSerializer):
 class AssignmentDetailSerializer(serializers.ModelSerializer):
   user_penilai = UserListSerializer()
   user_dinilai = UserListSerializer()
+  # list_paket_pertanyaan = PaketPertanyaanMiniSerializer(many=True)
+  # list_paket_jawaban = PaketJawabanMiniSerializer(many=True)
   list_paket_pertanyaan = PaketPertanyaanSerializer(many=True)
   list_paket_jawaban = PaketJawabanSerializer(many=True)
   class Meta:
@@ -101,3 +103,11 @@ class AssignRespondenSerializer(serializers.Serializer):
         assignment.list_paket_pertanyaan.add(*list_borang_data)
         list_assignment.append(AssignmentSerializer(assignment).data)
     return list_assignment
+
+
+class ScoringAspekSerializer(serializers.Serializer):
+  nama = serializers.CharField(max_length=255)
+  skor = serializers.IntegerField()
+
+class ScoringSerializer(serializers.Serializer):
+  list_aspek = ScoringAspekSerializer(many=True)

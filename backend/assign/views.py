@@ -1,7 +1,8 @@
-from rest_framework import generics, pagination, status, mixins, viewsets
+from rest_framework import generics, pagination, status, mixins, viewsets, views
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from .models import *
+from jawaban.models import PaketJawaban, AspekJawaban, Jawaban
 from .serializers import *
 from auth_app.permissions import *
 from backend.filters import AssignmentFilter
@@ -41,3 +42,34 @@ class AssignmentView(viewsets.ReadOnlyModelViewSet, mixins.CreateModelMixin):
     if not request.user.has_role('Admin'):
       self.queryset = Assignment.objects.filter(user_penilai=request.user).order_by('-id')
     return super().list(request, *args, **kwargs)  
+
+
+class ScoringView(views.APIView):
+  permission_classes = (IsAuthenticated, AdminPermission)
+  http_methods = ('get')
+
+  def get(self, request, *args, **kwargs):
+    list_paket_jawaban = PaketJawaban.objects.filter(**kwargs)
+    list_aspek_jawaban = AspekJawaban.objects.filter(paket__in=list_paket_jawaban)
+    skor_map = {}
+    list_aspek_serializer = []
+
+    for aspek in list_aspek_jawaban:
+      list_skor = skor_map.get(aspek.nama, [])
+      list_skor.append(aspek.get_sum_score())
+      skor_map[aspek.nama] = list_skor
+    for skor_aspek in skor_map.keys():
+      list_skor = skor_map[skor_aspek]
+      serializer = ScoringAspekSerializer(data={
+        'nama': skor_aspek,
+        'skor': sum(list_skor)/(len(list_skor) if len(list_skor) != 0 else 1)
+        })
+      if serializer.is_valid():
+        list_aspek_serializer.append(serializer.data)
+  
+    response = ScoringSerializer(data={'list_aspek': list_aspek_serializer})
+    if response.is_valid():
+      return Response(response.data, status=status.HTTP_200_OK)
+    return Response({'detail': 'Error'}, status=status.HTTP_501_NOT_IMPLEMENTED)
+    
+    

@@ -23,7 +23,7 @@ class AdminEditPermission(BasePermission):
             return True
         return request.user.has_role('Admin')
 
-class LogAktifitasPermission(BaseException):
+class LogAktifitasPermission(BasePermission):
 
     def has_permission(self, request, view):
         if not request.user.has_role('Manager'):
@@ -36,3 +36,17 @@ class LogAktifitasPermission(BaseException):
         if request.user.has_role('Manager') and (request.method in SAFE_METHODS or request.method == 'PATCH'):
             return True
         return obj.user == request.user
+
+class HasilPerformaPermission(BasePermission):
+    def has_permission(self, request, view):
+        if request.method in ['PATCH', 'PUT']:
+            return request.user.has_role('Manager')
+        if request.method == 'POST':
+            return request.user.has_role('Admin')
+        return True
+
+class ManagerOnlyEditPermission(BasePermission):
+    def has_permission(self, request, view):
+        if request.method == ['PATCH', 'PUT']:
+            return request.user.has_role('Manager')
+        return True
