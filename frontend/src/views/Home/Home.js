@@ -13,15 +13,12 @@ import {
   Grid,
   Container,
 } from '@material-ui/core';
-import { getKaryawan, getListDaftarKaryawan } from 'api/akun';
-import { buatPresensiAPI, getListPresensi } from 'api/log';
+import { buatPresensiAPI, getListPresensiKaryawan } from 'api/log';
 import { PAGE_SIZE } from 'utils/constant';
 import { StyledTableCell, StyledTableRow } from "components/Table";
 import MainTitle from "components/MainTitle";
 import CircularProgress from 'components/Loading/CircularProgress';
-import { Link } from 'react-router-dom';
 import Loading from 'components/Loading';
-import DeleteConfirmationDialog from 'components/DialogConf';
 import TextField from 'components/CustomTextField';
 import Dialog from 'components/Dialog';
 import DialogFail from 'components/DialogFail';
@@ -90,10 +87,7 @@ const Home = (props) => {
   const [listItem, setListItem] = useState([]);
   const [page, setPage] = useState(1);
   const [count, setCount] = useState(0);
-  const [fullLoading, setFullLoading] = useState(false);
   const [update, setUpdate] = useState(0);
-  const [deleteLog, setDeleteLog] = useState(null);
-  const [hadir, setHadir] = useState(false);
 
   const date = new Date();
   const new_date = Moment(date).format('YYYY-MM-DD');
@@ -102,33 +96,18 @@ const Home = (props) => {
   const [jamMasuk, setJamMasuk] = useState(new_time.toString());
   const [keterangan, setKeterangan] = useState("");
   const [createPresensi, setCreatePresensi] = React.useState(false);
-  const [id, setId] = React.useState("");
-  const [username, setUsername] = React.useState("");
-  const [role, setRole] = React.useState("");
 
   const [error, setError] = React.useState({});
 
   const history = props.match.params.history;
 
   useEffect(()=>{
-    // setLoading(true)
+    setLoading(true)
     
-    // getListDaftarKaryawan({
-    //   page
-    // }).then(res=>{
-    //   setListItem(res.data?.results);
-    //   setCount(Math.ceil(res.data?.count/PAGE_SIZE));
-    // }).catch(err=>{
-    // // Handle ERROR
-    // }).finally(()=>{
-    //   setLoading(false);
-    // })
-
-    getListPresensi({
+    getListPresensiKaryawan({
       page
     }).then(res=>{
       setListItem(res.data?.results);
-      console.log(res.data?.results);
       setCount(Math.ceil(res.data?.count/PAGE_SIZE));
     }).catch(err=>{
     // Handle ERROR
@@ -149,23 +128,12 @@ const Home = (props) => {
       setJamMasuk("");
       setKeterangan("");
       setCreatePresensi(true); 
-      setId(res.data.user);
-      // console.log(res.data.user);    
-      // console.log(res.data.tanggal);
-      // console.log(res.data.jam_masuk);
-      // console.log(res.data.keterangan); 
+      setUpdate(true);
     }).catch(err=>{
       console.error(err.response);
       setError(err.response && err.response.data);
     }).finally(()=>{
       setLoading(false);
-    })
-
-    getKaryawan(id).then(res => {
-      const { data } = res
-      setId(data.pk);
-      setUsername(data.username);
-      setRole(data.role);
     })
 
   }
@@ -174,7 +142,7 @@ const Home = (props) => {
     return (
     <div className={classes.root1}>
 
-      <MainTitle title="Buat Log Aktivitas" className="mb-8" />
+      <MainTitle title="Isi Presensi" className="mb-8" />
       <Container component={Paper} className={classes.paper}>
       
       <Grid container spacing={2} direction="column">
