@@ -18,7 +18,7 @@ export const STATUS_LOG = [
 "Menunggu Persetujuan", "Disetujui", "Ditolak"
 ]
 
-export const PAGE_SIZE = 5;
+export const PAGE_SIZE = 25;
 
 export const newPertanyaanTemplate = { 
   pertanyaan: "", 
@@ -27,5 +27,6 @@ export const newPertanyaanTemplate = {
 
 export const newAspekTemplate = {
   nama: "", 
+  bobot: 0,
   list_pertanyaan: [newPertanyaanTemplate] 
 }
