@@ -31,7 +31,15 @@ class HasilPerformaSerializer(serializers.ModelSerializer):
 
   class Meta:
     model = HasilPerforma
-    fields = '__all__'
+    fields = (
+      'nama',
+      'skor',
+      'deskripsi',
+      'user',
+      'list_aspek',
+      'manager_komentator',
+      'evaluasi_diri'
+    )
 
 # Use This serializer on creation & update
 class HasilPerformaMiniSerializer(serializers.ModelSerializer):
