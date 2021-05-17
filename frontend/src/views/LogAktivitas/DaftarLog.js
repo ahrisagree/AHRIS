@@ -224,6 +224,7 @@ const DaftarLog = (props) => {
                       type="button"
                       buttonStyle="btnYellow"
                       buttonSize="btnMedium"
+                      disabled={STATUS_LOG[row.status_log] === "Disetujui" ? true : false}
                       >
                       Edit
                     </TemplateButton>

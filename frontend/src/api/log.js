@@ -18,14 +18,10 @@ export const getListLogKaryawan = () => axios.get(`${baseUrl}/log/`);
 export const getListPresensi = query => {
     let formatedQuery = ""
     Object.keys(query).forEach(qkey=>formatedQuery+=query[qkey]?`${qkey}=${query[qkey]}&`:'');
-    return axios.get(`${baseUrl}/log/?${formatedQuery}`);
-}
-
-export const getListPresensiKaryawan = query => {
-    let formatedQuery = ""
-    Object.keys(query).forEach(qkey=>formatedQuery+=query[qkey]?`${qkey}=${query[qkey]}&`:'');
     return axios.get(`${baseUrl}/log/presensi/?${formatedQuery}`);
 }
+
+export const getListPresensiKaryawan = () => axios.get(`${baseUrl}/log/presensi/`);
 
 export const editLogAPI = (id, data) => 
     axios.patch(`${baseUrl}/log/${id}/`, data);

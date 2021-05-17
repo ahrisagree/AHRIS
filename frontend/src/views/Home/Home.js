@@ -13,7 +13,7 @@ import {
   Grid,
   Container,
 } from '@material-ui/core';
-import { buatPresensiAPI, getListPresensiKaryawan } from 'api/log';
+import { buatPresensiAPI, getListPresensiKaryawan, getListPresensi } from 'api/log';
 import { PAGE_SIZE } from 'utils/constant';
 import { StyledTableCell, StyledTableRow } from "components/Table";
 import MainTitle from "components/MainTitle";
@@ -104,7 +104,7 @@ const Home = (props) => {
   useEffect(()=>{
     setLoading(true)
     
-    getListPresensiKaryawan({
+    getListPresensiKaryawan({  
       page
     }).then(res=>{
       setListItem(res.data?.results);
@@ -229,15 +229,17 @@ const Home = (props) => {
           <Grid item xs={8}/>
       </Grid>
       
-        <TableContainer component={Paper}>
+
+      <TableContainer component={Paper}>
           <MuiTable className={classes.table} aria-label="customized table">
             <TableHead>
               <TableRow>
-                <StyledTableCell align="left">No </StyledTableCell>
-                <StyledTableCell align="left">Nama </StyledTableCell>
-                <StyledTableCell align="left">Role </StyledTableCell>
-                <StyledTableCell align="left">Status Presensi</StyledTableCell>
-                <StyledTableCell align="left">Keterangan</StyledTableCell>
+                <StyledTableCell align="left"> No </StyledTableCell>
+                <StyledTableCell align="left"> Nama </StyledTableCell>
+                <StyledTableCell align="left"> Role </StyledTableCell>
+                <StyledTableCell align="left"> Tanggal </StyledTableCell>
+                <StyledTableCell align="left"> Jam Masuk </StyledTableCell>
+                <StyledTableCell align="left"> Keterangan </StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -251,31 +253,34 @@ const Home = (props) => {
                 listItem?.length === 0 ? 
                 <StyledTableRow>
                   <StyledTableCell align="center" colSpan="5">
-                    Tidak ada karyawan
+                    Tidak ada Presensi
                   </StyledTableCell>
                 </StyledTableRow>
-                : 
+                :
                 listItem.map((row, i) => (
-                  <StyledTableRow key={row.user.pk}>
+                  <StyledTableRow key={row.id}>
                     <StyledTableCell component="th" scope="row">
                       {`${i+1}.`}
                     </StyledTableCell>
-                    <StyledTableCell align="left">{row.user.username}</StyledTableCell>
-                    <StyledTableCell align="left">{row.user.role}</StyledTableCell>
-                    <StyledTableCell align="left">Hadir</StyledTableCell>
+                    <StyledTableCell align="left">{row.user === null ? "Tidak ada user" : row.user.username}</StyledTableCell>
+                    <StyledTableCell align="left">{row.user === null ? "Tidak ada user" : row.user.role}</StyledTableCell>
+                    <StyledTableCell align="left">{row.tanggal}</StyledTableCell>
+                    <StyledTableCell align="left">{row.jam_masuk.split(".")[0]}</StyledTableCell>
                     <StyledTableCell align="left">{row.keterangan}</StyledTableCell>
                   </StyledTableRow>
-                ))) }
+                )))}
             </TableBody>
           </MuiTable>
         </TableContainer>
-        {/* <div className={classes.pagination}>
+
+      
+        <div className={classes.pagination}>
           <Pagination 
             count={count} 
             page={page} 
             onChange={(_e,val)=>setPage(val)}
             />
-        </div> */}
+        </div>
         <Loading open={loading} />
         <Dialog open={!!createPresensi} handleClose={()=>setCreatePresensi(false)} ></Dialog>
         <DialogFail

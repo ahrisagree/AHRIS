@@ -10,11 +10,12 @@ import {
 import TextField from 'components/CustomTextField';
 import MainTitle from 'components/MainTitle';
 import TemplateButton from 'components/TemplateButton';
-import { editLogAPI, getLog, setujuiLogAPI } from 'api/log';
+import { getLog, setujuiLogAPI } from 'api/log';
 import { STATUS_LOG } from 'utils/constant';
 import Loading from 'components/Loading';
 import Dialog from 'components/Dialog';
 import DialogFail from 'components/DialogFail';
+import { Link } from 'react-router-dom';
 
 
 const daftar_tipe = [
@@ -86,6 +87,7 @@ const DetailLogAktivitas = (props) => {
   const [komentar, setKomentar] = React.useState("");
   const [notes, setNotes] = React.useState("");
   const [statusLog, setStatusLog] = React.useState("");
+  const [role, setRole] = React.useState("");
 
 
   const handleDateChange = (date) => {
@@ -95,6 +97,9 @@ const DetailLogAktivitas = (props) => {
   useEffect(() => {
     setLoading(true);
     const id = props.match.params.id;
+    console.log(id)
+
+ 
     getLog(id).then(res => {
       const { data } = res
       setSelectedDate(data.tanggal);
@@ -109,11 +114,13 @@ const DetailLogAktivitas = (props) => {
       setAlasanLembur(data.alasan_lembur);
       setKomentar(data.komentar);
       setStatusLog(STATUS_LOG[data.status_log]);
+      setRole(data.user.role);
     }).catch(err => {
       // HANDLE ERROR
     }).finally(() => {
       setLoading(false)
     })
+
     
   }, [])
 
@@ -338,7 +345,9 @@ const DetailLogAktivitas = (props) => {
 
 
           </Grid>
-
+          
+          
+          {role === "Manager" ?
           <Grid item xs={12}>
             <TextField id="outlined-full-width"
               required="true"
@@ -355,21 +364,14 @@ const DetailLogAktivitas = (props) => {
               disabled={false}
               />
           </Grid>
+          :
+          <Grid>
 
-          {/* <div className="flex justify-center py-6">
-          <TemplateButton
-              onClick={sendKomentar}
-              type="button"
-              buttonStyle="btnBlue"
-              buttonSize="btnLong"
-              disabled={false}
-          >
-              Simpan
-          </TemplateButton>
-          </div> */
-          
+          </Grid>
+            
           }
 
+          {role === "Manager" ?
            <div className="flex justify-end py-6">
                <TemplateButton
                 onClick={sendKomentarSetuju}
@@ -390,6 +392,21 @@ const DetailLogAktivitas = (props) => {
                 Tolak
               </TemplateButton>
             </div>
+            :  
+            <div className="flex justify-end py-6">
+            <Link to={`/daftar-log-karyawan`}>
+              <TemplateButton
+                onClick={sendKomentarSetuju}
+                type="button"
+                buttonStyle="btnGreen"
+                buttonSize="btnMedium"
+              >
+                Back
+              </TemplateButton>
+            </Link>
+            </div>
+            
+          }
 
         </Container>
         <Loading open={loading} />
