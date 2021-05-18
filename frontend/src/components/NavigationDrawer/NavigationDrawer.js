@@ -167,7 +167,7 @@ const navigationMenu = [
     children: [
       {
         menu: 'List Daily Log',
-        path: '/daftar-log'
+        path: '/daftar-log',
       },
       {
         menu: 'Submit Log',

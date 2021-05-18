@@ -21,6 +21,8 @@ export const getListPresensi = query => {
     return axios.get(`${baseUrl}/log/presensi/?${formatedQuery}`);
 }
 
+export const getListPresensiKaryawan = () => axios.get(`${baseUrl}/log/presensi/`);
+
 export const editLogAPI = (id, data) => 
     axios.patch(`${baseUrl}/log/${id}/`, data);
 
@@ -32,5 +34,8 @@ export const getLog = id =>
 
 export const deleteLogAPI = id =>
     axios.delete(`${baseUrl}/log/${id}/`);
+
+export const getKaryawan = id =>
+    axios.get(`${baseUrl}/user/${id}/`);
 
 
