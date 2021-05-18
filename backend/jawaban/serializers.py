@@ -8,6 +8,7 @@ in this file Serializer:
 - Jawaban
 - AspekJawaban
 - PaketJawaban
+- PaketJawaban Mini
 """
 
 class JawabanSerializer(serializers.ModelSerializer):
@@ -29,7 +30,7 @@ class AspekJawabanSerializer(serializers.ModelSerializer):
 
   class Meta:
     model = AspekJawaban
-    fields = ('nama', 'list_jawaban')
+    fields = ('nama', 'bobot', 'list_jawaban')
 
 class PaketJawabanSerializer(serializers.ModelSerializer):
   list_aspek = AspekJawabanSerializer(many=True)
@@ -47,3 +48,8 @@ class PaketJawabanSerializer(serializers.ModelSerializer):
     model = PaketJawaban
     fields = '__all__'
     extra_kwargs = {'paket_pertanyaan': {'required': True}}
+
+class PaketJawabanMiniSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = PaketJawaban
+    fields = '__all__'

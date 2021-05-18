@@ -45,6 +45,7 @@ export const setupAuthToken = (token) => {
     axios.defaults.headers.common['Authorization'] = `Token ${token}`
   } else {
     delete axios.defaults.headers.common['Authorization']
+    window.location.href = "/login";
   }
   
 

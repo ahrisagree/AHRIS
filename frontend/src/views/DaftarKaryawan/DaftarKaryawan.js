@@ -19,12 +19,13 @@ import CreateIcon from '@material-ui/icons/CreateRounded';
 import { StyledTableCell, StyledTableRow } from "components/Table";
 import MainTitle from "components/MainTitle";
 import Pagination from '@material-ui/lab/Pagination';
-import { getDivisiAPI, getListDaftarKaryawan } from 'api/akun';
+import { getDivisiAPI, getListDaftarKaryawan, deleteKaryawanAPI } from 'api/akun';
 import { PAGE_SIZE, ROLES } from 'utils/constant';
 import CircularProgress from 'components/Loading/CircularProgress';
 import DeleteConfirmationDialog from 'components/DialogConf';
 import SearchIcon from '@material-ui/icons/Search';
 import _, {debounce} from 'lodash';
+import Loading from 'components/Loading';
 import { setQueryParams } from 'utils/setQueryParams';
 // import { PinDropSharp } from '@material-ui/icons';
 
@@ -42,6 +43,7 @@ const DaftarKaryawan = ({history}) => {
   const [page, setPage] = useState(1);
   const [count, setCount] = useState(0);
   const [deleteKaryawan, setDeleteKaryawan] = useState(null);
+  const [fullLoading, setFullLoading] = useState(false);
 
   // buat ngefilter
   const [update, setUpdate] = useState(0);
@@ -100,10 +102,16 @@ const DaftarKaryawan = ({history}) => {
   }
   
   const handleDeleteKaryawan = () => {
-    setDeleteKaryawan(null);
-    console.log(deleteKaryawan)
-    // DElete trus confirmation
-  }
+    setFullLoading(true);
+    deleteKaryawanAPI(deleteKaryawan.pk).then(()=>{
+     setDeleteKaryawan(null);
+     setUpdate(update+1);
+    }).catch(err=>{
+      // Handle ERROR
+      }).finally(()=>{
+        setFullLoading(false);
+      });
+    }
 
   return (
     <div className={classes.root1}>
@@ -189,12 +197,13 @@ const DaftarKaryawan = ({history}) => {
 
           <Grid item xs={2} alignContent="">
           <Button
-          variant="outlined"
-          color="primary" 
-          size="small"
-          >
-          + Tambah Akun
-        </Button>
+              variant="outlined"
+              color="primary" 
+              size="small"
+              onClick={()=>history.push('/akun/register')}
+              >
+              + Tambah Akun
+            </Button>
           </Grid>
         </Grid>
       </Grid>
@@ -265,6 +274,7 @@ const DaftarKaryawan = ({history}) => {
           handleCancel={()=>setDeleteKaryawan(null)}
           handleConfirm={handleDeleteKaryawan}
         />
+         <Loading open={fullLoading} />
     </div>
   );
 };

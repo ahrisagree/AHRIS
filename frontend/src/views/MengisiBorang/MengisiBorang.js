@@ -13,7 +13,7 @@ import {
 } from '@material-ui/core';
 import { StyledTableCell } from "components/Table";
 import MainTitle from "components/MainTitle";
-import { getDetailAssignment } from 'api/borang';
+import { getDetailAssignment, getPaketPertanyaanAPI } from 'api/borang';
 import { postJawabanAPI } from 'api/jawaban';
 import CircularProgress from 'components/Loading/CircularProgress';
 import SuccessDialog from 'components/Dialog';
@@ -25,30 +25,42 @@ import TemplateButton from 'components/TemplateButton';
 const useStyles = makeStyles({})
 const DaftarPaketPertanyaan = ({match, history}) => {
   const classes = useStyles();
-  const [loading, setLoading] = useState(false);
+  const [loadingAssignment, setLoadingAssignment] = useState(false);
+  const [loadingPaket, setLoadingPaket] = useState(false);
+  const loading = loadingAssignment || loadingPaket;
   const [fullLoading, setFullLoading] = useState(false);
+
   // const [update, setUpdate] = useState(0);
   const [success, setSuccess] = useState(false);
   const [fail, setFail] = useState(null); 
 
   
   const [assignment, setAssignment] = useState(null);
-  const [paketPertanyaan, setPaketPertanyaan] = useState(null)
+  const [paketPertanyaan, setPaketPertanyaan] = useState(null);
   
   const { id } = match.params;
   const { idPaket } = match.params; // cek routes.js
   useEffect(()=>{
-    setLoading(true)
+    setLoadingPaket(true)
+    setLoadingAssignment(true)
+    
     getDetailAssignment(id).then(res=>{
       const assignmentData = res.data;
       setAssignment(assignmentData);
-      const paketPertanyaanData = assignmentData?.list_paket_pertanyaan.find(x=>x.id===idPaket/1);
+    }).catch(err=>{
+      console.log(err.response && err.response.data);
+    }).finally(()=>{
+      setLoadingAssignment(false);
+    })
+
+    getPaketPertanyaanAPI(idPaket).then(res=>{
+      const paketPertanyaanData = res.data;
       delete paketPertanyaanData.id;
       setPaketPertanyaan(paketPertanyaanData);
     }).catch(err=>{
       console.log(err.response && err.response.data);
     }).finally(()=>{
-      setLoading(false);
+      setLoadingPaket(false);
     })
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -57,6 +69,7 @@ const DaftarPaketPertanyaan = ({match, history}) => {
     setFullLoading(true);
     const formatedListAspek = paketPertanyaan.list_aspek.map(aspek=>({
       nama: aspek.nama,
+      bobot: aspek.bobot,
       list_jawaban: aspek.list_pertanyaan
     }));
     postJawabanAPI({
