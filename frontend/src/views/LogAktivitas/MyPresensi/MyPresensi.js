@@ -83,14 +83,15 @@ const MyPresensi = (props) => {
   const [fullLoading, setFullLoading] = useState(false);
   const [update, setUpdate] = useState(0);
   const history = props.match.params.history;
+  const {user} = props;
 
   useEffect(()=>{
     setLoading(true)
 
-    const id = props.match.params.id;
+    // const id = props.match.params.id;
 
     getListPresensi({
-      user: id,  
+      user: user.pk,  
       page
     }).then(res=>{
       setListItem(res.data?.results);
@@ -101,7 +102,7 @@ const MyPresensi = (props) => {
       setLoading(false);
     })
 
-  }, [page, update]);
+  }, [page, update, user]);
 
 
     return (
@@ -148,8 +149,8 @@ const MyPresensi = (props) => {
                     <StyledTableCell component="th" scope="row">
                       {`${i+1}.`}
                     </StyledTableCell>
-                    <StyledTableCell align="left">{row.user.username}</StyledTableCell>
-                    <StyledTableCell align="left">{row.user.role}</StyledTableCell>
+                    <StyledTableCell align="left">{row.user?.username}</StyledTableCell>
+                    <StyledTableCell align="left">{row.user?.role}</StyledTableCell>
                     <StyledTableCell align="left">{row.tanggal}</StyledTableCell>
                     <StyledTableCell align="left">{row.jam_masuk}</StyledTableCell>
                     <StyledTableCell align="left">{row.keterangan}</StyledTableCell>

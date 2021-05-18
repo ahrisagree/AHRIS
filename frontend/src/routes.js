@@ -7,7 +7,7 @@ import LogAktivitas from "./views/LogAktivitas/LogAktivitas";
 import DaftarLogKaryawan from "./views/LogAktivitas/DaftarLogKaryawan";
 import DetailLogAktivitas from "./views/LogAktivitas/DetailLogAktivitas";
 import DaftarLog from "./views/LogAktivitas/DaftarLog";
-import MyPresensi from "./views/LogAktivitas/MyPresensi";
+import MyPresensi from "./views/LogAktivitas/MyPresensi/";
 import Register from "./views/Register";
 import DaftarKaryawan from "views/DaftarKaryawan";
 import DaftarPaketPertanyaan from "views/DaftarPakerPertanyaan";
@@ -135,7 +135,7 @@ export default [
     component: Home
   },
   {
-    path: '/log/daftar-presensi/:id',
+    path: '/log/daftar-presensi',
     exact: true,
     component: MyPresensi
   },
