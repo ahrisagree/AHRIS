@@ -22,6 +22,7 @@ class AspekPertanyaan(models.Model):
           on_delete=models.SET_NULL,
           null=True,
           related_name='list_aspek')
+  bobot = models.FloatField()
 
   def __str__(self):
     return self.nama
@@ -33,7 +34,6 @@ class Pertanyaan(models.Model):
             on_delete=models.SET_NULL,
             null=True,
             related_name='list_pertanyaan')
-  #bobot ?
   
   def __str__(self):
     return self.pertanyaan

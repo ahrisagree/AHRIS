@@ -265,7 +265,7 @@ const BuatPaketPertanyaan = ({paket, isEdit, isDetail, setEditMode}) => {
             </div>
             <div className="w-5/12 sm:w-4/12 md:w-3/12 lg:w-1/6 ml-1">
               <CreateableSelection 
-                className={classes.mb}
+                // className={classes.mb}
                 options={kategoriOption || []}
                 labelKey="nama"
                 value={kategori}
@@ -329,13 +329,14 @@ const BuatPaketPertanyaan = ({paket, isEdit, isDetail, setEditMode}) => {
 
       <DialogSuccess open={success} handleClose={()=>setSuccess(false)} />
       <DialogFail 
-        open={!!errorState.detail || !!errorState.list_aspek} 
+        open={!!errorState.detail || !!errorState.non_field_errors || !!errorState.list_aspek} 
         handleClose={()=>{
           delete errorState.detail;
           delete errorState.list_aspek;
+          delete errorState.non_field_errors;
           setUpdate(update+1);
         }} 
-        text={errorState.detail || "Terdapat field yang yang belum diisi"}
+        text={errorState.detail || (errorState.non_field_errors && errorState.non_field_errors[0]) ||"Terdapat field yang yang belum diisi"}
         />
     </div>
   );

@@ -40,6 +40,7 @@ class AspekJawaban(models.Model):
   paket = models.ForeignKey(PaketJawaban,
           on_delete=models.CASCADE,
           related_name='list_aspek')
+  bobot = models.FloatField()
 
   def get_sum_score(self):
     count = 0

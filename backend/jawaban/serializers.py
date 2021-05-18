@@ -30,7 +30,7 @@ class AspekJawabanSerializer(serializers.ModelSerializer):
 
   class Meta:
     model = AspekJawaban
-    fields = ('nama', 'list_jawaban')
+    fields = ('nama', 'bobot', 'list_jawaban')
 
 class PaketJawabanSerializer(serializers.ModelSerializer):
   list_aspek = AspekJawabanSerializer(many=True)

@@ -1,5 +1,6 @@
 from django.db import models
 from auth_app.models import AppUser
+from borang.models import PaketPertanyaan
 import datetime
 
 class HasilPerforma(models.Model):
@@ -11,9 +12,13 @@ class HasilPerforma(models.Model):
           null=True)
   komentar = models.TextField(blank=True, null=True)
   periode = models.DateField()
-  skor = models.IntegerField()
+  skor = models.FloatField()
   deskripsi = models.TextField(blank=True, null=True)
   nama = models.CharField(max_length=255)
+  paket = models.ForeignKey(PaketPertanyaan, on_delete=models.SET_NULL, null=True)
+
+  class Meta:
+    unique_together = [('user', 'paket', 'periode')]
 
   def __str__(self):
     return "{} {}".format(self.user.username, self.nama)
@@ -23,7 +28,7 @@ class AspekHasilPerforma(models.Model):
           on_delete=models.CASCADE,
           related_name='list_aspek')
   nama = models.CharField(max_length=255)
-  skor = models.IntegerField()
+  skor = models.FloatField()
   deskripsi = models.TextField(blank=True, null=True)
   
 class EvaluasiDiri(models.Model):

@@ -58,11 +58,20 @@ class AspekPertanyaanSerializer(serializers.ModelSerializer):
 
   class Meta:
     model = AspekPertanyaan
-    fields = ('nama', 'list_pertanyaan')
+    fields = ('nama', 'bobot', 'list_pertanyaan')
 
 class PaketPertanyaanSerializer(serializers.ModelSerializer):
   list_aspek = AspekPertanyaanSerializer(many=True)
   kategori = KategoriPertanyaanSerializer()
+
+  def validate(self, attrs):
+    all_aspek = attrs['list_aspek']
+    total_bobot = 0
+    for aspek in all_aspek:
+      total_bobot += aspek['bobot']
+    if total_bobot != 100:
+      raise serializers.ValidationError(_("Total Bobot harus mencapai 100%"))
+    return attrs
 
   def validate_kategori(self, kategori):
     try: 

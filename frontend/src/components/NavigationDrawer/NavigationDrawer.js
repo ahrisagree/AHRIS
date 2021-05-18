@@ -340,7 +340,7 @@ const NavigationDrawer = ({children, history, location, user, logoutThunk}) => {
           ))}
 
         </div>
-        <div className="text-center mt-12">
+        <div className={`text-center mt-12 ${open ? '' : 'hidden'}`}>
           <TemplateButton
             onClick={logoutThunk}
             type="button"
