@@ -113,6 +113,11 @@ export default [
     component: DaftarBorangPerforma,
   },
   {
+    path: '/daftar-karyawan-performa/:id/:id',
+    exact: true,
+    component: DaftarBorangPerforma,
+  },
+  {
     path: '/akun/:idUser',
     exact: true,
     component: DetailEditUser
