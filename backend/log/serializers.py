@@ -26,8 +26,19 @@ class LogAktivitasSerializer(serializers.ModelSerializer):
         tanggal = attrs.get('tanggal')
         is_lembur = attrs.get('is_lembur')
         presensi = get_or_none(Presensi, user=user, tanggal=tanggal)
+        # checking presensi in tanggal is exist
         if presensi == None and not is_lembur:
             raise serializers.ValidationError({'tanggal':['Anda tidak memiliki Presensi pada tanggal ini']})
+
+        # checking time validity
+        jam_masuk = attrs.get('jam_masuk')
+        jam_keluar = attrs.get('jam_keluar')
+        if jam_keluar < jam_masuk:
+            raise serializers.ValidationError({
+                    'jam_keluar':  ['Jam Masuk dan Jam Keluar tidak valid'],
+                    'jam_masuk': ['Jam Masuk dan Jam Keluar tidak valid']
+                })
+
         attrs['presensi'] = presensi
         return super().validate(attrs)
 
@@ -39,8 +50,6 @@ class LogAktivitasSerializer(serializers.ModelSerializer):
         presensi.log = log
         presensi.save()
         return log
-
-    # TODO case nya log apaaja gw lupa
 
     class Meta:
         model = LogAktivitas

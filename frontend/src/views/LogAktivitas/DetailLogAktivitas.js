@@ -10,10 +10,12 @@ import {
 import TextField from 'components/CustomTextField';
 import MainTitle from 'components/MainTitle';
 import TemplateButton from 'components/TemplateButton';
-import { buatLogAPI, editLogAPI, getLog } from 'api/log';
+import { getLog, setujuiLogAPI } from 'api/log';
+import { STATUS_LOG } from 'utils/constant';
 import Loading from 'components/Loading';
 import Dialog from 'components/Dialog';
 import DialogFail from 'components/DialogFail';
+import { Link } from 'react-router-dom';
 
 
 const daftar_tipe = [
@@ -70,7 +72,8 @@ const DetailLogAktivitas = (props) => {
   const classes = useStyles();
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState({});
-  const [success, setSuccess] = useState(false);
+  const [success, setSuccess] = useState(false);  
+
 
   const [selectedDate, setSelectedDate] = React.useState("");
   const [jamMasuk, setJamMasuk] = React.useState("");
@@ -83,18 +86,20 @@ const DetailLogAktivitas = (props) => {
   const [alasanLembur, setAlasanLembur] = React.useState("");
   const [komentar, setKomentar] = React.useState("");
   const [notes, setNotes] = React.useState("");
-  const [createLog, setCreateLog] = React.useState(false);
-  const [update, setUpdate] = React.useState(0);
+  const [statusLog, setStatusLog] = React.useState("");
+  const [role, setRole] = React.useState("");
 
-  
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
 
   useEffect(() => {
-    // setLoading(true);
+    setLoading(true);
     const id = props.match.params.id;
+    console.log(id)
+
+ 
     getLog(id).then(res => {
       const { data } = res
       setSelectedDate(data.tanggal);
@@ -107,29 +112,25 @@ const DetailLogAktivitas = (props) => {
       setStatusDeliverables(data.status_deliverable);
       setNotes(data.notes);
       setAlasanLembur(data.alasan_lembur);
+      setKomentar(data.komentar);
+      setStatusLog(STATUS_LOG[data.status_log]);
+      setRole(data.user.role);
     }).catch(err => {
       // HANDLE ERROR
     }).finally(() => {
       setLoading(false)
     })
-    
-  })
 
-  const sendKomentar = () => {
+    
+  }, [])
+
+  const sendKomentarSetuju = () => {
     const { id } = props.match.params;
-    setLoading(true)
-    editLogAPI(id, {
-      tanggal: selectedDate,
-      jam_masuk: jamMasuk,
-      jam_keluar: jamKeluar,
-      is_lembur: tipe,
-      keterangan: keterangan,
-      aktivitas: aktivitas,
-      link_deliverable: linkDeliverables,
-      status_deliverable: statusDeliverables,
-      notes: notes,
-      alasan_lembur: alasanLembur,
-      komentar: komentar
+    setLoading(true);
+    setStatusLog(STATUS_LOG[1]);
+    setujuiLogAPI(id, {
+      komentar: komentar,
+      status_log: 1
     }).then(res => {
       setSuccess(true);
     }).catch(err => {
@@ -138,6 +139,24 @@ const DetailLogAktivitas = (props) => {
       setLoading(false);
     })
   }
+
+  const sendKomentarTolak = () => {
+    const { id } = props.match.params;
+    setLoading(true);
+    setStatusLog(STATUS_LOG[2]);
+    setujuiLogAPI(id, {
+      komentar: komentar,
+      status_log: 2
+    }).then(res => {
+      setSuccess(true);
+    }).catch(err => {
+      setError(err.response && err.response.data);
+    }).finally(() => {
+      setLoading(false);
+    })
+  }
+
+
 
   
     return (
@@ -167,6 +186,7 @@ const DetailLogAktivitas = (props) => {
               }}
               value={selectedDate}
               disabled={true}
+              isDetail
               />
             
 
@@ -184,6 +204,7 @@ const DetailLogAktivitas = (props) => {
               }}
               value={jamMasuk}
               disabled={true}
+              isDetail
             />
 
 
@@ -201,6 +222,7 @@ const DetailLogAktivitas = (props) => {
               }}
               value={jamKeluar}
               disabled={true}
+              isDetail
             />
 
             </Grid>
@@ -216,6 +238,7 @@ const DetailLogAktivitas = (props) => {
             className={classes.textField}
             value={tipe}
             disabled={true}
+            isDetail
             >
               {daftar_tipe.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
@@ -233,6 +256,7 @@ const DetailLogAktivitas = (props) => {
             className={classes.textField}
             value={keterangan}
             disabled={true}
+            isDetail
             />
 
             <TextField id="outlined-multiline-static"
@@ -243,6 +267,7 @@ const DetailLogAktivitas = (props) => {
             className={classes.textField}
             value={aktivitas}
             disabled={true}
+            isDetail
             />
             
           </Grid>
@@ -256,6 +281,7 @@ const DetailLogAktivitas = (props) => {
               className={classes.textField}
               value={linkDeliverables}
               disabled={true}
+              isDetail
               />
 
             <TextField id="outlined-full-width"
@@ -266,6 +292,7 @@ const DetailLogAktivitas = (props) => {
               className={classes.textField}
               value={statusDeliverables}
               disabled={true}
+              isDetail
               />
 
             <TextField id="outlined-multiline-static"
@@ -276,21 +303,51 @@ const DetailLogAktivitas = (props) => {
             className={classes.textField}
             value={notes}
             disabled={true}
+            isDetail
             />
-
-          {tipe &&
-            <TextField id="outlined-multiline-static"
-            label="Alasan Lembur"
-            required="true"
-            style={{ margin: 8, width: "30%" }}
-            margin="normal"
-            className={classes.textField}
-            value={alasanLembur}
-            disabled={true}
-            />
-          }
           </Grid>
 
+          <Grid item xs={12}>
+            {tipe &&
+              <TextField id="outlined-multiline-static"
+              label="Alasan Lembur"
+              required="true"
+              style={{ margin: 8, width: "30%" }}
+              margin="normal"
+              className={classes.textField}
+              value={alasanLembur}
+              disabled={true}
+              isDetail
+              />
+            }
+
+              <TextField id="outlined-multiline-static"
+              label="Komentar"
+              required="true"
+              style={{ margin: 8, width: "30%" }}
+              margin="normal"
+              className={classes.textField}
+              value={komentar}
+              disabled={true}
+              isDetail
+              />
+
+              <TextField id="outlined-multiline-static"
+              label="Status Log"
+              required="true"
+              style={{ margin: 8, width: "30%" }}
+              margin="normal"
+              className={classes.textField}
+              value={statusLog}
+              disabled={true}
+              isDetail
+              />
+
+
+          </Grid>
+          
+          
+          {role === "Manager" ?
           <Grid item xs={12}>
             <TextField id="outlined-full-width"
               required="true"
@@ -307,18 +364,49 @@ const DetailLogAktivitas = (props) => {
               disabled={false}
               />
           </Grid>
+          :
+          <Grid>
 
-          <div className="flex justify-center py-6">
-          <TemplateButton
-              onClick={sendKomentar}
-              type="button"
-              buttonStyle="btnBlue"
-              buttonSize="btnLong"
-              disabled={false}
-          >
-              Simpan
-          </TemplateButton>
-          </div>
+          </Grid>
+            
+          }
+
+          {role === "Manager" ?
+           <div className="flex justify-end py-6">
+               <TemplateButton
+                onClick={sendKomentarSetuju}
+                type="button"
+                buttonStyle="btnGreen"
+                buttonSize="btnMedium"
+              >
+                Setujui
+              </TemplateButton>
+
+              <TemplateButton
+                onClick={sendKomentarTolak}
+                type="button"
+                buttonStyle="btnDanger"
+                buttonSize="btnMedium"
+                
+              >
+                Tolak
+              </TemplateButton>
+            </div>
+            :  
+            <div className="flex justify-end py-6">
+            <Link to={`/daftar-log-karyawan`}>
+              <TemplateButton
+                onClick={sendKomentarSetuju}
+                type="button"
+                buttonStyle="btnGreen"
+                buttonSize="btnMedium"
+              >
+                Back
+              </TemplateButton>
+            </Link>
+            </div>
+            
+          }
 
         </Container>
         <Loading open={loading} />

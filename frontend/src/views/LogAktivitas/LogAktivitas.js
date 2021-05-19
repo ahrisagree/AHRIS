@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {
   makeStyles,
   Paper,
@@ -90,6 +90,7 @@ const LogAktivitas = () => {
 
 
   const onSubmit = () => {
+    setLoading(true)
     buatLogAPI(
       {tanggal: selectedDate,
       jam_masuk: jamMasuk,
@@ -159,7 +160,7 @@ const LogAktivitas = () => {
 
           <Grid item xs={12}>
             <Typography style={{ fontWeight: 600, marginLeft: '1%', marginBottom: '3%', fontFamily: 'IBM Plex Sans', fontStyle: 'normal', 
-            fontWeight: 600, fontSize: 24, lineHeight: '138%', display: 'flex', alignItems: 'center', letterSpacing: '0.0075em', color: '#0A3142' }} 
+            fontSize: 24, lineHeight: '138%', display: 'flex', alignItems: 'center', letterSpacing: '0.0075em', color: '#0A3142' }} 
             variant="subtitle1">
               Log Aktivitas
             </Typography>
@@ -179,9 +180,9 @@ const LogAktivitas = () => {
                 shrink: true,
               }}
               value={selectedDate}
-              onChange={e=>{setSelectedDate(e.target.value); delete error.selectedDate}}
-              error={!!error.selectedDate}
-              helperText={error.selectedDate && error.selectedDate[0]}
+              onChange={e=>{setSelectedDate(e.target.value); delete error.tanggal}}
+              error={!!error.tanggal}
+              helperText={error.tanggal && error.tanggal[0]}
               disabled={loading}
               />
             
@@ -218,9 +219,9 @@ const LogAktivitas = () => {
                 step: 300, 
               }}
               value={jamMasuk}
-              onChange={e=>{setJamMasuk(e.target.value); delete error.jamMasuk}}
-              error={!!error.jamMasuk}
-              helperText={error.jamMasuk && error.jamMasuk[0]}
+              onChange={e=>{setJamMasuk(e.target.value); delete error.jam_masuk}}
+              error={!!error.jam_masuk}
+              helperText={error.jam_masuk && error.jam_masuk[0]}
               disabled={loading}
             />
 
@@ -240,9 +241,9 @@ const LogAktivitas = () => {
                 step: 300, 
               }}
               value={jamKeluar}
-              onChange={e=>{setJamKeluar(e.target.value); delete error.jamKeluar}}
-              error={!!error.jamKeluar}
-              helperText={error.jamKeluar && error.jamKeluar[0]}
+              onChange={e=>{setJamKeluar(e.target.value); delete error.jam_keluar}}
+              error={!!error.jam_keluar}
+              helperText={error.jam_keluar && error.jam_keluar[0]}
               disabled={loading}
             />
 
@@ -259,9 +260,9 @@ const LogAktivitas = () => {
             variant="outlined"
             className={classes.textField}
             value={tipe}
-            onChange={e=>{setTipe(e.target.value); delete error.tipe}}
-            error={!!error.tipe}
-            helperText={error.tipe && error.tipe[0]}
+            onChange={e=>{setTipe(e.target.value); delete error.is_lembur}}
+            error={!!error.is_lembur}
+            helperText={error.is_lembur && error.is_lembur[0]}
             disabled={loading}
             >
               {daftar_tipe.map((option) => (
@@ -310,9 +311,9 @@ const LogAktivitas = () => {
               style={{ margin: 8, width: "98%" }}
               margin="normal"
               variant="outlined"
-              onChange={e=>{setLinkDeliverables(e.target.value); delete error.linkDeliverables}}
-              error={!!error.linkDeliverables}
-              helperText={error.linkDeliverables && error.linkDeliverables[0]}
+              onChange={e=>{setLinkDeliverables(e.target.value); delete error.link_deliverable}}
+              error={!!error.link_deliverable}
+              helperText={error.link_deliverable && error.link_deliverable[0]}
               disabled={loading}
               />
           </Grid>
@@ -324,9 +325,9 @@ const LogAktivitas = () => {
               style={{ margin: 8, width: "98%" }}
               margin="normal"
               variant="outlined"
-              onChange={e=>{setStatusDeliverables(e.target.value); delete error.statusDeliverables}}
-              error={!!error.statusDeliverables}
-              helperText={error.statusDeliverables && error.statusDeliverables[0]}
+              onChange={e=>{setStatusDeliverables(e.target.value); delete error.status_deliverable}}
+              error={!!error.status_deliverable}
+              helperText={error.status_deliverable && error.status_deliverable[0]}
               disabled={loading}
               />
           </Grid>
@@ -357,9 +358,9 @@ const LogAktivitas = () => {
             required="true"
             style={{ margin: 8, width: "98%" }}
             margin="normal"
-            onChange={e=>{setAlasanLembur(e.target.value); delete error.alasanLembur}}
-            error={!!error.alasanLembur}
-            helperText={error.alasanLembur && error.alasanLembur[0]}
+            onChange={e=>{setAlasanLembur(e.target.value); delete error.alasan_lembur}}
+            error={!!error.alasan_lembur}
+            helperText={error.alasan_lembur && error.alasan_lembur[0]}
             disabled={loading}
             />
           </Grid>

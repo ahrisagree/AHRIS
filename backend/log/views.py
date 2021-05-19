@@ -64,6 +64,10 @@ class LogAktivitasViewSet(viewsets.ModelViewSet):
             request.data['is_lembur'] = log.is_lembur
         if request.data.get('status_log'):
             request.data['manajer_penyetuju'] = request.user.id
+        if request.data.get('jam_masuk') == None:
+            request.data['jam_masuk'] = log.jam_masuk
+        if request.data.get('jam_keluar') == None:
+            request.data['jam_keluar'] = log.jam_keluar
         return super().update(request, *args, **kwargs)
 
 

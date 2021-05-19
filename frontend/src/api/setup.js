@@ -14,7 +14,7 @@ import { setTokenError } from "store/auth";
 // });
 
 export const setupAuthTokenMiddleware = store => next => action => {
-  console.log(action)
+  // console.log(action)
   if (['persist/REHYDRATE', 'auth/login/fulfilled'].includes(action.type)) {
     const token = action.payload?.token;
     console.log("axios configured", token)
@@ -45,6 +45,7 @@ export const setupAuthToken = (token) => {
     axios.defaults.headers.common['Authorization'] = `Token ${token}`
   } else {
     delete axios.defaults.headers.common['Authorization']
+    window.location.href = "/login";
   }
   
 

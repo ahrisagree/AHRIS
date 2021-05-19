@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import Pagination from "@material-ui/lab/Pagination";
-import Button  from "components/TemplateButton";
 import TemplateButton  from "components/TemplateButton";
 import {
   makeStyles,
@@ -12,14 +11,13 @@ import {
   Paper,
   Grid,
 } from '@material-ui/core';
-import { getListLog, deleteLogAPI, getKaryawan } from 'api/log';
+import { getListLogKaryawan } from 'api/log';
 import { PAGE_SIZE, STATUS_LOG } from 'utils/constant';
 import { StyledTableCell, StyledTableRow } from "components/Table";
 import MainTitle from "components/MainTitle";
 import CircularProgress from 'components/Loading/CircularProgress';
 import { Link } from 'react-router-dom';
 import Loading from 'components/Loading';
-import DeleteConfirmationDialog from 'components/DialogConf';
 
 const useStyles = makeStyles((theme) =>({
   root: {
@@ -73,7 +71,7 @@ const useStyles = makeStyles((theme) =>({
     }
 }));
 
-const DaftarLog = (props) => {
+const DaftarLogKaryawan = (props) => {
   
   const classes = useStyles();
   const [loading, setLoading] = useState(false);
@@ -82,26 +80,12 @@ const DaftarLog = (props) => {
   const [count, setCount] = useState(0);
   const [fullLoading, setFullLoading] = useState(false);
   const [update, setUpdate] = useState(0);
-  const [deleteLog, setDeleteLog] = useState(null);
-  const [role, setRole] = useState("");
-  const history = props.match.params.history;
+
 
   useEffect(()=>{
     setLoading(true)
-
-    const id = props.match.params.id;
-
-    getKaryawan(id).then(res=>{
-      const { data } = res
-      setRole(data.role);
-    }).catch(err=>{
-      // Handle ERROR
-    }).finally(()=>{
-      setLoading(false);
-    })
-
-    getListLog({
-      user: id,  
+    
+    getListLogKaryawan({
       page
     }).then(res=>{
       setListItem(res.data?.results);
@@ -111,66 +95,17 @@ const DaftarLog = (props) => {
     }).finally(()=>{
       setLoading(false);
     })
-
   }, [page, update]);
-
-
-  const handleDeleteLog = () => {
-    setFullLoading(true);
-    deleteLogAPI(deleteLog.id).then(()=>{
-      setDeleteLog(null);
-      setUpdate(update+1);
-    }).catch(err=>{
-    // Handle ERROR
-    }).finally(()=>{
-      setFullLoading(false);
-    });
-  }
-
 
     return (
     <div className={classes.root1}>
       <Grid container spacing={2} direction="column">
       <Grid item xs={12} container>
           <Grid item xs={4} alignContent="flex-start">
-            <MainTitle title="Daftar Log" className={classes.title} />
+            <MainTitle title="Daftar Log Karyawan" className={classes.title} />
           </Grid>
           <Grid item xs={8}/>
         </Grid>
-
-        <Grid item container direction="row" justify="space-between">
-          <Grid item xs={10}>
-          <Link to={`/log-aktivitas`}>
-            <Button
-                variant="outlined"
-                color="primary" 
-                size="small"
-                >
-            + Create Log
-            </Button>
-          </Link>
-          </Grid>
-
-          {role === "Manager" ?
-          <Grid item xs={2}>
-            <Link to={`/daftar-log-karyawan`}>
-              <TemplateButton size="small"
-                  type="button"
-                  buttonStyle="btnGreenOutline"
-                  >
-                  Daftar Log Karyawan
-              </TemplateButton>
-              </Link>
-          </Grid>
-          :
-          <Grid item xs={2}>
-            
-          </Grid>
-          
-          }
-
-        </Grid>
-        
       </Grid>
 
         <TableContainer component={Paper}>
@@ -178,6 +113,7 @@ const DaftarLog = (props) => {
             <TableHead>
               <TableRow>
                 <StyledTableCell align="left">No </StyledTableCell>
+                <StyledTableCell align="left">Nama Karyawan </StyledTableCell>
                 <StyledTableCell align="left">Tanggal </StyledTableCell>
                 <StyledTableCell align="left">Tipe Log </StyledTableCell>
                 <StyledTableCell align="left">Status</StyledTableCell>
@@ -204,6 +140,7 @@ const DaftarLog = (props) => {
                     <StyledTableCell component="th" scope="row">
                       {`${i+1}.`}
                     </StyledTableCell>
+                    <StyledTableCell align="left">{row.user.username}</StyledTableCell>
                     <StyledTableCell align="left">{row.tanggal}</StyledTableCell>
                     <StyledTableCell align="left">{row.is_lembur ? "Lembur" : "Reguler"}</StyledTableCell>
                     <StyledTableCell align="left">{STATUS_LOG[row.status_log]}</StyledTableCell>
@@ -219,25 +156,6 @@ const DaftarLog = (props) => {
                       </TemplateButton>
                     </Link>
                     
-                    <Link to={`/edit-log/${row.id}`}>
-                    <TemplateButton
-                      type="button"
-                      buttonStyle="btnYellow"
-                      buttonSize="btnMedium"
-                      disabled={STATUS_LOG[row.status_log] === "Disetujui" ? true : false}
-                      >
-                      Edit
-                    </TemplateButton>
-                    </Link>
- 
-                      <TemplateButton
-                      type="button"
-                      buttonStyle="btnDanger"
-                      buttonSize="btnMedium"
-                      onClick={()=>setDeleteLog(row)}
-                      >
-                      Delete
-                    </TemplateButton>
                   
                     </StyledTableCell>
                   </StyledTableRow>
@@ -252,19 +170,10 @@ const DaftarLog = (props) => {
             onChange={(_e,val)=>setPage(val)}
             />
         </div>
-        <DeleteConfirmationDialog 
-          open={!!deleteLog}
-          handleCancel={()=>setDeleteLog(null)}
-          handleConfirm={handleDeleteLog}
-        />
-        <DeleteConfirmationDialog 
-          open={!!deleteLog}
-          handleCancel={()=>setDeleteLog(null)}
-          handleConfirm={handleDeleteLog}
-        />
+
         <Loading open={fullLoading} />
     </div>
   );
 }
 
-export default DaftarLog;
+export default DaftarLogKaryawan;

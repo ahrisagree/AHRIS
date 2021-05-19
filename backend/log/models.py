@@ -14,7 +14,7 @@ class LogAktivitas(models.Model):
     tanggal = models.DateField(default = datetime.date.today)
     jam_masuk = models.TimeField(default = now)
     jam_keluar = models.TimeField(default = now)
-    keterangan = models.CharField(max_length=50)
+    keterangan = models.CharField(max_length=50, default="")
     aktivitas = models.CharField(max_length=250)
     link_deliverable = models.CharField(max_length=250)
     status_deliverable = models.CharField(max_length=50)
@@ -45,7 +45,7 @@ class LogAktivitas(models.Model):
 class Presensi(models.Model):
     tanggal = models.DateField(default = datetime.date.today)
     jam_masuk = models.TimeField(default = now)
-    keterangan = models.CharField(max_length=100)
+    keterangan = models.CharField(max_length=255, blank=True, null=True)
     user = models.ForeignKey(AppUser,
         on_delete=models.SET_NULL,
         null=True,
