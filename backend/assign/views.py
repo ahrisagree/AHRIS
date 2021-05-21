@@ -10,7 +10,6 @@ from backend.filters import AssignmentFilter
 
 class AssignmentView(viewsets.ReadOnlyModelViewSet, mixins.CreateModelMixin):
   permission_classes = (IsAuthenticated, DefaultRolePermission, AdminEditPermission)
-  # TODO cek lagi permissionnya
   http_methods = ('get', 'post')
   queryset = Assignment.objects.all().order_by('-id')
   serializer_class = AssignmentSerializer

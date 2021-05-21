@@ -50,3 +50,7 @@ class ManagerOnlyEditPermission(BasePermission):
         if request.method in ['PATCH', 'PUT']:
             return request.user.has_role('Manager')
         return True
+
+class AdministrasiOnlyPermission(BasePermission):
+    def has_permission(self, request, view):
+        return request.user.has_role('Administrasi', 'Admin')

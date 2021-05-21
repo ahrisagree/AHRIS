@@ -73,4 +73,12 @@ class LogAktivitasFilter(FilterSet):
   periode = PeriodeFilter(field_name='tanggal')
   status = filters.NumberFilter(field_name='status_log')
   is_lembur = filters.BooleanFilter(field_name='is_lembur')
+
+class GajiFilter(FilterSet):
+  periode = PeriodeFilter(field_name='periode')
+  role = filters.CharFilter(field_name='user__role')
+  divisi = CharMultipleFilter(
+    field_name='user__divisi__nama_divisi',
+    lookup_expr='in'
+  )
   
