@@ -43,19 +43,14 @@ table: {
   minWidth: 500,
 },
 pagination: {
-  '& > *': {
-    marginTop: theme.spacing(1),
-    color: "#0B3242",
-    marginLeft: "90%",
-    // color: "primary",
-  },
+  marginTop: theme.spacing(1),
+  color: "#0B3242",
+  display: 'flex',
+  justifyContent: 'flex-end'
 },
 button: {
-    position: "relative",
-    alignSelf: "center",
-    alignItems: "center",
-    marginLeft: "35%"
-    
+  display: 'flex',
+  justifyContent: 'space-evenly' 
 },
 
 }));
@@ -280,21 +275,21 @@ const AssignResponden = ({
         </div>
         <Grid item xs={12} className={classes.button}>
         <TemplateButton 
-                    onClick={prevStep}
-                    type="button"
-                    buttonStyle="btnBlue"
-                    buttonSize="btnLong"
-                  >
-                    Sebelumnya
-                  </TemplateButton>
-                  <TemplateButton 
-                    onClick={submit}
-                    type="button"
-                    buttonStyle="btnBlue"
-                    buttonSize="btnLong"
-                  >
-                    Simpan
-                  </TemplateButton>
+          onClick={prevStep}
+          type="button"
+          buttonStyle="btnBlueOutline"
+          buttonSize="btnLong"
+        >
+          Sebelumnya
+        </TemplateButton>
+        <TemplateButton 
+          onClick={submit}
+          type="button"
+          buttonStyle="btnBlue"
+          buttonSize="btnLong"
+        >
+          Simpan
+        </TemplateButton>
         </Grid>
     </div>
   );
