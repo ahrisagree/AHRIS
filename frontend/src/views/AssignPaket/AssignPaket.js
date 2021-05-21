@@ -40,19 +40,14 @@ table: {
   minWidth: 500,
 },
 pagination: {
-  '& > *': {
     marginTop: theme.spacing(1),
     color: "#0B3242",
-    marginLeft: "90%",
-    // color: "primary",
-  },
+    display: 'flex',
+    justifyContent: 'flex-end'
 },
 button: {
-    position: "relative",
-    alignSelf: "center",
-    alignItems: "center",
-    marginLeft: "40%"
-    
+  display: 'flex',
+  justifyContent: 'space-evenly'
 },
 
 }));
@@ -267,15 +262,15 @@ const AssignPaket = ({
         </div>
 
         <Grid item xs={12} className={classes.button}>
-                  <TemplateButton 
-                    onClick={nextStep}
-                    type="button"
-                    buttonStyle="btnBlue"
-                    buttonSize="btnLong"
-                    disabled={loading}
-                  >
-                    Selanjutnya
-                  </TemplateButton>
+          <TemplateButton 
+            onClick={nextStep}
+            type="button"
+            buttonStyle="btnBlue"
+            buttonSize="btnLong"
+            disabled={loading}
+          >
+            Selanjutnya
+          </TemplateButton>
         </Grid>
     </div>
   );
