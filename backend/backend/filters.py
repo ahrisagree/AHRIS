@@ -1,23 +1,6 @@
 from django_filters import Filter, FilterSet, filters
+from django.forms import widgets
 from auth_app.models import AppUser
-
-# class M2MFilter(Filter):
-
-#   def filter(self, qs, value):
-#     if not value:
-#       return qs
-#     values = value.split(',')
-#     for v in values:
-#       qs = qs.filter(labels=v)
-#     return qs
-
-# class UserFilter(FilterSet):
-#   role = M2MFilter(name='role')
-#   divisi = M2MFilter(name='divisi__nama_divisi')
-
-#   class Meta:
-#     model = AppUser
-#     fields = ('role', 'divisi')
 
 class CharMultipleFilter(filters.BaseInFilter, filters.CharFilter):
   # This allow filter multiple with comma (,) separation
@@ -27,6 +10,7 @@ class NumberMultipleFilter(filters.BaseInFilter, filters.NumberFilter):
   pass
 
 class PeriodeFilter(filters.DateFilter):
+  # widget=widgets.DateInput(attrs={'type': 'month'})
   def filter(self, qs, value):
     if value:
         filter_lookups = {

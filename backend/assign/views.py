@@ -60,9 +60,21 @@ class ScoringView(views.APIView):
       user = kwargs['assignment__user_dinilai__pk']
     ).exists()
 
+    not_answered_assignment = Assignment.objects.filter(
+      list_paket_pertanyaan = kwargs['paket_pertanyaan__id'],
+      periode = kwargs['assignment__periode'],
+      user_dinilai = kwargs['assignment__user_dinilai__pk']
+    ).exclude(list_paket_jawaban__paket_pertanyaan = kwargs['paket_pertanyaan__id'])
+
+    not_aswering_users = AppUser.objects.filter(
+      user_penilai__in=not_answered_assignment
+    )
+
+
     skor_map = {}
     bobot_map = {}
     list_aspek_serializer = []
+    list_not_answered_serializer = []
     nama_paket = "None"
 
     for aspek in list_aspek_jawaban:
@@ -81,14 +93,19 @@ class ScoringView(views.APIView):
         })
       if serializer.is_valid():
         list_aspek_serializer.append(serializer.data)
+
+    for user in not_aswering_users:
+      serializer = UserListSerializer(instance=user)
+      list_not_answered_serializer.append(serializer.data)
   
     response = ScoringSerializer(data={
       'list_aspek': list_aspek_serializer,
       'nama': nama_paket, 
-      'hasil_performa_exist': hasil_performa_exist
+      'hasil_performa_exist': hasil_performa_exist,
+      'list_not_answered' : list_not_answered_serializer
     })
-    if response.is_valid():
-      return Response(response.data, status=status.HTTP_200_OK)
-    return Response({'detail': 'Error'}, status=status.HTTP_501_NOT_IMPLEMENTED)
+
+    return Response(response.initial_data, status=status.HTTP_200_OK)
+    # return Response({'detail': 'Error'}, status=status.HTTP_501_NOT_IMPLEMENTED)
     
     
