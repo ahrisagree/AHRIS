@@ -7,12 +7,15 @@ import {
   TableRow,
   Paper,
   Grid,
+  Tooltip,
+  IconButton,
 } from '@material-ui/core';
 import { StyledTableCell } from "components/Table";
 import CircularProgress from 'components/Loading/CircularProgress';
 import TextField from 'components/CustomTextField';
 import MainTitle from 'components/MainTitle';
 import { getDetailAssignment } from 'api/borang';
+import { KeyboardBackspaceRounded } from '@material-ui/icons';
 
 
 const JawabanBorang = ({classes, idAssignment, back, match}) => {
@@ -53,7 +56,11 @@ const JawabanBorang = ({classes, idAssignment, back, match}) => {
           title={`${assignment?.user_dinilai.username}'s ${paketJawaban?.nama} 
           by ${assignment?.user_penilai.username} `} 
           className="mb-8" />
-        <button onClick={back}>back</button>
+        <Tooltip title="Back" placement="right">
+          <IconButton onClick={back}>
+            <KeyboardBackspaceRounded />
+          </IconButton>
+        </Tooltip>
         <TableContainer component={Paper}>
           <MuiTable className={classes.table} aria-label="customized table">
             {loading ?
@@ -64,7 +71,7 @@ const JawabanBorang = ({classes, idAssignment, back, match}) => {
                     </StyledTableCell>
                   </TableRow>
                 </TableBody>
-            : !paketJawaban  ? <p>Not Found</p> : 
+            : !paketJawaban  ? <p className="text-center p-8">Not Found</p> : 
               paketJawaban.list_aspek.map((aspek)=>(
               <>
                 <TableHead>
@@ -72,10 +79,10 @@ const JawabanBorang = ({classes, idAssignment, back, match}) => {
                     <StyledTableCell align="left">
                         <Grid container>
                           <Grid item xs={10}>
-                            <p>{aspek.nama}</p>
+                            <p className="font-bold">{aspek.nama}</p>
                           </Grid>
                           <Grid item xs={2} container justify="flex-end">
-                            <p>{mean(aspek.list_jawaban)}</p>
+                            <p className="font-bold">{mean(aspek.list_jawaban)}</p>
                           </Grid>
                         </Grid>
                     </StyledTableCell>
