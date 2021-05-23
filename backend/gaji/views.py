@@ -16,19 +16,21 @@ class GajiViewSet(viewsets.ReadOnlyModelViewSet, mixins.UpdateModelMixin):
   filterset_fields = ['role', 'divisi', 'periode']
   search_fields = ['user__username']
 
-  def list(self, request, *args, **kwargs):
-    today_period = datetime.date.today()
-    today_period.replace(day=1)
-    if (not Gaji.objects.filter(periode=today_period).exists()): 
-      perform_generate_gaji(today_period)
-    return super().list(request, *args, **kwargs)
-
   def perform_generate_gaji(self, period):
     for user in AppUser.objects.all():
-      Gaji.object.create(
+      Gaji.objects.create(
         periode=period,
         user=user,
-        amount=user.gaji
+        nominal=user.gaji
       )
+
+  def list(self, request, *args, **kwargs):
+    today = datetime.date.today()
+    # Always Normalize period into 1
+    period = today.replace(day=1)
+    if (not Gaji.objects.filter(periode=period).exists()): 
+      self.perform_generate_gaji(period)
+    return super().list(request, *args, **kwargs)
+
 
   

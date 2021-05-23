@@ -5,7 +5,7 @@ class Gaji(models.Model):
   periode = models.DateField()
   user = models.ForeignKey(AppUser,
       on_delete=models.CASCADE,
-      related_name='gaji')
+      related_name='gaji_bulanan')
   nominal = models.IntegerField()
 
   
