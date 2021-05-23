@@ -159,12 +159,12 @@ const DaftarBorang = ({history, match}) => {
                     <StyledTableCell align="left">
                     <Grid item sm={10}>
                     {assignment.list_paket_jawaban.find(x=>x.paket_pertanyaan===row.id) ? 
-                    "Sudah Diisi":
+                    <span className="text-green-600">Sudah Diisi</span>:
                       <TemplateButton
                           onClick={()=>history.push(`/mengisi-borang/${assignment.id}/${row.id}`)}
                           type="button"
                           buttonStyle="btnGreen"
-                          buttonSize="btnLong"
+                          buttonSize="btnMedium"
                       >
                           Isi Penilaian
                       </TemplateButton>

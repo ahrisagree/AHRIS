@@ -114,3 +114,4 @@ class ScoringSerializer(serializers.Serializer):
   nama = serializers.CharField(max_length=255)
   list_aspek = ScoringAspekSerializer(many=True)
   hasil_performa_exist = serializers.BooleanField()
+  list_not_answered = UserListSerializer(many=True)
