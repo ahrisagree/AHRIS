@@ -21,7 +21,6 @@ import Loading from 'components/Loading';
 import { EditRounded } from '@material-ui/icons';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutlineRounded';
 import DeleteConfirmationDialog from 'components/DialogConf';
-import { id } from 'date-fns/locale';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -69,9 +68,8 @@ const useStyles = makeStyles((theme) => ({
 
 const filter = createFilterOptions();
 
-const DetailEditUser = (props) => {
+const EditAkun = (props) => {
   const classes = useStyles();
-  const { idUser } = props.match.params;
 
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState({});
@@ -82,7 +80,7 @@ const DetailEditUser = (props) => {
   const [divisi, setDivisi] = React.useState([]);
   const [gaji, setGaji] = React.useState("");
   const [opsiDivisi, setOpsiDivisi] = React.useState([]);
-  const [editMode, setEditMode] = React.useState(false);
+  const [editMode, setEditMode] = React.useState(true);
   const [deleteKaryawan, setDeleteKaryawan] = React.useState(null);
   const [update, setUpdate] = React.useState(0);
   const [fullLoading, setFullLoading] = React.useState(false);
@@ -341,10 +339,9 @@ const DetailEditUser = (props) => {
           handleCancel={()=>setDeleteKaryawan(null)}
           handleConfirm={handleDeleteKaryawan}
         />
-        <Loading open={fullLoading} />
 
     </div>
   )
 };
 
-export default DetailEditUser;                                                                                                                                                                                
+export default EditAkun;                                                                                                                                                                                
