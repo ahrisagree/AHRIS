@@ -13,7 +13,7 @@ class PresensiViewSet(viewsets.ModelViewSet):
     queryset = Presensi.objects.all().order_by('-id')
     serializer_class = PresensiSerializer
     filter_class = PresensiFilter
-    filterset_fields = ['tanggal', 'user', 'periode']
+    filterset_fields = ['tanggal', 'user', 'periode', 'date', 'divisi']
     search_fields = ['user__username']
 
     def get_serializer_class(self):
@@ -37,7 +37,15 @@ class LogAktivitasViewSet(viewsets.ModelViewSet):
     queryset = LogAktivitas.objects.all().order_by('-tanggal')
     serializer_class = LogAktivitasSerializer
     filter_class = LogAktivitasFilter
-    filterset_fields = ['tanggal', 'user', 'periode', 'status', 'is_lembur']
+    filterset_fields = [
+        'tanggal',
+        'user',
+        'periode',
+        'status',
+        'is_lembur',
+        'penyetuju',
+        'date'
+        ]
     search_fields = ['user__username']
 
     def get_queryset(self):

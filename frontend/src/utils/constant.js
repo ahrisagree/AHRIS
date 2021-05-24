@@ -7,11 +7,12 @@ export const ROLE = {
   admin: "Admin",
   manager: "Manager",
   karyawan: "Karyawan",
+  administrasi: "Administrasi",
   guest: "Guest"
 }
 
 export const ROLES = [
-  "Admin", "Manager", "Karyawan"
+  "Admin", "Manager", "Karyawan", "Administrasi"
 ]
 
 export const STATUS_LOG = [

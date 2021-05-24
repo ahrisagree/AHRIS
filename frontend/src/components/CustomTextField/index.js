@@ -4,6 +4,7 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import IconButton from '@material-ui/core/IconButton';
+import { SearchRounded } from '@material-ui/icons';
 
 
 const TheTextField = ({type, ...props}) => {
@@ -22,6 +23,10 @@ const TheTextField = ({type, ...props}) => {
               {show ? <Visibility /> : <VisibilityOff />}
             </IconButton>
           </InputAdornment>
+          ) : (type==='search') ? (
+            <InputAdornment position="end">
+              <SearchRounded />
+            </InputAdornment>
           ) : null
       }}
       type = {show ? 'text' : type}

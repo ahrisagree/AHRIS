@@ -8,6 +8,7 @@ import DialogSuccess from 'components/Dialog';
 import DialogFail from 'components/DialogFail';
 import Loading from 'components/Loading';
 import CustomTextField from 'components/CustomTextField';
+import ModalAssignConfirmation from 'components/ModalAssignConfirmation';
 
 
 const stepComponent = [
@@ -25,6 +26,8 @@ const AssignmentManager = (props) => {
   const [selectedBorang, setSelectedBorang] = useState([]);
   const [selectedPenilai, setSelectedPenilai] = useState([]);
   const [selectedDinilai, setSelectedDinilai] = useState([]);
+
+  const [showConfirmation, setShowConfirmation] = useState(false);
 
   const [periode, setPeriode] = useState(new Date().toISOString().substr(0,10));
 
@@ -61,6 +64,7 @@ const AssignmentManager = (props) => {
       periode
     }).then(()=>{
       setSuccess(true);
+      setShowConfirmation(false);
       setSelectedPenilai([]);
       setSelectedDinilai([]);
       setSelectedBorang([]);
@@ -104,7 +108,7 @@ const AssignmentManager = (props) => {
         nextStep,
         prevStep,
         onSelect,
-        submit
+        submit: ()=>setShowConfirmation(true)
       })}
       <DialogSuccess open={success} handleClose={()=>setSuccess(false)} />
       <DialogFail
@@ -113,6 +117,16 @@ const AssignmentManager = (props) => {
         text={error.detail && error.detail[0]}
       />
       <Loading open={loading} />
+      <ModalAssignConfirmation
+        open={showConfirmation}
+        onCancel={()=>setShowConfirmation(false)}
+        selectedBorang={selectedBorang}
+        selectedDinilai={selectedDinilai}
+        selectedPenilai={selectedPenilai}
+        periode={periode}
+        handleChangePeriode={e=>{setPeriode(e.target.value); delete error.periode}}
+        submit={submit}
+      />
     </>
   )
 }
