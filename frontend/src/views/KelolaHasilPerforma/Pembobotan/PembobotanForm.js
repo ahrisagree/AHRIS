@@ -34,10 +34,15 @@ const PembobotanForm = ({classes, match, history, setYangBelum, yangBelum}) => {
 
   useEffect(()=>{
     setLoading(true);
+    setListAspek(null);
+    setSkorKumulatif(0);
+    setCatatan("");
+    setHasilPerformaExist(false);
     getSumScoringAPI(idDinilai, idPaket, periodFormated(periode)).then(res=>{
       setNamaPaket(res.data?.nama);
       setListAspek(res.data?.list_aspek.map(asp=>({...asp, deskripsi: ""})))
-      setSkorKumulatif(res.data?.list_aspek.reduce((x,y)=>x.skor*x.bobot+y.skor*y.bobot, 0)/100)
+      if (res.data?.list_aspek?.length > 0) 
+        setSkorKumulatif(res.data.list_aspek.reduce((x,y)=>x.skor*x.bobot+y.skor*y.bobot)/100)
       setHasilPerformaExist(res.data?.hasil_performa_exist)
       setYangBelum(res.data?.list_not_answered || []);
     }).catch(err=>{
@@ -160,7 +165,6 @@ const PembobotanForm = ({classes, match, history, setYangBelum, yangBelum}) => {
         </Grid>
         </>
       ))}
-      {console.log(list_aspek)}
       {list_aspek && (list_aspek?.length > 0 ? (
         <>
         <Grid item xs={12}>
