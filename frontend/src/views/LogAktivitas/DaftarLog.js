@@ -20,6 +20,7 @@ import CircularProgress from 'components/Loading/CircularProgress';
 import { Link } from 'react-router-dom';
 import Loading from 'components/Loading';
 import DeleteConfirmationDialog from 'components/DialogConf';
+import Status from 'components/Status';
 
 const useStyles = makeStyles((theme) =>({
   root: {
@@ -206,7 +207,7 @@ const DaftarLog = (props) => {
                     </StyledTableCell>
                     <StyledTableCell align="left">{row.tanggal}</StyledTableCell>
                     <StyledTableCell align="left">{row.is_lembur ? "Lembur" : "Reguler"}</StyledTableCell>
-                    <StyledTableCell align="left">{STATUS_LOG[row.status_log]}</StyledTableCell>
+                    <StyledTableCell align="left"><Status status={STATUS_LOG[row.status_log]} /></StyledTableCell>
                     <StyledTableCell align="center">
                     
                     <Link to={`/detail-log/${row.id}`}>

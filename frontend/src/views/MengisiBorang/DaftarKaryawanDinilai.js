@@ -19,6 +19,7 @@ import CircularProgress from 'components/Loading/CircularProgress';
 // import { setQueryParams } from 'utils/setQueryParams';
 import TextField from 'components/CustomTextField';
 import { periodFormated } from 'utils/periodeConverter';
+import Status from 'components/Status';
 
 
 
@@ -238,19 +239,24 @@ const DaftarKaryawanDinilai = ({history}) => {
                     <StyledTableCell align="left">{row.user_dinilai.role}</StyledTableCell>
                     <StyledTableCell align="left">{row.user_dinilai.divisi.map(x=> x.nama_divisi+", ")}</StyledTableCell>
                     <StyledTableCell align="left">
-                      {row.list_paket_jawaban.length} / 
-                      {row.list_paket_pertanyaan.length}
+                      {row.list_paket_jawaban.length >= row.list_paket_pertanyaan.length ? 
+                      <Status status="Done" />
+                      :
+                      `${row.list_paket_jawaban.length} / ${row.list_paket_pertanyaan.length}`
+                      }
                     </StyledTableCell>
                     <StyledTableCell align="left">
                     <Grid item sm={10}>
-                    <TemplateButton
-                        onClick={()=>history.push(`/mengisi-borang/${row.id}`)}
-                        type="button"
-                        buttonStyle="btnGreen"
-                        buttonSize="btnLong"
-                    >
-                        Lihat Borang
-                    </TemplateButton>
+                    {row.list_paket_jawaban.length < row.list_paket_pertanyaan.length &&
+                      <TemplateButton
+                          onClick={()=>history.push(`/mengisi-borang/${row.id}`)}
+                          type="button"
+                          buttonStyle="btnGreen"
+                          buttonSize="btnMedium"
+                      >
+                          Lihat Borang
+                      </TemplateButton>
+                    }
                     </Grid>
                     </StyledTableCell>
                   </StyledTableRow>

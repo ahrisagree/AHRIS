@@ -11,7 +11,6 @@ import {
   Grid,
   MenuItem,
 } from '@material-ui/core';
-import SearchIcon from '@material-ui/icons/Search';
 import { StyledTableCell, StyledTableRow } from "components/Table";
 import MainTitle from "components/MainTitle";
 import TextField from 'components/CustomTextField';
