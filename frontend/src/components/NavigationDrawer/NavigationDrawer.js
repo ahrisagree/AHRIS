@@ -159,7 +159,16 @@ const navigationMenu = [
   {
     menu: 'Presensi',
     icon: <CheckIcon style={{ color: 'white' }}/>,
-    path: '/'
+    children: [
+      {
+        menu: 'Buat Presensi',
+        path: '/',
+      },
+      {
+        menu: 'My Presensi',
+        path: '/log/daftar-presensi',
+      }
+    ]
   },
   {
     menu: 'Daily Log',
