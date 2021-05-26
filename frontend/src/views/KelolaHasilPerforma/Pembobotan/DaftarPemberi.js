@@ -6,6 +6,8 @@ import TextField from 'components/CustomTextField';
 import { getListAssignment } from 'api/borang';
 import { setQueryParams } from 'utils/setQueryParams';
 import CircularProgress from 'components/Loading/CircularProgress';
+import { periodFormated } from 'utils/periodeConverter';
+import Status from 'components/Status';
 
 
 const DaftarPemberi = ({classes, history, match, selectJawaban, yangBelum}) => {
@@ -26,7 +28,7 @@ const DaftarPemberi = ({classes, history, match, selectJawaban, yangBelum}) => {
   // const [searchFilter, setFilterSearch] = useState(params.get("search"));
 
   const { idDinilai, idPaket } = match.params;
-  const periode = params.get("periode") || new Date().toISOString().substr(0,10)
+  const periode = params.get("periode") || new Date().toISOString().substr(0,7)
 
   useEffect(()=>{
     setLoading(true)
@@ -34,7 +36,7 @@ const DaftarPemberi = ({classes, history, match, selectJawaban, yangBelum}) => {
       disablepagination: true,
       user_dinilai: idDinilai,
       paket_pertanyaan: idPaket,
-      periode
+      periode: periodFormated(periode)
     }).then(res=>{
       setListItem(res.data);
       // setCount(Math.ceil(res.data?.count/PAGE_SIZE));
@@ -65,7 +67,7 @@ const DaftarPemberi = ({classes, history, match, selectJawaban, yangBelum}) => {
             size="small"
             className={classes.mb}
             fullWidth
-            type="date"
+            type="month"
             bordered={true}
             value={periode}
             onChange={e=>handleFilterPeriode(e.target.value)}
@@ -110,7 +112,7 @@ const DaftarPemberi = ({classes, history, match, selectJawaban, yangBelum}) => {
               <StyledTableCell align="left">{row.user_penilai.divisi.map(x=> x.nama_divisi+", ")}</StyledTableCell>
               <StyledTableCell align="left">
                 {yangBelum?.find(x=>x.pk===row.user_penilai.pk) ? 
-                  <span className="text-red-500">Belum isi</span>
+                  <Status status="Belum isi"/>
                   : 
                   <button
                   onClick={()=>selectJawaban(row.id)}

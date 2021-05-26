@@ -16,6 +16,7 @@ import MainTitle from "components/MainTitle";
 import { getListPaketPertanyaanAPI } from 'api/borang';
 import CircularProgress from 'components/Loading/CircularProgress';
 import CustomTextField from 'components/CustomTextField';
+import { periodFormated } from 'utils/periodeConverter';
 
 
 
@@ -86,7 +87,7 @@ const DaftarBorangPerforma = ({history, match}) => {
     const [loading, setLoading] = useState(false);
     // const [assignment, setAssignment] = useState(null);
     const [listBorang, setPaketBorang] = React.useState([]);
-    const [periodeFilter, setPeriodeFilter] = useState(new Date().toISOString().substr(0,10));
+    const [periodeFilter, setPeriodeFilter] = useState(new Date().toISOString().substr(0,7));
 
     const { idDinilai } = match.params;
 
@@ -98,7 +99,7 @@ const DaftarBorangPerforma = ({history, match}) => {
       getListPaketPertanyaanAPI({
         disablepagination: true, 
         dinilaiAssigned: idDinilai,
-        periodeAssigned: periodeFilter
+        periodeAssigned: periodFormated(periodeFilter)
       }).then(res=>{
         // setAssignment(res.data);
         setPaketBorang(res.data);
@@ -169,7 +170,7 @@ const DaftarBorangPerforma = ({history, match}) => {
                 size="small"
                 className={classes.mb}
                 fullWidth
-                type="date"
+                type="month"
                 bordered={true}
                 value={periodeFilter}
                 onChange={e=>setPeriodeFilter(e.target.value)}

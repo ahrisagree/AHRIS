@@ -91,8 +91,7 @@ class ScoringView(views.APIView):
         'skor': sum(list_skor)/(len(list_skor) if len(list_skor) != 0 else 1),
         'bobot': bobot_map[skor_aspek]
         })
-      if serializer.is_valid():
-        list_aspek_serializer.append(serializer.data)
+      list_aspek_serializer.append(serializer.initial_data)
 
     for user in not_aswering_users:
       serializer = UserListSerializer(instance=user)

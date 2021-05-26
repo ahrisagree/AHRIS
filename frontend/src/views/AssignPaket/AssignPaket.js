@@ -150,6 +150,7 @@ const AssignPaket = ({
             <CustomTextField
               label="Search"
               variant="outlined"
+              type="search"
               size="small"
               fullWidth
               bordered={true}
@@ -260,14 +261,18 @@ const AssignPaket = ({
             onChange={(_e,val)=>setPage(val)}
             />
         </div>
-
+        <Grid item xs={12} justify="center">
+          {selectedBorang.length === 0 && !loading &&
+            <p className="text-red-500 text-center text-sm">Harap pilih Paket Pertanyaan untuk penilaian</p>
+          }
+        </Grid>
         <Grid item xs={12} className={classes.button}>
           <TemplateButton 
             onClick={nextStep}
             type="button"
             buttonStyle="btnBlue"
             buttonSize="btnLong"
-            disabled={loading}
+            disabled={loading || selectedBorang.length === 0}
           >
             Selanjutnya
           </TemplateButton>

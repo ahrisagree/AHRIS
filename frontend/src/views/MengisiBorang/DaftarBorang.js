@@ -14,6 +14,7 @@ import { StyledTableCell, StyledTableRow } from "components/Table";
 import MainTitle from "components/MainTitle";
 import { getDetailAssignment } from 'api/borang';
 import CircularProgress from 'components/Loading/CircularProgress';
+import Status from 'components/Status';
 
 
 const useStyles = makeStyles((theme) =>({
@@ -159,7 +160,7 @@ const DaftarBorang = ({history, match}) => {
                     <StyledTableCell align="left">
                     <Grid item sm={10}>
                     {assignment.list_paket_jawaban.find(x=>x.paket_pertanyaan===row.id) ? 
-                    <span className="text-green-600">Sudah Diisi</span>:
+                    <Status status="Sudah Diisi" />:
                       <TemplateButton
                           onClick={()=>history.push(`/mengisi-borang/${assignment.id}/${row.id}`)}
                           type="button"

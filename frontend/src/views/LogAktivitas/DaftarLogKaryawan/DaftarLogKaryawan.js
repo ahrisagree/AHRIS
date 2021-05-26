@@ -22,7 +22,7 @@ import Loading from 'components/Loading';
 import { setQueryParams } from 'utils/setQueryParams';
 import CustomTextField from 'components/CustomTextField';
 import TextField from 'components/CustomTextField';
-
+import Status from 'components/Status';
 
 
 const useStyles = makeStyles((theme) =>({
@@ -320,7 +320,7 @@ const DaftarLogKaryawan = (props) => {
                     <StyledTableCell align="left">{row.user === null ? "Tidak ada user" : row.user?.username}</StyledTableCell>
                     <StyledTableCell align="left">{row.tanggal}</StyledTableCell>
                     <StyledTableCell align="left">{row.is_lembur ? "Lembur" : "Reguler"}</StyledTableCell>
-                    <StyledTableCell align="left">{STATUS_LOG[row.status_log]}</StyledTableCell>
+                    <StyledTableCell align="left"><Status status={STATUS_LOG[row.status_log]} /></StyledTableCell>
                     <StyledTableCell align="left">{row.aktivitas}</StyledTableCell>
                     <StyledTableCell align="left">{row.manajer_penyetuju !== null ? row.manajer_penyetuju.username : "" }</StyledTableCell>
                     <StyledTableCell align="center">
