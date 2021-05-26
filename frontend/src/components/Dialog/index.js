@@ -14,6 +14,7 @@ const styles = (theme) => ({
     alignItems: 'center',
     alignSelf: "center",
     borderRadius: 12,
+    textAlign: "center"
   },
   typography: {
     fontFamily: "IBM Plex Sans",
@@ -34,9 +35,7 @@ const styles = (theme) => ({
     color: '#FFFFFF',
     fontWeight: 'bold',
     borderColor: '#FFFFFF',
-    position: "relative",
-    top: 8,
-    right : -70
+    marginTop: 10,
   },
   judul: {
     fontFamily: "IBM Plex Sans",
@@ -52,13 +51,8 @@ const styles = (theme) => ({
     position : "relative",
   },
   foto: {
-    alignItems: "center",
-    textAlign: "center",
-    alignSelf: "center",
     width: "48%",
-    position: "relative",
-    top: -5,
-    right: -48,
+    margin: "auto"
   }
 });
 

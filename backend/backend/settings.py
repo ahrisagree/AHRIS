@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     'assign',
     'hasilperforma',
     'notification',
+    'gaji',
 ]
 
 MIDDLEWARE = [

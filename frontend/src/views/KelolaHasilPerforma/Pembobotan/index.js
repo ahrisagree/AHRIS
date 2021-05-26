@@ -81,6 +81,7 @@ const useStyles = makeStyles((theme) => ({
 const Pembobotan = props => {
   const classes = useStyles();
   const [idAssignment, setIdAssignment] = useState(null);
+  const [yangBelum, setYangBelum] = useState([]);
   // const [periode, setRootPeriode] = useState(null);
   // const handlesetDetailJawaban = val => {
   //   setDetailJawaban(val);
@@ -111,7 +112,6 @@ const Pembobotan = props => {
   //   setFilterSearch(null);
   //   setFilterRole(null);
   // }
-
   
     return (
       <div className={classes.splitScreen}>
@@ -127,12 +127,13 @@ const Pembobotan = props => {
             <DaftarPemberi
               classes={classes}
               selectJawaban={setIdAssignment}
+              yangBelum={yangBelum}
               {...props} 
             />
           }
         </div>
         <div className={classes.bottomPane}>
-          <PembobotanForm classes={classes} {...props} />
+          <PembobotanForm classes={classes} {...props} setYangBelum={setYangBelum} yangBelum={yangBelum} />
         </div>
       </div>
 

@@ -177,81 +177,6 @@ const DaftarBorangPerforma = ({history, match}) => {
             </div>
           </Grid>
         </Grid>
-        {/* <Grid item xs={12} spacing={2} direction="row" container>
-        <Grid item xs={2} alignContent="">
-          <div style={{position: 'relative', padding: 2}}>
-          <TextField
-            label="Jenis"
-            variant="outlined"
-            size="small"
-            className={classes.mb}
-            fullWidth
-            select
-            bordered={true}
-            value={jenisFilter}
-            onChange={e=>setFilterJenis(e.target.value)}
-          >
-              {JENIS_PAKET.map(j=>(
-                <MenuItem value={j.value}>{j.label}</MenuItem>
-              ))}
-          </TextField>
-          </div>
-        </Grid>
-
-        <Grid item xs={2} alignContent="">
-        <div style={{position: 'relative', padding: 2}}>
-        <TextField
-              label="Kategori"
-              variant="outlined"
-              size="small"
-              fullWidth
-              select
-              bordered={true}
-              value={kategoriFilter}
-              onChange={e=>setFilterKategori(e.target.value)}
-            >
-              {optionKategori.map(k=>(
-                <MenuItem value={k.nama}>{k.nama}</MenuItem>
-              ))}
-            </TextField>
-        </div>
-        </Grid>
-
-        <Grid item xs={5}/>
-          <Grid item lg={2} alignContent="">
-          <div style={{position: 'relative', padding: 2}}>
-          <SearchIcon style={{position: 'absolute', right: 0, top: 10, width: 25, height: 25}}/>
-          <TextField
-            label="Search"
-            variant="outlined"
-            size="small"
-            className={classes.mb}
-            fullWidth
-            bordered={true}
-            value={searchFilter}
-            onChange={e=>setFilterSearch(e.target.value)}
-          />
-          </div>
-          </Grid>
-
-          <Grid item xs={1}>
-          {!(params.get("jenis") === jenisFilter && 
-          params.get("search") === searchFilter &&
-          params.get("kategori") === kategoriFilter) &&
-            <TemplateButton 
-            type="button"
-            buttonStyle="btnBlueOutline"
-            buttonSize="btnMedium" onClick={doQuery}>Apply</TemplateButton>  
-          }
-          {(params.get("search") ||
-            params.get("jenis") &&
-            params.get("kategori")) &&
-            <TemplateButton type="button"
-            buttonStyle="btnBlueOutline"
-            buttonSize="btnMedium" onClick={resetQuery}>Reset</TemplateButton>  
-          }
-        </Grid>
-        </Grid> */}
       </Grid>
 
       <br></br>
@@ -295,7 +220,7 @@ const DaftarBorangPerforma = ({history, match}) => {
                         onClick={()=>history.push(`/kelola-performa/${idDinilai}/${row.id}/?periode=${periodeFilter}`)}
                         type="button"
                         buttonStyle="btnGreen"
-                        buttonSize="btnLong"
+                        buttonSize="btnMedium"
                     >
                         Lihat Penilaian
                     </TemplateButton>
