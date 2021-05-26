@@ -13,7 +13,11 @@ export const getListLog = query => {
     return axios.get(`${baseUrl}/log/?${formatedQuery}`);
 }
 
-export const getListLogKaryawan = () => axios.get(`${baseUrl}/log/`);
+export const getListLogKaryawan = query => {
+    let formatedQuery = ""
+    Object.keys(query).forEach(qkey=>formatedQuery+=query[qkey]?`${qkey}=${query[qkey]}&`:'');
+    return axios.get(`${baseUrl}/log/?${formatedQuery}`);
+}
 
 export const getListPresensi = query => {
     let formatedQuery = ""
@@ -21,10 +25,18 @@ export const getListPresensi = query => {
     return axios.get(`${baseUrl}/log/presensi/?${formatedQuery}`);
 }
 
-export const getListPresensiKaryawan = () => axios.get(`${baseUrl}/log/presensi/`);
+export const getListPresensiKaryawan= query => {
+    let formatedQuery = ""
+    Object.keys(query).forEach(qkey=>formatedQuery+=query[qkey]?`${qkey}=${query[qkey]}&`:'');
+    return axios.get(`${baseUrl}/log/presensi/?${formatedQuery}`);
+}
 
 export const editLogAPI = (id, data) => 
     axios.patch(`${baseUrl}/log/${id}/`, data);
+
+export const komentarLogAPI = (id, data) => 
+    axios.patch(`${baseUrl}/log/${id}/`, data);
+
 
 export const setujuiLogAPI = (id, data) => 
     axios.patch(`${baseUrl}/log/${id}/`, data);
