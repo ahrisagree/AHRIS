@@ -86,13 +86,14 @@ const DaftarLog = (props) => {
   const [deleteLog, setDeleteLog] = useState(null);
   const [role, setRole] = useState("");
   const history = props.match.params.history;
+  const {user} = props;
 
   useEffect(()=>{
     setLoading(true)
 
-    const id = props.match.params.id;
+    // const id = props.match.params.id;
 
-    getKaryawan(id).then(res=>{
+    getKaryawan(user.pk).then(res=>{
       const { data } = res
       setRole(data.role);
     }).catch(err=>{
@@ -102,7 +103,7 @@ const DaftarLog = (props) => {
     })
 
     getListLog({
-      user: id,  
+      user: user.pk,  
       page
     }).then(res=>{
       setListItem(res.data?.results);

@@ -127,6 +127,7 @@ const MyPresensi = (props) => {
                 <StyledTableCell align="left"> Tanggal </StyledTableCell>
                 <StyledTableCell align="left"> Jam Masuk </StyledTableCell>
                 <StyledTableCell align="left"> Keterangan </StyledTableCell>
+                <StyledTableCell align="left"> Status Log Aktivitas </StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -152,8 +153,20 @@ const MyPresensi = (props) => {
                     <StyledTableCell align="left">{row.user?.username}</StyledTableCell>
                     <StyledTableCell align="left">{row.user?.role}</StyledTableCell>
                     <StyledTableCell align="left">{row.tanggal}</StyledTableCell>
-                    <StyledTableCell align="left">{row.jam_masuk}</StyledTableCell>
+                    <StyledTableCell align="left">{row.jam_masuk.split(".")[0]}</StyledTableCell>
                     <StyledTableCell align="left">{row.keterangan}</StyledTableCell>
+                    <StyledTableCell align="left">{row.log !== null ? "Sudah mengisi log" : 
+                    
+                    <Link to={`/log-aktivitas`}>
+                    <TemplateButton 
+                      type="button" 
+                      buttonStyle="btnGreen" 
+                      buttonSize="btnMedium"
+                      >
+                      Buat Log
+                      </TemplateButton>
+                    </Link>}</StyledTableCell>
+
                   </StyledTableRow>
                 )))}
             </TableBody>
