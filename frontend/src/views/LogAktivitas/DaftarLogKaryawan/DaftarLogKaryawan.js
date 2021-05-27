@@ -24,7 +24,6 @@ import CustomTextField from 'components/CustomTextField';
 import TextField from 'components/CustomTextField';
 
 
-
 const useStyles = makeStyles((theme) =>({
   root: {
     '& > *': {
@@ -96,8 +95,8 @@ const DaftarLogKaryawan = (props) => {
   const [searchFilter, setFilterSearch] = useState(params.get("search"));
   const [statusFilter, setFilterStatus] = useState(params.get("status"));
   const [penyetujuFilter, setFilterPenyetuju] = useState(params.get("penyetuju"));
-  const [tanggalSetelahFilter, setFilterTanggalSetelah] = useState(params.get("date_after"));
-  const [tanggalSebelumFilter, setFilterTanggalSebelum] = useState(params.get("date_before"));
+  const [tanggalSetelahFilter, setFilterTanggalSetelah] = useState();
+  const [tanggalSebelumFilter, setFilterTanggalSebelum] = useState();
 
 
   useEffect(()=>{
@@ -105,12 +104,12 @@ const DaftarLogKaryawan = (props) => {
     const search = params.get("search");
     const status = params.get("status");
     const penyetuju = params.get("penyetuju");
-    const tanggalSetelah = params.get("date_after");
-    const tanggalSebelum = params.get("date_before");
+    const date_after = params.get("date_after");
+    const date_before = params.get("date_before");
     
     
     getListLogKaryawan({
-      page, search, status, penyetuju, tanggalSetelah, tanggalSebelum
+      page, search, status, penyetuju, date_after, date_before
     }).then(res=>{
       setListItem(res.data?.results);
       setCount(Math.ceil(res.data?.count/PAGE_SIZE));
@@ -154,8 +153,8 @@ const DaftarLogKaryawan = (props) => {
       search: searchFilter || "",
       status: statusFilter || "",
       penyetuju: penyetujuFilter || "",
-      tanggalSetelah: tanggalSetelahFilter || "",
-      tanggalSebelum: tanggalSebelumFilter || ""
+      date_after: tanggalSetelahFilter || "",
+      date_before: tanggalSebelumFilter || ""
     }, history);
     setPage(1);
     setUpdate(update+1);
@@ -212,7 +211,7 @@ const DaftarLogKaryawan = (props) => {
                 bordered={true}
               >
                 {STATUS_LOG_LABEL.map(s=>(
-                  <MenuItem value={s.value}>{s.label}</MenuItem>
+                  <MenuItem value={s.value ===  0 ? '0' : s.value}>{s.label}</MenuItem>
                 ))}
               </TextField>
           </div>
@@ -230,7 +229,8 @@ const DaftarLogKaryawan = (props) => {
               />
             
           </div>
-
+            
+          
           <div className="w-full md:w-1/3 my-2 md:mr-2">
               <CustomTextField
                 variant="outlined"
@@ -240,8 +240,8 @@ const DaftarLogKaryawan = (props) => {
                 InputLabelProps={{
                   shrink: true,
                 }}
-                value={tanggalSebelumFilter}
-                onChange={e=>{setFilterTanggalSebelum(e.target.value)}}
+                value={tanggalSetelahFilter}
+                onChange={e=>{setFilterTanggalSetelah(e.target.value)}}
                 disabled={loading}
                 />
           </div>
@@ -255,11 +255,13 @@ const DaftarLogKaryawan = (props) => {
                 InputLabelProps={{
                   shrink: true,
                 }}
-                value={tanggalSetelahFilter}
-                onChange={e=>{setFilterTanggalSetelah(e.target.value)}}
+                value={tanggalSebelumFilter}
+                onChange={e=>{setFilterTanggalSebelum(e.target.value)}}
                 disabled={loading}
                 />
           </div>
+
+    
 
 
           <div className="flex items-center">
