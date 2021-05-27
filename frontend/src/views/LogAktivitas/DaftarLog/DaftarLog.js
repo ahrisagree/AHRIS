@@ -11,6 +11,8 @@ import {
   TableRow,
   Paper,
   Grid,
+  Tooltip,
+  IconButton
 } from '@material-ui/core';
 import { getListLog, deleteLogAPI, getKaryawan } from 'api/log';
 import { PAGE_SIZE, STATUS_LOG } from 'utils/constant';
@@ -21,6 +23,9 @@ import { Link } from 'react-router-dom';
 import Loading from 'components/Loading';
 import DeleteConfirmationDialog from 'components/DialogConf';
 import Status from 'components/Status';
+import VisibilityIcon from '@material-ui/icons/Visibility';
+import DeleteOutlineIcon from '@material-ui/icons/DeleteOutlineRounded';
+import CreateIcon from '@material-ui/icons/CreateRounded';
 
 const useStyles = makeStyles((theme) =>({
   root: {
@@ -212,34 +217,27 @@ const DaftarLog = (props) => {
                     <StyledTableCell align="center">
                     
                     <Link to={`/detail-log/${row.id}`}>
-                    <TemplateButton 
-                      type="button" 
-                      buttonStyle="btnGreen" 
-                      buttonSize="btnMedium"
-                      >
-                      View
-                      </TemplateButton>
+                    <Tooltip title="View">
+                        <IconButton size="small">
+                          <VisibilityIcon style={{ color: "#0A3142"}}/>
+                        </IconButton>
+                      </Tooltip>
                     </Link>
                     
                     <Link to={`/edit-log/${row.id}`}>
-                    <TemplateButton
-                      type="button"
-                      buttonStyle="btnYellow"
-                      buttonSize="btnMedium"
-                      disabled={STATUS_LOG[row.status_log] === "Disetujui" ? true : false}
-                      >
-                      Edit
-                    </TemplateButton>
+                    <Tooltip title="Edit">
+                        <IconButton size="small" disabled={STATUS_LOG[row.status_log] === "Disetujui" ? true : false}>
+                          <CreateIcon style={{ color: "green"}}/>
+                        </IconButton>
+                      </Tooltip>
+                    
                     </Link>
  
-                      <TemplateButton
-                      type="button"
-                      buttonStyle="btnDanger"
-                      buttonSize="btnMedium"
-                      onClick={()=>setDeleteLog(row)}
-                      >
-                      Delete
-                    </TemplateButton>
+                    <Tooltip title="Delete">
+                        <IconButton size="small" onClick={()=>setDeleteLog(row)}>
+                          <DeleteOutlineIcon style={{ color: "red"}}/>
+                        </IconButton>
+                      </Tooltip>
                   
                     </StyledTableCell>
                   </StyledTableRow>

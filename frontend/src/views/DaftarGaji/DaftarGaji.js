@@ -14,12 +14,12 @@ import {
   MenuItem,
 } from '@material-ui/core';
 import TextField from 'components/CustomTextField';
-import DeleteOutlineIcon from '@material-ui/icons/DeleteOutlineRounded';
-import CreateIcon from '@material-ui/icons/CreateRounded';
+import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 import { StyledTableCell, StyledTableRow } from "components/Table";
 import MainTitle from "components/MainTitle";
 import Pagination from '@material-ui/lab/Pagination';
-import { getDivisiAPI, getListDaftarKaryawan, deleteKaryawanAPI, editUser } from 'api/akun';
+import { getDivisiAPI, getListDaftarKaryawan, deleteKaryawanAPI } from 'api/akun';
+import { getListGaji } from 'api/gaji';
 import { PAGE_SIZE, ROLES } from 'utils/constant';
 import CircularProgress from 'components/Loading/CircularProgress';
 import DeleteConfirmationDialog from 'components/DialogConf';
@@ -27,7 +27,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import _, {debounce} from 'lodash';
 import Loading from 'components/Loading';
 import { setQueryParams } from 'utils/setQueryParams';
-import VisibilityIcon from '@material-ui/icons/Visibility';
+import CustomButton from 'components/CustomButton';
 // import { PinDropSharp } from '@material-ui/icons';
 
 
@@ -36,7 +36,7 @@ const useStyles = makeStyles({
     marginBottom: '1rem'
   }
 })
-const DaftarKaryawan = ({history}) => {
+const DaftarGaji = ({history}) => {
   const classes = useStyles();
   const [loading, setLoading] = useState(false);
   const [listItem, setListItem] = useState([]);
@@ -45,7 +45,6 @@ const DaftarKaryawan = ({history}) => {
   const [count, setCount] = useState(0);
   const [deleteKaryawan, setDeleteKaryawan] = useState(null);
   const [fullLoading, setFullLoading] = useState(false);
-  const [editMode, setEditMode] = useState(false);
 
   // buat ngefilter
   const [update, setUpdate] = useState(0);
@@ -56,16 +55,13 @@ const DaftarKaryawan = ({history}) => {
   const [divisiFilter, setFilterDivisi] = useState(params.get("divisi"));
   const [searchFilter, setFilterSearch] = useState(params.get("search"));
 
+  
+
   useEffect(()=>{
     setLoading(true)
-    
-    const search = params.get("search");
-    const role = params.get("role");
-    const divisi = params.get("divisi");
 
-
-    getListDaftarKaryawan({
-      page, search, role, divisi 
+    getListGaji({
+      page
     }).then(res=>{
       setListItem(res.data?.results);
       setCount(Math.ceil(res.data?.count/PAGE_SIZE));
@@ -120,12 +116,15 @@ const DaftarKaryawan = ({history}) => {
 
       <Grid container spacing={2} direction="column">
       <Grid item xs={12} container>
-          <Grid item xs={4} alignContent="flex-start">
-            <MainTitle title="Kelola Akun" className={classes.title} />
+          <Grid item xs={2} alignContent="flex-start">
+            <MainTitle title="Daftar Gaji" className={classes.title} />
           </Grid>
-          <Grid item xs={8}/>
+          <Grid item xs={10}>
+          
+          </Grid>
         </Grid>
 
+        
         <Grid item xs={12} container>
 
         <Grid item xs={2} alignContent="">
@@ -138,7 +137,6 @@ const DaftarKaryawan = ({history}) => {
                     value={searchFilter}
                     onChange={e=>setFilterSearch(e.target.value)}
                     variant="outlined"
-                    type="search"
                     className={classes.mb}
                     size="small"
                     hintText="Search by Name"
@@ -185,7 +183,7 @@ const DaftarKaryawan = ({history}) => {
         </TextField>
         </div>
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={5}>
           {!(params.get("search") === searchFilter &&
             params.get("role") === roleFilter && 
             params.get("divisi") === divisiFilter) &&
@@ -197,16 +195,12 @@ const DaftarKaryawan = ({history}) => {
             <button onClick={resetQuery}>Reset</button>  
           }
         </Grid>
-
-          <Grid item xs={2} alignContent="">
-          <Button
-              variant="outlined"
-              color="primary" 
-              size="small"
-              onClick={()=>history.push('/akun/register')}
-              >
-              + Tambah Akun
-            </Button>
+        <Grid item xs={1} alignContent="flex-end">
+        <Tooltip title="Download">
+                        <IconButton size="medium">
+                          <CloudDownloadIcon style={{ color: "#0A3142", position:"absolute", right: 0}}/>
+                        </IconButton>
+                      </Tooltip>
           </Grid>
         </Grid>
       </Grid>
@@ -217,8 +211,8 @@ const DaftarKaryawan = ({history}) => {
               <TableRow>
                 <StyledTableCell align="left">No </StyledTableCell>
                 <StyledTableCell align="left">Nama </StyledTableCell>
-                <StyledTableCell align="left">Role </StyledTableCell>
-                <StyledTableCell align="left">Divisi</StyledTableCell>
+                <StyledTableCell align="left">Gaji </StyledTableCell>
+                <StyledTableCell align="left">Jumlah Log</StyledTableCell>
                 <StyledTableCell align="left"></StyledTableCell>
               </TableRow>
             </TableHead>
@@ -233,35 +227,28 @@ const DaftarKaryawan = ({history}) => {
                 listItem?.length === 0 ? 
                 <StyledTableRow>
                   <StyledTableCell align="center" colSpan="5">
-                    Tidak ada Daftar Karyawan
+                    Tidak ada Daftar Gaji
                   </StyledTableCell>
                 </StyledTableRow>
                 :
                 listItem.map((row, i) => (
-                  <StyledTableRow key={row.username}>
+                  <StyledTableRow key={row.user}>
                     <StyledTableCell component="th" scope="row">
                       {`${i+1}.`}
                     </StyledTableCell>
-                    <StyledTableCell align="left">{row.username}</StyledTableCell>
-                    <StyledTableCell align="left">{row.role}</StyledTableCell>
-                    <StyledTableCell align="left">{row.divisi.map(x=> x.nama_divisi+", ")}</StyledTableCell>
+                    <StyledTableCell align="left">{row.user.username}</StyledTableCell>
+                    <StyledTableCell align="left">{row.nominal}</StyledTableCell>
+                    <StyledTableCell align="left"></StyledTableCell>
                     <StyledTableCell align="left">
                     <Grid item sm={10}>
-                    <Tooltip title="View">
-                        <IconButton size="small" onClick={()=>history.push(`/akun/${row.pk}`)}>
-                          <VisibilityIcon style={{ color: "#0A3142"}}/>
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip title="Edit">
-                        <IconButton size="small" onClick={()=>history.push(`/akun/edit/${row.pk}`)}>
-                          <CreateIcon style={{ color: "green"}}/>
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip title="Delete">
-                        <IconButton size="small" onClick={()=>setDeleteKaryawan(row)}>
-                          <DeleteOutlineIcon style={{ color: "red"}}/>
-                        </IconButton>
-                      </Tooltip>
+                    <Button
+                        variant="outlined"
+                        color="primary" 
+                        size="small"
+                        onClick={()=>history.push(`/gaji/${row.user.pk}`)}
+                    >
+                    Edit
+                    </Button>
                     </Grid>
                     </StyledTableCell>
                   </StyledTableRow>
@@ -287,4 +274,4 @@ const DaftarKaryawan = ({history}) => {
   );
 };
 
-export default DaftarKaryawan;
+export default DaftarGaji;
