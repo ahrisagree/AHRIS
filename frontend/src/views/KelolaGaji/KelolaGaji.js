@@ -21,19 +21,17 @@ import MainTitle from 'components/MainTitle';
 import Dialog from 'components/Dialog';
 import DialogFail from 'components/DialogFail';
 import TemplateButton from 'components/TemplateButton';
-import { buatLogAPI } from 'api/log';
 import Loading from 'components/Loading';
 import Pagination from '@material-ui/lab/Pagination';
-import { getDivisiAPI, getListDaftarKaryawan } from 'api/akun';
-import { PAGE_SIZE, ROLES } from 'utils/constant';
+import { editUser, getKaryawan, getDivisiAPI, getListDaftarKaryawan } from 'api/akun';
+import { getListLog } from 'api/log';
+import { PAGE_SIZE, ROLES, STATUS_LOG } from 'utils/constant';
 import CircularProgress from 'components/Loading/CircularProgress';
-import DeleteConfirmationDialog from 'components/DialogConf';
 import { setQueryParams } from 'utils/setQueryParams';
 import { StyledTableCell, StyledTableRow } from "components/Table";
-import { getListAssignment } from 'api/borang';
-import { getPaketPertanyaanAPI } from 'api/borang';
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
-
+import { getGaji, editGaji, getListGaji } from 'api/gaji';
+import DetailEditUser from 'views/DetailEditUser';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -97,7 +95,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const KelolaGaji = ({history}) => {
+const KelolaGaji = ({history, match}) => {
   const classes = useStyles();
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState({});
@@ -105,11 +103,24 @@ const KelolaGaji = ({history}) => {
   const [divisiOptions, setDivisiOptions] = useState([]);
   const [page, setPage] = useState(1);
   const [count, setCount] = useState(0);
-  const [deleteKaryawan, setDeleteKaryawan] = useState(null);
+  const [jam, setJam] = useState(0);
+  const [penyesuaian, setPenyesuaian] = useState(0);
+  const [honor, setHonor] = useState(0);
+  
+  const [role, setRole] = React.useState("");
+  const [username, setUsername] = React.useState("");
+  const [nominal, setNominal] = React.useState("");
+  const [id, setId] = React.useState("");
+  const [divisi, setDivisi] = React.useState([]);
+  const [gaji, setGaji] = React.useState("");
+  const [listLog, setListLog] = useState([]);
+  const [total, setTotal] = useState(gaji+penyesuaian);
+  const [detail, setDetail] = useState(null);
 
   const [update, setUpdate] = useState(0);
   
   const params = new URLSearchParams(history.location.search);
+  const { idUser } = match.params;
 
   const [roleFilter, setFilterRole] = useState(params.get("role"));
   const [divisiFilter, setFilterDivisi] = useState(params.get("divisi"));
@@ -117,20 +128,18 @@ const KelolaGaji = ({history}) => {
 
   useEffect(()=>{
     setLoading(true)
-    const search = params.get("search");
-    const role = params.get("role");
-    const divisi = params.get("divisi");
-    getListDaftarKaryawan({
-        page, search, role, divisi
-      }).then(res=>{
-        setListItem(res.data?.results);
-        setCount(Math.ceil(res.data?.count/PAGE_SIZE));
-      }).catch(err=>{
-      // Handle ERROR
-      }).finally(()=>{
-        setLoading(false);
-      })
-    }, [page, update]);
+
+    getListGaji({
+      page
+    }).then(res=>{
+      setListItem(res.data?.results);
+      setCount(Math.ceil(res.data?.count/PAGE_SIZE));
+    }).catch(err=>{
+    // Handle ERROR
+    }).finally(()=>{
+      setLoading(false);
+    })
+  }, [page, update]);
 
   useEffect(()=>{
     getDivisiAPI().then(res=>{
@@ -139,6 +148,92 @@ const KelolaGaji = ({history}) => {
       console.error(err.response);
     })
   }, [])
+
+
+  /*useEffect(()=>{
+    setLoading(true);
+    const id = match.params.id;
+    getGaji(id).then(res => {
+        const { data } = res;
+        setUsername(data.user.username);
+        setRole(data.user.role);
+        setGaji(data.user.gaji);
+        setNominal(data.nominal);
+        setId(data.user.pk);
+        console.log(data)
+    }).catch(err=>{
+      // HANDLE ERROR
+    }).finally(()=>{
+      setLoading(false)
+    })
+  }, [])*/
+
+  useEffect(()=>{
+    setLoading(true)
+    {detail !== null?
+      getListLog({ 
+        disablepagination:true,
+        user: detail.user.pk
+      }).then(res=>{
+        setListLog(res.data?.results);
+        //setCount(Math.ceil(res.data?.count/PAGE_SIZE));
+      }).catch(err=>{
+      // Handle ERROR
+      }).finally(()=>{
+        setLoading(false);
+      })
+      :
+      getListLog({ 
+        
+      }).then(res=>{
+        setListLog(res.data?.results);
+        //setCount(Math.ceil(res.data?.count/PAGE_SIZE));
+      }).catch(err=>{
+      // Handle ERROR
+      }).finally(()=>{
+        setLoading(false);
+      })
+    }
+    
+
+  }, [detail]);
+
+  const onSubmit = () => {
+    setLoading(true)
+    editGaji(detail.user.pk, {
+      username: detail.user.username,
+      nominal: detail.nominal+honor*jam
+    }).then(res=>{
+      
+      console.log(res.data)
+    }).catch(err=>{
+      console.error(err.response);
+      setError(err.response && err.response.data);
+    }).finally(()=>{
+      setLoading(false);
+    })
+
+    
+  }
+
+  /*useEffect(()=>{
+    setLoading(true)
+
+    //const id = match.params.id;
+
+    getListGaji({
+      //user: id,  
+      page
+    }).then(res=>{
+      setListItem(res.data?.results);
+      setCount(Math.ceil(res.data?.count/PAGE_SIZE));
+    }).catch(err=>{
+    // Handle ERROR
+    }).finally(()=>{
+      setLoading(false);
+    })
+
+  }, [page, update]);*/
 
   const doQuery = () => {
     setQueryParams({
@@ -156,6 +251,10 @@ const KelolaGaji = ({history}) => {
     setFilterDivisi(null);
     setFilterSearch(null);
     setFilterRole(null);
+  }
+
+  const detailUser = () => {
+    setDetail();
   }
 
   
@@ -244,6 +343,7 @@ const KelolaGaji = ({history}) => {
                 <StyledTableCell align="left">Nama </StyledTableCell>
                 <StyledTableCell align="left">Gaji </StyledTableCell>
                 <StyledTableCell align="left">Jumlah Log</StyledTableCell>
+                
               </TableRow>
             </TableHead>
             <TableBody>
@@ -262,13 +362,16 @@ const KelolaGaji = ({history}) => {
                 </StyledTableRow>
                 :
                 listItem.map((row, i) => (
-                  <StyledTableRow key={row.username}>
+                  <StyledTableRow key={row.user}>
                     <StyledTableCell component="th" scope="row">
                       {`${i+1}.`}
                     </StyledTableCell>
-                    <StyledTableCell align="left">{row.username}</StyledTableCell>
-                    <StyledTableCell align="left">{row.gaji}</StyledTableCell>
+                    <StyledTableCell align="left">
+                      <a style={{color:"#00A96F", textDecorationLine: "underline"}} onClick={()=>setDetail(row)}>{row.user.username}</a></StyledTableCell>
+                    
+                    <StyledTableCell align="left">{row.nominal}</StyledTableCell>
                     <StyledTableCell align="left"></StyledTableCell>
+                    
                     
                   </StyledTableRow>
                 )))}
@@ -284,10 +387,18 @@ const KelolaGaji = ({history}) => {
         </div>
 
         </div>
+        {detail !== null ?
+
+         
         <div className={classes.bottomPane}>
             
             <Container component={Paper} className={classes.paper}>
-            <MainTitle title="Leonardo" className="mb-8"></MainTitle>
+            <MainTitle title={detail.user.username} style={{marginBottom:0}} className="mb-8"></MainTitle>
+            <Typography style={{ fontWeight: 600, marginBottom: '5%',fontFamily: 'IBM Plex Sans', fontStyle: 'normal', 
+            fontSize: 16, lineHeight: '138%', display: 'flex', alignItems: 'center', letterSpacing: '0.0075em', color: 'black' }} 
+            variant="subtitle1">
+              {detail.user.role}
+            </Typography>
 
             <div className="row">
            
@@ -299,7 +410,7 @@ const KelolaGaji = ({history}) => {
               <Typography style={{ fontWeight: 400,  fontFamily: 'IBM Plex Sans', fontStyle: 'normal', 
             fontSize: 18, lineHeight: '138%', position:'absolute', right:50, letterSpacing: '0.0075em', color: '#0A3142' }} 
             variant="subtitle1">
-              Rp.14.000.000
+              {detail.user.gaji}
             </Typography>
             </Typography>
             
@@ -321,7 +432,7 @@ const KelolaGaji = ({history}) => {
             <Typography style={{ fontWeight: 400,  marginTop:20,fontFamily: 'IBM Plex Sans', fontStyle: 'normal', 
             fontSize: 18, lineHeight: '138%', position:'absolute', right:50, letterSpacing: '0.0075em', color: '#0A3142' }} 
             variant="subtitle1">
-              Rp.300.000
+              Rp.{jam*honor}
               
             </Typography>
 
@@ -331,6 +442,9 @@ const KelolaGaji = ({history}) => {
             style={{ margin: 8, width: "30%" }}
             margin="normal"
             variant="outlined"
+            type="number"
+            value={jam}
+            onChange={e=>setJam(e.target.value)}
             /> 
             <TextField
             required
@@ -338,6 +452,9 @@ const KelolaGaji = ({history}) => {
             style={{ margin: 8, width: "30%" }}
             margin="normal"
             variant="outlined"
+            type="number"
+            value={honor}
+            onChange={e=>setHonor(e.target.value)}
             /> 
            
             </div>
@@ -346,21 +463,25 @@ const KelolaGaji = ({history}) => {
 
             <div className="row">
            
-           <div className="col" style={{marginBottom: '3%'}}>
+           <div className="col" style={{marginBottom: '5%'}}>
+             
            <Typography style={{ fontWeight: 600, marginLeft: '1%',fontFamily: 'IBM Plex Sans', fontStyle: 'normal', 
             fontSize: 18, lineHeight: '138%', display: 'flex', alignItems: 'center', letterSpacing: '0.0075em', color: '#0A3142' }} 
             variant="subtitle1">
               Penyesuaian Gaji
               <Typography style={{ fontWeight: 400,  fontFamily: 'IBM Plex Sans', fontStyle: 'normal', 
-            fontSize: 18, lineHeight: '138%', position:'absolute', right:150, letterSpacing: '0.0075em', color: '#0A3142' }} 
+            fontSize: 18, lineHeight: '138%', position:'absolute', right:120, letterSpacing: '0.0075em', color: '#0A3142' }} 
             variant="subtitle1">
               Rp.
             </Typography>
             <TextField
             required
-            style={{ width: "20%", position:'relative', right:-240 }}
+            style={{ width: "5%", position:'absolute', right:50 }}
             margin="normal"
             variant="outlined"
+            type="number"
+            value={penyesuaian}
+            onChange={e=>setPenyesuaian(e.target.value)}
             /> 
             </Typography>
             
@@ -378,7 +499,7 @@ const KelolaGaji = ({history}) => {
               <Typography style={{ fontWeight: 400,  fontFamily: 'IBM Plex Sans', fontStyle: 'normal', 
             fontSize: 18, lineHeight: '138%', position:'absolute', right:50, letterSpacing: '0.0075em', color: '#0A3142' }} 
             variant="subtitle1">
-              Rp.14.000.000
+              {jam*honor}
             </Typography>
             </Typography>
             
@@ -395,7 +516,7 @@ const KelolaGaji = ({history}) => {
               variant="outlined"
               color="primary" 
               size="small"
-              
+              onClick={onSubmit}
               >
               Simpan
             </TemplateButton>
@@ -403,9 +524,57 @@ const KelolaGaji = ({history}) => {
            
             </div>
 
-
+            <MainTitle title="Daftar Log" style={{marginTop:75}} className="mb-8"></MainTitle>
+            <TableContainer component={Paper}>
+          <MuiTable className={classes.table} aria-label="customized table">
+            <TableHead>
+              <TableRow>
+                <StyledTableCell align="left">No </StyledTableCell>
+                <StyledTableCell align="left">Tanggal </StyledTableCell>
+                <StyledTableCell align="left">Tipe Log </StyledTableCell>
+                <StyledTableCell align="left">Waktu </StyledTableCell>
+              
+               
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {loading ? 
+              <StyledTableRow>
+                <StyledTableCell align="center" colSpan="5">
+                  <CircularProgress />
+                </StyledTableCell>
+              </StyledTableRow>
+              : (
+                listLog?.length === 0  ? 
+                <StyledTableRow>
+                  <StyledTableCell align="center" colSpan="5">
+                    Tidak ada Log Aktivitas
+                  </StyledTableCell>
+                </StyledTableRow>
+                : 
+                listLog.map((row, i) => (row.status_log === 1 ? <StyledTableRow key={row.tanggal}>
+                <StyledTableCell component="th" scope="row">
+                  {`${i+1}.`}
+                </StyledTableCell>
+                <StyledTableCell align="left">{row.tanggal}</StyledTableCell>
+                <StyledTableCell align="left">{row.is_lembur ? "Lembur" : "Reguler"}</StyledTableCell>
+                <StyledTableCell align="left">{row.jam_keluar - row.jam_masuk}</StyledTableCell>
+               
+              </StyledTableRow>
+              :
+              <StyledTableRow>
+              
+            </StyledTableRow>
+                  
+                )))}
+            </TableBody>
+          </MuiTable>
+        </TableContainer>
             </Container>
         </div>
+        :
+        <Container></Container>
+      }
       </div>
 
     )

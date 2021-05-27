@@ -19,6 +19,7 @@ import { StyledTableCell, StyledTableRow } from "components/Table";
 import MainTitle from "components/MainTitle";
 import Pagination from '@material-ui/lab/Pagination';
 import { getDivisiAPI, getListDaftarKaryawan, deleteKaryawanAPI } from 'api/akun';
+import { getListGaji } from 'api/gaji';
 import { PAGE_SIZE, ROLES } from 'utils/constant';
 import CircularProgress from 'components/Loading/CircularProgress';
 import DeleteConfirmationDialog from 'components/DialogConf';
@@ -54,16 +55,13 @@ const DaftarGaji = ({history}) => {
   const [divisiFilter, setFilterDivisi] = useState(params.get("divisi"));
   const [searchFilter, setFilterSearch] = useState(params.get("search"));
 
+  
+
   useEffect(()=>{
     setLoading(true)
-    
-    const search = params.get("search");
-    const role = params.get("role");
-    const divisi = params.get("divisi");
 
-
-    getListDaftarKaryawan({
-      page, search, role, divisi
+    getListGaji({
+      page
     }).then(res=>{
       setListItem(res.data?.results);
       setCount(Math.ceil(res.data?.count/PAGE_SIZE));
@@ -229,17 +227,17 @@ const DaftarGaji = ({history}) => {
                 listItem?.length === 0 ? 
                 <StyledTableRow>
                   <StyledTableCell align="center" colSpan="5">
-                    Tidak ada Daftar Karyawan
+                    Tidak ada Daftar Gaji
                   </StyledTableCell>
                 </StyledTableRow>
                 :
                 listItem.map((row, i) => (
-                  <StyledTableRow key={row.username}>
+                  <StyledTableRow key={row.user}>
                     <StyledTableCell component="th" scope="row">
                       {`${i+1}.`}
                     </StyledTableCell>
-                    <StyledTableCell align="left">{row.username}</StyledTableCell>
-                    <StyledTableCell align="left">{row.gaji}</StyledTableCell>
+                    <StyledTableCell align="left">{row.user.username}</StyledTableCell>
+                    <StyledTableCell align="left">{row.nominal}</StyledTableCell>
                     <StyledTableCell align="left"></StyledTableCell>
                     <StyledTableCell align="left">
                     <Grid item sm={10}>
@@ -247,7 +245,7 @@ const DaftarGaji = ({history}) => {
                         variant="outlined"
                         color="primary" 
                         size="small"
-                        onClick={()=>history.push('/kelola-gaji')}
+                        onClick={()=>history.push(`/gaji/${row.user.pk}`)}
                     >
                     Edit
                     </Button>

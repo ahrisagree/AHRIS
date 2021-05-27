@@ -158,12 +158,7 @@ export default [
     component: EvaluasiDiri
   },
   {
-    path: '/daftar-gaji',
-    exact: true,
-    component: DaftarGaji
-  },
-  {
-    path: '/kelola-gaji',
+    path: '/gaji/',
     exact: true,
     component: KelolaGaji
   },
