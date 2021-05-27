@@ -89,7 +89,7 @@ const DaftarEvaluasiPerforma = ({history, match, user}) => {
     useEffect(()=>{
       setLoading(true)
       // const { id } = match.params;
-      getListHasilPerforma().then(res=>{
+      getListHasilPerforma({}).then(res=>{
         setAssignment(res.data?.results);
         setHasilPerforma(res.data?.results);
         console.log(res.data?.nama);
@@ -109,9 +109,7 @@ const DaftarEvaluasiPerforma = ({history, match, user}) => {
       <Grid container spacing={2} direction="column">
       <Grid item xs={12} container>
           <Grid item xs={4} alignContent="flex-start">
-            {/* <div className="m-12"> */}
             <MainTitle title={`Daftar Borang`} className={classes.title} />
-            {/* </div> */}
           </Grid>
           <Grid item xs={8}/>
       </Grid>
@@ -159,7 +157,7 @@ const DaftarEvaluasiPerforma = ({history, match, user}) => {
                     {/* {assignment.list_paket_jawaban.find(x=>x.paket_pertanyaan===row.id) ? 
                     "Sudah Diisi": */}
                       <TemplateButton
-                          onClick={()=>history.push(`/evaluasi-performa`)}
+                          onClick={()=>history.push(`/evaluasi-performa/${row.id}`)}
                           type="button"
                           buttonStyle="btnGreen"
                           buttonSize="btnLong"

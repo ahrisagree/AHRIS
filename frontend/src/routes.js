@@ -153,7 +153,7 @@ export default [
     component: EvaluasiDiri
   },
   {
-    path: '/evaluasi-performa',
+    path: '/evaluasi-performa/:id',
     exact: true,
     component: EvaluasiPerforma
   },

@@ -5,6 +5,7 @@ import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import List from '@material-ui/core/List';
+import { EditRounded } from '@material-ui/icons';
 // import CssBaseline from '@material-ui/core/CssBaseline';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
@@ -330,7 +331,7 @@ const NavigationDrawer = ({children, history, location, user, logoutThunk}) => {
               textAlign: 'center', 
               color: 'white'
               }} />
-            <IconButton>
+              <IconButton>
               <EditRounded style={{color: 'white'}} />
             </IconButton>
             <h1 style={{textAlign: 'center'}}>{user?.username}</h1>

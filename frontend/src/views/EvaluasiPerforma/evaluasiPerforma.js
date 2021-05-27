@@ -8,134 +8,89 @@ import {
   TableRow,
   Paper,
   Grid,
-  Typography,
-  MenuItem,
+  Radio,
+  FormControlLabel,
+  IconButton,
+  Tooltip,
+  TextField,
   fade,
+  Typography,
 } from '@material-ui/core';
-import TextField from 'components/CustomTextField';
+import Rating from '@material-ui/lab/Rating';
 import { StyledTableCell, StyledTableRow } from "components/Table";
 import MainTitle from "components/MainTitle";
-import Pagination from '@material-ui/lab/Pagination';
-import { getDivisiAPI, getListDaftarKaryawan, registerAkunAPI } from 'api/akun';
-import { PAGE_SIZE, ROLES } from 'utils/constant';
+import { getDetailHasilPerforma, commentManager, registerHasilPerformaAPI} from 'api/hasilperforma';
 import CircularProgress from 'components/Loading/CircularProgress';
-import DeleteConfirmationDialog from 'components/DialogConf';
-import { setQueryParams } from 'utils/setQueryParams';
 import TemplateButton from 'components/TemplateButton';
+import DeleteOutlineIcon from '@material-ui/icons/DeleteOutlineRounded';
+import CreateIcon from '@material-ui/icons/CreateRounded';
 
 function RedditTextField(props) {
-    const classes = useStylesReddit();
-  
-    return <TextField InputProps={{ classes, disableUnderline: true }} {...props} />;
-  }
+  const classes = useStylesReddit();
 
-  const useStylesReddit = makeStyles((theme) => ({
-    root: {
-      border: '1px solid #e2e2e1',
-      overflow: 'hidden',
-      borderRadius: 4,
-      backgroundColor: '#fcfcfb',
-      transition: theme.transitions.create(['border-color', 'box-shadow']),
-      '&:hover': {
-        backgroundColor: '#fff',
-      },
-      '&$focused': {
-        backgroundColor: '#fff',
-        boxShadow: `${fade(theme.palette.primary.main, 0.25)} 0 0 0 2px`,
-        borderColor: theme.palette.primary.main,
-      },
+  return <TextField InputProps={{ classes, disableUnderline: true }} {...props} />;
+}
+
+const useStylesReddit = makeStyles((theme) => ({
+  root: {
+    border: '1px solid #e2e2e1',
+    overflow: 'hidden',
+    borderRadius: 4,
+    backgroundColor: '#fcfcfb',
+    transition: theme.transitions.create(['border-color', 'box-shadow']),
+    '&:hover': {
+      backgroundColor: '#fff',
     },
-    focused: {},
-  }));
+    '&$focused': {
+      backgroundColor: '#fff',
+      boxShadow: `${fade(theme.palette.primary.main, 0.25)} 0 0 0 2px`,
+      borderColor: theme.palette.primary.main,
+    },
+  },
+  focused: {},
+}));
 
-const useStyles = makeStyles({
-  mb: {
-    marginBottom: '1rem'
-  }
-})
-const EvaluasiPerforma = ({history}) => {
-  
+const useStyles = makeStyles({})
+const EvaluasiPerforma = ({match, history, user}) => {
   const classes = useStyles();
   const [loading, setLoading] = useState(false);
-  const [listItem, setListItem] = useState([]);
-  const [divisiOptions, setDivisiOptions] = useState([]);
-  const [page, setPage] = useState(1);
-  const [count, setCount] = useState(0);
-  const [deleteKaryawan, setDeleteKaryawan] = useState(null);
-
-  // buat ngefilter
-  const [update, setUpdate] = useState(0);
   
-  const params = new URLSearchParams(history.location.search);
 
-  const [roleFilter, setFilterRole] = useState(params.get("role"));
-  const [divisiFilter, setFilterDivisi] = useState(params.get("divisi"));
-  const [searchFilter, setFilterSearch] = useState(params.get("search"));
-
+  // const [update, setUpdate] = useState(0);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = React.useState({});
+  const [feedback, setFeedback] = React.useState("");
+  const [regisFeedback, setRegistFeedback] = React.useState(false);
+  const [fail, setFail] = useState(null); 
+  const [regisAccount, setRegistAccount] = React.useState(false);
+  const [assignment, setAssignment] = useState(null);
+  const [paketPertanyaan, setPaketPertanyaan] = useState(null);
+  
+  const { id } = match.params;
   useEffect(()=>{
     setLoading(true)
     
-    const search = params.get("search");
-    const role = params.get("role");
-    const divisi = params.get("divisi");
-
-
-    getListDaftarKaryawan({
-      page, search, role, divisi 
-    }).then(res=>{
-      setListItem(res.data?.results);
-      setCount(Math.ceil(res.data?.count/PAGE_SIZE));
+    getDetailHasilPerforma(id).then(res=>{
+      const hasilperformaData = res.data;
+      setAssignment(hasilperformaData);
     }).catch(err=>{
-    // Handle ERROR
+      console.log(err.response && err.response.data);
     }).finally(()=>{
       setLoading(false);
     })
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, update]);
 
-  useEffect(()=>{
-    getDivisiAPI().then(res=>{
-      setDivisiOptions(res.data);
-    }).catch(err=>{
-      console.error(err.response);
-    })
-  }, [])
-
-  const doQuery = () => {
-    setQueryParams({
-      role: roleFilter || "",
-      divisi: divisiFilter || "",
-      search: searchFilter || ""
-    }, history);
-    setPage(1);
-    setUpdate(update+1);
-  }
-
-  const resetQuery = () => {
-    setQueryParams({}, history);
-    setPage(1);
-    setUpdate(update+1);
-    setFilterDivisi(null)
-    setFilterSearch(null)
-    setFilterRole(null)
-  }
   
-  const handleDeleteKaryawan = () => {
-    setDeleteKaryawan(null);
-    console.log(deleteKaryawan)
-    // DElete trus confirmation
-  }
-
-const [error, setError] = React.useState({});
-const [comment, setComment] = React.useState("");
+  }, []);
 
   const onSubmit = () => {
     // generate password
+    const { id } = match.params;
     setLoading(true);
-    registerAkunAPI({
-      comment,
+    commentManager({
+      feedback,
     }).then(res=>{
-        setComment("");
+      setFeedback("");
+      setRegistFeedback(true);
     }).catch(err=>{
       console.error(err.response);
       setError(err.response && err.response.data);
@@ -144,122 +99,142 @@ const [comment, setComment] = React.useState("");
     })
   }
 
+  // const handleChange = (indexAspek, indexPertanyaan, jawaban) => {
+  //   const newPaket =  {...paketPertanyaan};
+  //   newPaket.list_aspek[indexAspek].list_pertanyaan[indexPertanyaan].jawaban = jawaban;
+  //   setPaketPertanyaan(newPaket);
+  // }
+
   return (
     <div className={classes.root1}>
-
+      {/* <Paper className={classes.page}> */}
       <Grid container spacing={2} direction="column">
-        <Grid container spacing={2} direction="column">
-      <Grid item xs={12} container>
-          <Grid item xs={4} alignContent="flex-start">
+        <Grid item xs={12} container>
+          <Grid item alignContent="flex-start">
             {/* <div className="m-12"> */}
-            <MainTitle title="Hasil Performa" className={classes.title} />
+            <MainTitle title={`Hasil Performa | ${assignment?.user?.username}`} className={classes.title} />
             {/* </div> */}
           </Grid>
-          <Grid item xs={8}/>
         </Grid>
-        </Grid>
+        <div className="flex w-full flex-wrap p-2">
+          
+        </div>
 
-        <Grid item xs={12} container>
-        <Grid item xs={2} alignContent="">
-        <TextField
-          label="Periode"
-          variant="outlined"
-          size="small"
-          className={classes.mb}
-          fullWidth
-          value={divisiFilter}
-          onChange={e=>setFilterDivisi(e.target.value)}
-          // multiple
-          select
-          bordered={true}
-        >
-          {divisiOptions.map(d=>(
-            <MenuItem value={d.nama_divisi}>{d.nama_divisi}</MenuItem>
-          ))}
-        </TextField>
-        </Grid>
-        <Grid item xs={4}>
-          {!(params.get("search") === searchFilter &&
-            params.get("role") === roleFilter && 
-            params.get("divisi") === divisiFilter) &&
-            <button onClick={doQuery}>Apply</button>  
-          }
-          {(params.get("search") ||
-            params.get("role") || 
-            params.get("divisi")) &&
-            <button onClick={resetQuery}>Reset</button>  
-          }
-        </Grid>
-        </Grid>
       </Grid>
-
         <TableContainer component={Paper}>
           <MuiTable className={classes.table} aria-label="customized table">
-            <TableHead>
-              <TableRow>
-                <StyledTableCell align="left">Jenis Paket </StyledTableCell>
-                <StyledTableCell align="left">Score </StyledTableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {loading ? 
-              <StyledTableRow>
-                <StyledTableCell align="center" colSpan="5">
-                  <CircularProgress />
-                </StyledTableCell>
-              </StyledTableRow>
-              : (
-                listItem?.length === 0 ? 
-                <StyledTableRow>
-                  <StyledTableCell align="center" colSpan="5">
-                    Tidak ada Daftar Karyawan
-                  </StyledTableCell>
-                </StyledTableRow>
-                :
-                listItem.map((row, i) => (
-                  <StyledTableRow key={row.username}>
-                    <StyledTableCell component="th" scope="row">
-                      {`${i+1}.`}
+            {loading ?
+                <TableBody>
+                  <TableRow>
+                    <StyledTableCell>
+                      <CircularProgress />
                     </StyledTableCell>
-                    <StyledTableCell align="left">{row.username}</StyledTableCell>
-                  </StyledTableRow>
-                )))}
-            </TableBody>
-          </MuiTable>
-        </TableContainer>
+                  </TableRow>
+                </TableBody>
+            :  !assignment  ? "Not Found" : 
+              assignment.list_aspek.map((aspek, indexAspek)=>(
+              <>
+                <TableHead>
+                  <TableRow>
+                    <StyledTableCell align="left">{aspek.nama}</StyledTableCell>
+                    <StyledTableCell align="left"></StyledTableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                      <TableRow>
+                        <StyledTableCell align="left">
+                        <Grid container>
+                          <Grid item xs={12} md={8}>
+                            {aspek.deskripsi}
+                          </Grid>
+                          <Grid item xs={12} md={4} container justify="center">
+                                
+                            <div className={classes.root}>
+                              <Rating name="half-rating-read" value={aspek.skor} precision={0.5} readOnly />
+                             </div>
+                                {/* <TextField
+                                  required
+                                  // value={pertanyaan.jawaban}
+                                  // onChange={e=>handleChange(indexAspek, indexPertanyaan, e.target.value)}
+                                  label="Jawaban"
+                                  margin="normal"
+                                  fullWidth
+                                  multiline
+                            
+                                > Test </TextField> */}
+                         
+                            </Grid>
+                          </Grid>
+                        </StyledTableCell>
+                        <StyledTableCell align="left">
+                        {aspek.skor}
+                        </StyledTableCell>
+                      </TableRow>
+                </TableBody>
+              </>
+            ))}
+                <TableHead>
+                  <TableRow>
+                  <StyledTableCell align="left">Final Score</StyledTableCell>
+                  <StyledTableCell align="left"></StyledTableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                      <TableRow>
+                        <StyledTableCell align="left">
+                        <Grid container>
+                          <Grid item xs={12} md={8}>
+                            {assignment?.deskripsi}
+                          </Grid>
+                          <Grid item xs={12} md={4} container justify="center">
+                                
+                            <div className={classes.root}>
+                            
+                            {loading ? 
+                              <StyledTableRow>
+                              <StyledTableCell align="center" colSpan="5">
+                                <CircularProgress />
+                              </StyledTableCell>
+                            </StyledTableRow>
+                            : (
+                              assignment?.skor.length === 0 ? 
+                              <StyledTableRow>
+                              <StyledTableCell align="center" colSpan="5">
+                              <Rating name="half-rating-read" defaultValue={0}readOnly /> 
+                              </StyledTableCell>
+                            </StyledTableRow>
+                              :
+                              <StyledTableRow>
+                              <StyledTableCell align="center" colSpan="5">
+                              <Rating name="half-rating-read" value={assignment?.skor} precision={0.5} readOnly /> 
+                              </StyledTableCell>
+                            </StyledTableRow>
+                            )
+                            }
 
-        <TableContainer component={Paper}>
-          <MuiTable className={classes.table} aria-label="customized table">
-            <TableHead>
-              <TableRow>
-                <StyledTableCell align="left">Final Score </StyledTableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {loading ? 
-              <StyledTableRow>
-                <StyledTableCell align="center" colSpan="5">
-                  <CircularProgress />
-                </StyledTableCell>
-              </StyledTableRow>
-              : (
-                listItem?.length === 0 ? 
-                <StyledTableRow>
-                  <StyledTableCell align="center" colSpan="5">
-                    Tidak ada Daftar Karyawan
-                  </StyledTableCell>
-                </StyledTableRow>
-                :
-                listItem.map((row, i) => (
-                  <StyledTableRow key={row.username}>
-                    <StyledTableCell component="th" scope="row">
-                      {`${i+1}.`}
-                    </StyledTableCell>
-                  </StyledTableRow>
-                )))}
-            </TableBody>
+                             </div>
+                                {/* <TextField
+                                  required
+                                  // value={pertanyaan.jawaban}
+                                  // onChange={e=>handleChange(indexAspek, indexPertanyaan, e.target.value)}
+                                  label="Jawaban"
+                                  margin="normal"
+                                  fullWidth
+                                  multiline
+                            
+                                > Test </TextField> */}
+                         
+                            </Grid>
+                          </Grid>
+                        </StyledTableCell>
+                        <StyledTableCell align="left">
+                        {assignment?.skor}
+                        </StyledTableCell>
+                      </TableRow>
+                </TableBody>
           </MuiTable>
         </TableContainer>
+    
         <br></br>
         <Grid container spacing={2} direction="column">
       <Grid item xs={12} container>
@@ -291,22 +266,24 @@ const [comment, setComment] = React.useState("");
                 </StyledTableCell>
               </StyledTableRow>
               : (
-                listItem?.length === 0 ? 
+                assignment?.evaluasi_diri.length === 0 ? 
                 <StyledTableRow>
                   <StyledTableCell align="center" colSpan="5">
-                    Tidak ada Daftar Karyawan
+                    Tidak ada Evaluasi Diri
                   </StyledTableCell>
                 </StyledTableRow>
                 :
-                listItem.map((row, i) => (
-                  <StyledTableRow key={row.username}>
-                    <StyledTableCell component="th" scope="row">
-                      {`${i+1}.`}
-                    </StyledTableCell>
-                    <StyledTableCell align="left">{row.username}</StyledTableCell>
-                    <StyledTableCell align="left">{row.role}</StyledTableCell>
+                assignment?.evaluasi_diri.map((row, i) => (
+                  <StyledTableRow>
+                    <StyledTableCell align="left">{row.current_performance}</StyledTableCell>
+                    <StyledTableCell align="left">{row.to_do}</StyledTableCell>
+                    <StyledTableCell align="left">{row.parameter}</StyledTableCell>
+                    <StyledTableCell align="left">{row.feedback}</StyledTableCell>
                   </StyledTableRow>
-                )))}
+                )
+                )
+              )
+                }
             </TableBody>
           </MuiTable>
         </TableContainer>
@@ -324,10 +301,17 @@ const [comment, setComment] = React.useState("");
         <RedditTextField
                 label="Answer text"
                 className={classes.margin}
-                // defaultValue="react-reddit"
                 variant="filled"
-                fullWidth="400"
-                // id="reddit-input"
+                fullWidth="2000"
+                style={{ margin: 8 }}
+                fullWidth
+                margin="normal"
+                variant="outlined"
+                value={feedback}
+                onChange={e=>{setFeedback(e.target.value); delete error.feedback}}
+                error={!!error.feedback}
+                helperText={error.feedback && error.feedback[0]}
+                disabled={loading}
             />
 
         <div className="flex justify-center py-6">
@@ -342,20 +326,7 @@ const [comment, setComment] = React.useState("");
               Simpan
             </TemplateButton>
         </div>
-
-        <div className={classes.pagination}>
-          <Pagination 
-            count={count} 
-            page={page} 
-            onChange={(_e,val)=>setPage(val)}
-            />
-        </div>
         {/* </Paper> */}
-        <DeleteConfirmationDialog 
-          open={!!deleteKaryawan}
-          handleCancel={()=>setDeleteKaryawan(null)}
-          handleConfirm={handleDeleteKaryawan}
-        />
     </div>
   );
 };
