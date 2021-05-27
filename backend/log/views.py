@@ -44,7 +44,8 @@ class LogAktivitasViewSet(viewsets.ModelViewSet):
         'status',
         'is_lembur',
         'penyetuju',
-        'date'
+        'date',
+        'divisi'
         ]
     search_fields = ['user__username']
 
