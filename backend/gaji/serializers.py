@@ -3,7 +3,7 @@ from .models import *
 from auth_app.serializers import UserSerializer
 
 class GajiSerializer(serializers.ModelSerializer):
-  user = UserSerializer
+  user = UserSerializer()
   class Meta: 
     model = Gaji
     fields = '__all__'
