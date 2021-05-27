@@ -22,6 +22,16 @@ class PaketJawaban(models.Model):
           on_delete=models.SET_NULL,
           null=True)
 
+  def get_sum_score(self):
+    count = 0
+    total = 0
+    for aspek in self.list_aspek.all():
+      total += int(aspek.get_sum_score())
+      count += 1
+    if count == 0:
+      return 0
+    return total/count
+
   def __str__(self):
     return self.nama
 
@@ -30,6 +40,19 @@ class AspekJawaban(models.Model):
   paket = models.ForeignKey(PaketJawaban,
           on_delete=models.CASCADE,
           related_name='list_aspek')
+  bobot = models.FloatField()
+
+  def get_sum_score(self):
+    count = 0
+    total = 0
+    for jawaban in self.list_jawaban.all():
+      if jawaban.tipe == 0:
+        total += int(jawaban.jawaban)
+        count += 1
+    if count == 0:
+      return 0
+    return total/count
+
 
   def __str__(self):
     return self.nama

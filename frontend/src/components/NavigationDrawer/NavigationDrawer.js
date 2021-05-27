@@ -14,18 +14,19 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-// import InboxIcon from '@material-ui/icons/MoveToInbox';
-// import MailIcon from '@material-ui/icons/Mail';
 import Breadcrumbs from 'components/Breadcrumbs';
 import { withRouter } from 'react-router';
 import { Accordion, AccordionDetails, AccordionSummary } from '@material-ui/core';
-import AddRounded from '@material-ui/icons/AddRounded';
-import InsertDriveFileOutlinedIcon from '@material-ui/icons/InsertDriveFileOutlined';
-import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
-import LocalAtmRoundedIcon from '@material-ui/icons/LocalAtmRounded';
-import CheckIcon from '@material-ui/icons/Check';
-import BookIcon from '@material-ui/icons/Book';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import TemplateButton from 'components/TemplateButton';
+import {
+  // ADMINISTRASI_NAVIGATION,
+  // ADMIN_NAVIGATION,
+  // KARYAWAN_NAVIGATION,
+  // MANAGER_NAVIGATION,
+  TEST_NAVIGATION 
+} from 'utils/navigation';
+// import { ROLE } from 'utils/constant';
 
 
 const drawerWidth = 240;
@@ -139,69 +140,117 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-// gini dulu nanti dipisahin ke constant
-const navigationMenu = [
-  {
-    menu: 'Kelola Akun',
-    icon: <PeopleAltIcon style={{ color: 'white' }}/>,
-    children: [
-      {
-        menu: 'List Akun',
-        path: '/akun',
-      },
-      {
-        menu: 'Buat Akun',
-        path: '/akun/register',
-      }
-    ]
-  },
-  {
-    menu: 'Presensi',
-    icon: <CheckIcon style={{ color: 'white' }}/>,
-    path: '/'
-  },
-  {
-    menu: 'Daily Log',
-    icon: <BookIcon style={{ color: 'white' }}/>,
-    children: [
-      {
-        menu: 'List Daily Log',
-        path: '/daftar-log'
-      },
-      {
-        menu: 'Submit Log',
-        path: '/log-aktivitas',
-        icon: <AddRounded />
-      }
-    ]
-  },
-  {
-    menu: 'Paket Pertanyaan',
-    icon: <InsertDriveFileOutlinedIcon style={{ color: 'white' }}/>,
-    children: [
-      {
-        menu: 'List Paket Pertanyaan',
-        path: '/paket-pertanyaan'
-      },
-      {
-        menu: 'Buat Paket Pertanyaan',
-        path: '/paket-pertanyaan/add',
-      }
-    ]
-  },
-  {
-    menu: 'Gaji',
-    path: '/',
-    icon: <LocalAtmRoundedIcon style={{ color: 'white' }}/>,
-  }
-]
+// // gini dulu nanti dipisahin ke constant
+// const navigationMenu = [
+//   {
+//     menu: 'Kelola Akun',
+//     icon: <PeopleAltIcon style={{ color: 'white' }}/>,
+//     children: [
+//       {
+//         menu: 'List Akun',
+//         path: '/akun',
+//       },
+//       {
+//         menu: 'Buat Akun',
+//         path: '/akun/register',
+//       }
+//     ]
+//   },
+//   {
+//     menu: 'Presensi',
+//     icon: <CheckIcon style={{ color: 'white' }}/>,
+//     children: [
+//       {
+//         menu: 'Buat Presensi',
+//         path: '/',
+//       },
+//       {
+//         menu: 'My Presensi',
+//         path: '/log/daftar-presensi',
+//       }
+//     ]
+//   },
+//   {
+//     menu: 'Daily Log',
+//     icon: <BookIcon style={{ color: 'white' }}/>,
+//     children: [
+//       {
+//         menu: 'List Daily Log',
+//         path: '/daftar-log',
+//       },
+//       {
+//         menu: 'Submit Log',
+//         path: '/log-aktivitas',
+//         icon: <AddRounded />
+//       }
+//     ]
+//   },
+//   {
+//     menu: 'Paket Pertanyaan',
+//     icon: <InsertDriveFileOutlinedIcon style={{ color: 'white' }}/>,
+//     children: [
+//       {
+//         menu: 'List Paket Pertanyaan',
+//         path: '/paket-pertanyaan'
+//       },
+//       {
+//         menu: 'Buat Paket Pertanyaan',
+//         path: '/paket-pertanyaan/add',
+//       }
+//     ]
+//   },
+//   {
+//     menu: 'Assign Borang',
+//     icon: <InsertDriveFileOutlinedIcon style={{ color: 'white' }}/>,
+//     path: '/assign'
+//   },
+//   {
+//     menu: 'Performa',
+//     icon: <InsertDriveFileOutlinedIcon style={{ color: 'white' }}/>,
+//     children: [
+//       {
+//         menu: 'Kelola Hasil Performa',
+//         path: '/kelola-performa'
+//       },
+//       {
+//         menu: 'Isi Borang',
+//         path: '/mengisi-borang'
+//       },
+//     ]
+//   },
+//   {
+//     menu: 'Gaji',
+//     path: '/',
+//     icon: <LocalAtmRoundedIcon style={{ color: 'white' }}/>,
+//   }
+// ]
 
-const NavigationDrawer = ({children, history, location, user}) => {
+const NavigationDrawer = ({children, history, location, user, logoutThunk}) => {
   const classes = useStyles();
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(true);
   const [accordion, setAccordion] = React.useState(-1);
   const {pathname} = location;
+
+  // gini dulu nanti dipisahin ke constant
+  let navigationMenu = TEST_NAVIGATION
+
+  // switch (user.role) {
+  //   case ROLE.admin:
+  //     navigationMenu = ADMIN_NAVIGATION
+  //     break;
+  //   case ROLE.karyawan:
+  //     navigationMenu = KARYAWAN_NAVIGATION
+  //     break;
+  //   case ROLE.manager:
+  //     navigationMenu = MANAGER_NAVIGATION
+  //     break;
+  //   case ROLE.administrasi:
+  //     navigationMenu = ADMINISTRASI_NAVIGATION
+  //     break;
+  //   default:
+  //     break;
+  // }
 
   const handleAccordion = panel => (_e, isExpanded) => {
     setAccordion(isExpanded ? panel : -1);
@@ -319,6 +368,16 @@ const NavigationDrawer = ({children, history, location, user}) => {
             </ListItem>
           ))}
 
+        </div>
+        <div className={`text-center mt-8 ${open ? '' : 'hidden'}`}>
+          <TemplateButton
+            onClick={logoutThunk}
+            type="button"
+            buttonStyle="btnBlueOutline"
+            buttonSize="btnLong"
+          >
+            Logout
+          </TemplateButton>
         </div>
       </Drawer>
       <main className={classes.content}>

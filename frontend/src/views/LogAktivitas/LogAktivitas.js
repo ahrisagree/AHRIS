@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {
   makeStyles,
   Paper,
@@ -14,7 +14,7 @@ import DialogFail from 'components/DialogFail';
 import TemplateButton from 'components/TemplateButton';
 import { buatLogAPI } from 'api/log';
 import Loading from 'components/Loading';
-
+import Moment from 'moment';
 
 
 const daftar_tipe = [
@@ -65,13 +65,13 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const LogAktivitas = props => {
+const LogAktivitas = () => {
   const classes = useStyles();
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState({});
-
-
-  // const [tanggal, setTanggal] = React.useState("");
+  const date = new Date();
+  const new_date = Moment(date).format('YYYY-MM-DD');
+  const [selectedDate, setSelectedDate] = React.useState(new_date);
   const [jamMasuk, setJamMasuk] = React.useState("");
   const [jamKeluar, setJamKeluar] = React.useState("");
   const [tipe, setTipe] = React.useState(false);
@@ -79,21 +79,18 @@ const LogAktivitas = props => {
   const [aktivitas, setAktivitas] = React.useState("");
   const [linkDeliverables, setLinkDeliverables] = React.useState("");
   const [statusDeliverables, setStatusDeliverables] = React.useState("");
+  const [alasanLembur, setAlasanLembur] = React.useState("");
   const [notes, setNotes] = React.useState("");
   const [createLog, setCreateLog] = React.useState(false);
   const [update, setUpdate] = React.useState(0);
 
-
-  const [selectedDate, setSelectedDate] = React.useState(new Date(''));
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
 
-  const handleChange = (event) => {
-    setTipe(event.target.value);
-  };
 
   const onSubmit = () => {
+    setLoading(true)
     buatLogAPI(
       {tanggal: selectedDate,
       jam_masuk: jamMasuk,
@@ -123,6 +120,38 @@ const LogAktivitas = props => {
     })
   }
 
+  const onSubmitLembur = () => {
+    buatLogAPI(
+      {tanggal: selectedDate,
+      jam_masuk: jamMasuk,
+      jam_keluar: jamKeluar,
+      is_lembur: tipe,
+      keterangan: keterangan,
+      aktivitas: aktivitas,
+      link_deliverable: linkDeliverables,
+      status_deliverable: statusDeliverables,
+      notes: notes,
+      alasan_lembur: alasanLembur},
+    ).then(res=>{
+      setSelectedDate("");
+      setJamMasuk("");
+      setJamKeluar("");
+      setTipe("");
+      setKeterangan("");
+      setAktivitas("");
+      setLinkDeliverables("");
+      setStatusDeliverables("");
+      setNotes("");
+      setAlasanLembur("");
+      setCreateLog(true);
+    }).catch(err=>{
+      console.error(err.response);
+      setError(err.response && err.response.data);
+    }).finally(()=>{
+      setLoading(false);
+    })
+  }
+
   
     return (
       <div className="m-10">
@@ -131,7 +160,7 @@ const LogAktivitas = props => {
 
           <Grid item xs={12}>
             <Typography style={{ fontWeight: 600, marginLeft: '1%', marginBottom: '3%', fontFamily: 'IBM Plex Sans', fontStyle: 'normal', 
-            fontWeight: 600, fontSize: 24, lineHeight: '138%', display: 'flex', alignItems: 'center', letterSpacing: '0.0075em', color: '#0A3142' }} 
+            fontSize: 24, lineHeight: '138%', display: 'flex', alignItems: 'center', letterSpacing: '0.0075em', color: '#0A3142' }} 
             variant="subtitle1">
               Log Aktivitas
             </Typography>
@@ -139,16 +168,6 @@ const LogAktivitas = props => {
           
           
             <Grid item xs={12}>
-              {/* <TextField id="outlined-full-width"
-              required="true"
-              label="Tanggal"
-              style={{ margin: 8, width: "31%" }}
-              margin="normal"
-              variant="outlined"
-              className={classes.textField}
-
-              /> */}
-
               <TextField
               variant="outlined"
               id="date"
@@ -161,9 +180,9 @@ const LogAktivitas = props => {
                 shrink: true,
               }}
               value={selectedDate}
-              onChange={e=>{setSelectedDate(e.target.value); delete error.selectedDate}}
-              error={!!error.selectedDate}
-              helperText={error.selectedDate && error.selectedDate[0]}
+              onChange={e=>{setSelectedDate(e.target.value); delete error.tanggal}}
+              error={!!error.tanggal}
+              helperText={error.tanggal && error.tanggal[0]}
               disabled={loading}
               />
             
@@ -185,7 +204,7 @@ const LogAktivitas = props => {
               className={classes.textField}
               /> */}
 
-          <TextField
+            <TextField
               variant="outlined"
               id="time"
               label="Jam masuk"
@@ -200,9 +219,9 @@ const LogAktivitas = props => {
                 step: 300, 
               }}
               value={jamMasuk}
-              onChange={e=>{setJamMasuk(e.target.value); delete error.jamMasuk}}
-              error={!!error.jamMasuk}
-              helperText={error.jamMasuk && error.jamMasuk[0]}
+              onChange={e=>{setJamMasuk(e.target.value); delete error.jam_masuk}}
+              error={!!error.jam_masuk}
+              helperText={error.jam_masuk && error.jam_masuk[0]}
               disabled={loading}
             />
 
@@ -222,9 +241,9 @@ const LogAktivitas = props => {
                 step: 300, 
               }}
               value={jamKeluar}
-              onChange={e=>{setJamKeluar(e.target.value); delete error.jamKeluar}}
-              error={!!error.jamKeluar}
-              helperText={error.jamKeluar && error.jamKeluar[0]}
+              onChange={e=>{setJamKeluar(e.target.value); delete error.jam_keluar}}
+              error={!!error.jam_keluar}
+              helperText={error.jam_keluar && error.jam_keluar[0]}
               disabled={loading}
             />
 
@@ -241,11 +260,9 @@ const LogAktivitas = props => {
             variant="outlined"
             className={classes.textField}
             value={tipe}
-            onChange={handleChange}
-            value={tipe}
-            onChange={e=>{setTipe(e.target.value); delete error.tipe}}
-            error={!!error.tipe}
-            helperText={error.tipe && error.tipe[0]}
+            onChange={e=>{setTipe(e.target.value); delete error.is_lembur}}
+            error={!!error.is_lembur}
+            helperText={error.is_lembur && error.is_lembur[0]}
             disabled={loading}
             >
               {daftar_tipe.map((option) => (
@@ -294,9 +311,9 @@ const LogAktivitas = props => {
               style={{ margin: 8, width: "98%" }}
               margin="normal"
               variant="outlined"
-              onChange={e=>{setLinkDeliverables(e.target.value); delete error.linkDeliverables}}
-              error={!!error.linkDeliverables}
-              helperText={error.linkDeliverables && error.linkDeliverables[0]}
+              onChange={e=>{setLinkDeliverables(e.target.value); delete error.link_deliverable}}
+              error={!!error.link_deliverable}
+              helperText={error.link_deliverable && error.link_deliverable[0]}
               disabled={loading}
               />
           </Grid>
@@ -308,9 +325,9 @@ const LogAktivitas = props => {
               style={{ margin: 8, width: "98%" }}
               margin="normal"
               variant="outlined"
-              onChange={e=>{setStatusDeliverables(e.target.value); delete error.statusDeliverables}}
-              error={!!error.statusDeliverables}
-              helperText={error.statusDeliverables && error.statusDeliverables[0]}
+              onChange={e=>{setStatusDeliverables(e.target.value); delete error.status_deliverable}}
+              error={!!error.status_deliverable}
+              helperText={error.status_deliverable && error.status_deliverable[0]}
               disabled={loading}
               />
           </Grid>
@@ -330,10 +347,28 @@ const LogAktivitas = props => {
             disabled={loading}
             />
           </Grid>
+          
+          {tipe &&
+          <Grid item xs={12}>
+            <TextField id="outlined-multiline-static"
+            label="Alasan Lembur"
+            multiline
+            rows={2}
+            variant="outlined"
+            required="true"
+            style={{ margin: 8, width: "98%" }}
+            margin="normal"
+            onChange={e=>{setAlasanLembur(e.target.value); delete error.alasan_lembur}}
+            error={!!error.alasan_lembur}
+            helperText={error.alasan_lembur && error.alasan_lembur[0]}
+            disabled={loading}
+            />
+          </Grid>
+          }
 
           <div className="flex justify-center py-6">
           <TemplateButton
-              onClick={onSubmit}
+              onClick={!tipe ? onSubmit : onSubmitLembur}
               type="button"
               buttonStyle="btnBlue"
               buttonSize="btnLong"

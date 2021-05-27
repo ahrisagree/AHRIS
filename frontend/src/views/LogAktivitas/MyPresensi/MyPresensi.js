@@ -12,13 +12,14 @@ import {
   Paper,
   Grid,
 } from '@material-ui/core';
-import { getListLog } from 'api/log';
+import { getListPresensi } from 'api/log';
 import { PAGE_SIZE, STATUS_LOG } from 'utils/constant';
 import { StyledTableCell, StyledTableRow } from "components/Table";
 import MainTitle from "components/MainTitle";
 import CircularProgress from 'components/Loading/CircularProgress';
 import { Link } from 'react-router-dom';
 import Loading from 'components/Loading';
+import DeleteConfirmationDialog from 'components/DialogConf';
 
 const useStyles = makeStyles((theme) =>({
   root: {
@@ -72,7 +73,7 @@ const useStyles = makeStyles((theme) =>({
     }
 }));
 
-const DaftarLog = ({history}) => {
+const MyPresensi = (props) => {
   
   const classes = useStyles();
   const [loading, setLoading] = useState(false);
@@ -81,11 +82,16 @@ const DaftarLog = ({history}) => {
   const [count, setCount] = useState(0);
   const [fullLoading, setFullLoading] = useState(false);
   const [update, setUpdate] = useState(0);
+  const history = props.match.params.history;
+  const {user} = props;
 
   useEffect(()=>{
     setLoading(true)
-    
-    getListLog({
+
+    // const id = props.match.params.id;
+
+    getListPresensi({
+      user: user.pk,  
       page
     }).then(res=>{
       setListItem(res.data?.results);
@@ -95,51 +101,33 @@ const DaftarLog = ({history}) => {
     }).finally(()=>{
       setLoading(false);
     })
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, update]);
+
+  }, [page, update, user]);
+
 
     return (
     <div className={classes.root1}>
       <Grid container spacing={2} direction="column">
       <Grid item xs={12} container>
           <Grid item xs={4} alignContent="flex-start">
-            <MainTitle title="Daftar Log" className={classes.title} />
+            <MainTitle title="Daftar Presensi" className={classes.title} />
           </Grid>
           <Grid item xs={8}/>
         </Grid>
-
-        <Grid item container direction="row" justify="space-between">
-          <Grid item xs={10}>
-            <Button
-                variant="outlined"
-                color="primary" 
-                size="small"
-                >
-            + Create Log
-            </Button>
-          </Grid>
-
-          <Grid item xs={2}>
-                <TemplateButton size="small"
-                    type="button"
-                    buttonStyle="btnGreenOutline"
-                    >
-                    Daftar Karyawan
-                </TemplateButton>
-          </Grid>
-
-        </Grid>
+        
       </Grid>
 
         <TableContainer component={Paper}>
           <MuiTable className={classes.table} aria-label="customized table">
             <TableHead>
               <TableRow>
-                <StyledTableCell align="left">No </StyledTableCell>
-                <StyledTableCell align="left">Tanggal </StyledTableCell>
-                <StyledTableCell align="left">Tipe Log </StyledTableCell>
-                <StyledTableCell align="left">Status</StyledTableCell>
-                <StyledTableCell align="center">Action</StyledTableCell>
+                <StyledTableCell align="left"> No </StyledTableCell>
+                <StyledTableCell align="left"> Nama </StyledTableCell>
+                <StyledTableCell align="left"> Role </StyledTableCell>
+                <StyledTableCell align="left"> Tanggal </StyledTableCell>
+                <StyledTableCell align="left"> Jam Masuk </StyledTableCell>
+                <StyledTableCell align="left"> Keterangan </StyledTableCell>
+                <StyledTableCell align="left"> Status Log Aktivitas </StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -153,7 +141,7 @@ const DaftarLog = ({history}) => {
                 listItem?.length === 0 ? 
                 <StyledTableRow>
                   <StyledTableCell align="center" colSpan="5">
-                    Tidak ada Log Aktivitas
+                    Tidak ada Presensi
                   </StyledTableCell>
                 </StyledTableRow>
                 :
@@ -162,38 +150,23 @@ const DaftarLog = ({history}) => {
                     <StyledTableCell component="th" scope="row">
                       {`${i+1}.`}
                     </StyledTableCell>
+                    <StyledTableCell align="left">{row.user?.username}</StyledTableCell>
+                    <StyledTableCell align="left">{row.user?.role}</StyledTableCell>
                     <StyledTableCell align="left">{row.tanggal}</StyledTableCell>
-                    <StyledTableCell align="left">{row.is_lembur ? "Lembur" : "Reguler"}</StyledTableCell>
-                    <StyledTableCell align="left">{STATUS_LOG[row.status_log]}</StyledTableCell>
-                    <StyledTableCell align="center">
+                    <StyledTableCell align="left">{row.jam_masuk.split(".")[0]}</StyledTableCell>
+                    <StyledTableCell align="left">{row.keterangan}</StyledTableCell>
+                    <StyledTableCell align="left">{row.log !== null ? "Sudah mengisi log" : 
                     
-                    <Link to={`/detail-log/${row.id}`}>
+                    <Link to={`/log-aktivitas`}>
                     <TemplateButton 
                       type="button" 
                       buttonStyle="btnGreen" 
                       buttonSize="btnMedium"
                       >
-                      View
+                      Buat Log
                       </TemplateButton>
-                    </Link>
- 
-                      <TemplateButton
-                      type="button"
-                      buttonStyle="btnYellow"
-                      buttonSize="btnMedium"
-                      >
-                      Edit
-                      </TemplateButton>
- 
-                      <TemplateButton
-                      type="button"
-                      buttonStyle="btnDanger"
-                      buttonSize="btnMedium"
-                      >
-                      Delete
-                    </TemplateButton>
-                  
-                    </StyledTableCell>
+                    </Link>}</StyledTableCell>
+
                   </StyledTableRow>
                 )))}
             </TableBody>
@@ -211,4 +184,4 @@ const DaftarLog = ({history}) => {
   );
 }
 
-export default DaftarLog;
+export default MyPresensi;

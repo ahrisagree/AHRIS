@@ -8,12 +8,10 @@ import fail from 'images/fail.png';
 
 const styles = (theme) => ({
   root: {
-    margin: 3,
     padding: theme.spacing(4),
     backgroundColor: '#FFFFFF',
-    alignItems: 'center',
-    alignSelf: "center",
     borderRadius: 12,
+    textAlign: "center"
   },
   typography: {
     fontFamily: "IBM Plex Sans",
@@ -35,8 +33,7 @@ const styles = (theme) => ({
     fontWeight: 'bold',
     borderColor: '#FFFFFF',
     position: "relative",
-    top: 10,
-    right : -53
+    marginTop: 10,
   },
   judul: {
     fontFamily: "IBM Plex Sans",
@@ -52,13 +49,8 @@ const styles = (theme) => ({
     position : "relative",
   },
   foto: {
-    alignItems: "center",
-    textAlign: "center",
-    alignSelf: "center",
     width: "40%",
-    position: "relative",
-    top: -5,
-    right: -50,
+    margin: "auto"
   }
 });
 

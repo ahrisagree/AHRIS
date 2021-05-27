@@ -14,11 +14,11 @@ class LogAktivitas(models.Model):
     tanggal = models.DateField(default = datetime.date.today)
     jam_masuk = models.TimeField(default = now)
     jam_keluar = models.TimeField(default = now)
-    keterangan = models.CharField(max_length=50)
+    keterangan = models.CharField(max_length=50, default="", blank=True, null=True)
     aktivitas = models.CharField(max_length=250)
     link_deliverable = models.CharField(max_length=250)
     status_deliverable = models.CharField(max_length=50)
-    notes = models.CharField(max_length=50, default="")
+    notes = models.CharField(max_length=50, default="", blank=True, null=True)
     is_lembur = models.BooleanField(default=False)
     status_log = models.IntegerField(default=STATUS['pending'], choices=(STATUS_CHOICES))
     komentar = models.CharField(max_length=250, blank=True, null=True)
@@ -29,7 +29,7 @@ class LogAktivitas(models.Model):
     user = models.ForeignKey(AppUser,
         on_delete=models.SET_NULL,
         null=True,
-        related_name='user')
+        related_name='log')
     alasan_lembur = models.CharField(max_length=250, blank=True, null=True)
 
 
@@ -45,16 +45,16 @@ class LogAktivitas(models.Model):
 class Presensi(models.Model):
     tanggal = models.DateField(default = datetime.date.today)
     jam_masuk = models.TimeField(default = now)
-    keterangan = models.CharField(max_length=100)
-    # id_user = models.ForeignKey(AppUser,
-    #     on_delete=models.SET_NULL,
-    #     null=True,
-    #     related_name='id_user') 
-    # log = models.ForeignKey(LogAktivitas,
-    #     on_delete=models.SET_NULL,
-    #     null=True,
-    #     related_name='log')
+    keterangan = models.CharField(max_length=255, blank=True, null=True)
+    user = models.ForeignKey(AppUser,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name='presensi') 
+    log = models.OneToOneField(LogAktivitas,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name='presensi')
     
     def __str__(self):
-        return "{} - {}-{}".format(self.id_user, self.tanggal, self.jam_masuk) 
+        return "{} - {}-{}".format(self.user, self.tanggal, self.jam_masuk) 
 

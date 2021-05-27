@@ -4,14 +4,24 @@ import Login from "./views/Login";
 import Profil from "./views/Profil";
 import Coba from "./views/Coba";
 import LogAktivitas from "./views/LogAktivitas/LogAktivitas";
-import DetailLogAktivitas from "./views/LogAktivitas/DetailLogAktivitas";
-import DaftarLog from "./views/LogAktivitas/DaftarLog";
+import DaftarLogKaryawan from "./views/LogAktivitas/DaftarLogKaryawan/";
+import DetailLogAktivitas from "./views/LogAktivitas/DetailLogAktivitas/";
+import DaftarLog from "./views/LogAktivitas/DaftarLog/";
+import MyPresensi from "./views/LogAktivitas/MyPresensi/";
 import Register from "./views/Register";
 import DaftarKaryawan from "views/DaftarKaryawan";
 import DaftarPaketPertanyaan from "views/DaftarPakerPertanyaan";
 import DetailEditPaketPertanyaan from "views/DetailEditPaketPertanyaan";
-import DaftarBorang from "views/MengisiBorang";
+import DaftarBorang from "views/MengisiBorang/DaftarBorang";
+import DaftarKaryawanDinilai from "views/MengisiBorang/DaftarKaryawanDinilai"
+import MengisiBorang from "views/MengisiBorang/MengisiBorang";
 import EditLogAktivitas from "views/LogAktivitas/EditLogAktivitas";
+import DetailEditUser from "views/DetailEditUser";
+import DaftarKaryawanPerforma from "views/KelolaHasilPerforma/DaftarKaryawanPerforma";
+import DaftarBorangPerforma from "views/KelolaHasilPerforma/DaftarBorangPerforma";
+import AssignmentManager from "views/AssignmentManager";
+import EvaluasiDiri from "views/EvaluasiDiri";
+import Pembobotan from "views/KelolaHasilPerforma/Pembobotan";
 
 export default [
   {
@@ -60,9 +70,19 @@ export default [
     component: DaftarKaryawan
   },
   {
-    path: '/daftar-borang',
+    path: '/mengisi-borang/:id',
     exact: true,
     component: DaftarBorang
+  },
+  {
+    path: '/mengisi-borang',
+    exact: true,
+    component: DaftarKaryawanDinilai
+  },
+  {
+    path: '/mengisi-borang/:id/:idPaket',
+    exact: true,
+    component: MengisiBorang
   },
   {
     path: '/log-aktivitas',
@@ -75,13 +95,58 @@ export default [
     component: DaftarLog
   },
   {
-    path: '/detail-log',
+    path: '/daftar-log-karyawan',
+    exact: true,
+    component: DaftarLogKaryawan
+  },
+  {
+    path: '/detail-log/:id',
     exact: true,
     component: DetailLogAktivitas
   },
   {
-    path: '/edit-log',
+    path: '/edit-log/:id',
     exact: true,
     component: EditLogAktivitas
-  }
+  },
+  {
+    path: '/kelola-performa',
+    exact: true,
+    component: DaftarKaryawanPerforma,
+  },
+  {
+    path: '/kelola-performa/:idDinilai',
+    exact: true,
+    component: DaftarBorangPerforma,
+  },
+  {
+    path: '/kelola-performa/:idDinilai/:idPaket',
+    exact: true,
+    component: Pembobotan
+  },
+  {
+    path: '/akun/:idUser',
+    exact: true,
+    component: DetailEditUser
+  },
+  {
+    path: '/log/presensi',
+    exact: true,
+    component: Home
+  },
+  {
+    path: '/log/daftar-presensi',
+    exact: true,
+    component: MyPresensi
+  },
+  {
+    path: '/assign',
+    exact: true,
+    component: AssignmentManager
+  },
+  {
+    path: '/evaluasi-diri/add',
+    exact: true,
+    component: EvaluasiDiri
+  },
 ]
