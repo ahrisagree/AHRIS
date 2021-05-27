@@ -10,6 +10,7 @@ import DaftarLog from "./views/LogAktivitas/DaftarLog/";
 import MyPresensi from "./views/LogAktivitas/MyPresensi/";
 import Register from "./views/Register";
 import DaftarKaryawan from "views/DaftarKaryawan";
+// import EvaluasiPerforma from "views/EvaluasiPerforma";
 import DaftarPaketPertanyaan from "views/DaftarPakerPertanyaan";
 import DetailEditPaketPertanyaan from "views/DetailEditPaketPertanyaan";
 import DaftarBorang from "views/MengisiBorang/DaftarBorang";
@@ -22,6 +23,8 @@ import DaftarBorangPerforma from "views/KelolaHasilPerforma/DaftarBorangPerforma
 import AssignmentManager from "views/AssignmentManager";
 import EvaluasiDiri from "views/EvaluasiDiri";
 import Pembobotan from "views/KelolaHasilPerforma/Pembobotan";
+import EvaluasiPerforma from "views/EvaluasiPerforma";
+import DaftarEvaluasiPerforma from "views/DaftarEvaluasiPerforma";
 
 export default [
   {
@@ -148,5 +151,15 @@ export default [
     path: '/evaluasi-diri/add',
     exact: true,
     component: EvaluasiDiri
+  },
+  {
+    path: '/evaluasi-performa',
+    exact: true,
+    component: EvaluasiPerforma
+  },
+  {
+    path: '/daftar-evaluasi-performa',
+    exact: true,
+    component: DaftarEvaluasiPerforma
   },
 ]

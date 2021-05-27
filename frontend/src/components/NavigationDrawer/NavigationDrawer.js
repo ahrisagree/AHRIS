@@ -330,6 +330,9 @@ const NavigationDrawer = ({children, history, location, user, logoutThunk}) => {
               textAlign: 'center', 
               color: 'white'
               }} />
+            <IconButton>
+              <EditRounded style={{color: 'white'}} />
+            </IconButton>
             <h1 style={{textAlign: 'center'}}>{user?.username}</h1>
             <h1 style={{textAlign: 'center'}}>{user?.role || "No Role"}</h1>
           </ListItem>
