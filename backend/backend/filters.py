@@ -64,6 +64,10 @@ class LogAktivitasFilter(FilterSet):
   is_lembur = filters.BooleanFilter(field_name='is_lembur')
   penyetuju = filters.NumberFilter(field_name='manajer_penyetuju__id')
   date = filters.DateFromToRangeFilter(field_name='tanggal')
+  divisi = CharMultipleFilter(
+    field_name='user__divisi__nama_divisi',
+    lookup_expr='in'
+  )
 
 class GajiFilter(FilterSet):
   periode = PeriodeFilter(field_name='periode')
@@ -73,3 +77,9 @@ class GajiFilter(FilterSet):
     lookup_expr='in'
   )
   
+class HasilPerformaFilter(FilterSet):
+  periode = PeriodeFilter(field_name='periode')
+  divisi = CharMultipleFilter(
+    field_name='user__divisi__nama_divisi',
+    lookup_expr='in'
+  )
