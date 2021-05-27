@@ -83,3 +83,4 @@ class HasilPerformaFilter(FilterSet):
     field_name='user__divisi__nama_divisi',
     lookup_expr='in'
   )
+  user = filters.NumberFilter(field_name='user__id')
