@@ -89,7 +89,8 @@ const DaftarHasilPerforma = ({history, match, user}) => {
     useEffect(()=>{
       setLoading(true)
       // const { id } = match.params;
-      getListHasilPerforma().then(res=>{
+      getListHasilPerforma( {
+        user: user.pk}).then(res=>{
         setAssignment(res.data?.results);
         setHasilPerforma(res.data?.results);
         console.log(res.data?.nama);
@@ -114,10 +115,27 @@ const DaftarHasilPerforma = ({history, match, user}) => {
             {/* </div> */}
           </Grid>
           <Grid item xs={8}/>
-      </Grid>
+          </Grid>
 
-      <Grid item xs={12} container>
-        
+        <Grid item xs={12} container>
+        {/* <Grid item xs={2} alignContent="">
+        <TextField
+          label="Periode"
+          variant="outlined"
+          size="small"
+          className={classes.mb}
+          fullWidth
+          value={divisiFilter}
+          onChange={e=>setFilterDivisi(e.target.value)}
+          // multiple
+          select
+          bordered={true}
+        >
+          {divisiOptions.map(d=>(
+            <MenuItem value={d.nama_divisi}>{d.nama_divisi}</MenuItem>
+          ))}
+        </TextField>
+        </Grid> */}
         </Grid>
       </Grid>
 
@@ -127,8 +145,6 @@ const DaftarHasilPerforma = ({history, match, user}) => {
               <TableRow>
                 <StyledTableCell align="left">No </StyledTableCell>
                 <StyledTableCell align="left">Nama Borang </StyledTableCell>
-                <StyledTableCell align="left">Jenis Paket </StyledTableCell>
-                <StyledTableCell align="left">Kategori</StyledTableCell>
                 <StyledTableCell align="left"></StyledTableCell>
               </TableRow>
             </TableHead>
@@ -153,16 +169,13 @@ const DaftarHasilPerforma = ({history, match, user}) => {
                       {`${i+1}.`}
                     </StyledTableCell>
                     <StyledTableCell align="left">{row.nama}</StyledTableCell>
-                    <StyledTableCell align="left">lalala</StyledTableCell>
-                    <StyledTableCell align="left">lalala</StyledTableCell>
-                    
                     <StyledTableCell align="left">
                     <Grid item sm={10}>
                     {/* ini ganti */}
                     {/* {assignment.list_paket_jawaban.find(x=>x.paket_pertanyaan===row.id) ? 
                     "Sudah Diisi": */}
                       <TemplateButton
-                          onClick={()=>history.push(`/hasil-performa/detail`)}
+                          onClick={()=>history.push(`/hasil-performa/${row.id}`)}
                           type="button"
                           buttonStyle="btnGreen"
                           buttonSize="btnLong"

@@ -13,14 +13,11 @@ import {
   IconButton,
   Tooltip,
 } from '@material-ui/core';
+import Rating from '@material-ui/lab/Rating';
 import { StyledTableCell, StyledTableRow } from "components/Table";
 import MainTitle from "components/MainTitle";
 import { getDetailHasilPerforma} from 'api/hasilperforma';
 import CircularProgress from 'components/Loading/CircularProgress';
-import SuccessDialog from 'components/Dialog';
-import FailDialog from 'components/DialogFail';
-import Loading from 'components/Loading';
-import TextField from 'components/CustomTextField';
 import TemplateButton from 'components/TemplateButton';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutlineRounded';
 import CreateIcon from '@material-ui/icons/CreateRounded';
@@ -29,23 +26,20 @@ import CreateIcon from '@material-ui/icons/CreateRounded';
 const useStyles = makeStyles({})
 const HasilPerforma = ({match, history, user}) => {
   const classes = useStyles();
-  const [loadingAssignment, setLoadingAssignment] = useState(false);
-  const [loadingPaket, setLoadingPaket] = useState(false);
-  const loading = loadingAssignment || loadingPaket;
-  const [fullLoading, setFullLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  
 
   // const [update, setUpdate] = useState(0);
   const [success, setSuccess] = useState(false);
   const [fail, setFail] = useState(null); 
-
   
   const [assignment, setAssignment] = useState(null);
   const [paketPertanyaan, setPaketPertanyaan] = useState(null);
   
   const { id } = match.params;
   useEffect(()=>{
-    setLoadingPaket(true)
-    setLoadingAssignment(true)
+    setLoading(true)
     
     getDetailHasilPerforma(id).then(res=>{
       const hasilperformaData = res.data;
@@ -53,19 +47,10 @@ const HasilPerforma = ({match, history, user}) => {
     }).catch(err=>{
       console.log(err.response && err.response.data);
     }).finally(()=>{
-      setLoadingAssignment(false);
+      setLoading(false);
     })
 
-    // getPaketPertanyaanAPI(idPaket).then(res=>{
-    //   const paketPertanyaanData = res.data;
-    //   delete paketPertanyaanData.id;
-    //   setPaketPertanyaan(paketPertanyaanData);
-    // }).catch(err=>{
-    //   console.log(err.response && err.response.data);
-    // }).finally(()=>{
-    //   setLoadingPaket(false);
-    // })
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  
   }, []);
 
 
@@ -102,17 +87,17 @@ const HasilPerforma = ({match, history, user}) => {
                     </StyledTableCell>
                   </TableRow>
                 </TableBody>
-            : ( !assignment  ? "Not Found" : 
-              assignment.list_aspek.map((aspek, i)=>(
+            :  !assignment  ? "Not Found" : 
+              assignment.list_aspek.map((aspek, indexAspek)=>(
               <>
                 <TableHead>
                   <TableRow>
                     <StyledTableCell align="left">{aspek.nama}</StyledTableCell>
+                    <StyledTableCell align="left"></StyledTableCell>
+
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {aspek.deskripsi}
-                    <>
                       <TableRow>
                         <StyledTableCell align="left">
                         <Grid container>
@@ -120,7 +105,63 @@ const HasilPerforma = ({match, history, user}) => {
                             {aspek.deskripsi}
                           </Grid>
                           <Grid item xs={12} md={4} container justify="center">
-                                <TextField
+                                
+                            <div className={classes.root}>
+                              <Rating name="half-rating-read" value={aspek.skor} precision={0.5} readOnly />
+                             </div>
+                                
+                         
+                            </Grid>
+                          </Grid>
+                        </StyledTableCell>
+                        <StyledTableCell align="left">
+                        {aspek.skor}
+                        </StyledTableCell>
+                      </TableRow>
+                </TableBody>
+              </>
+            ))}
+            <TableHead>
+                  <TableRow>
+                    <StyledTableCell align="left">Final Score</StyledTableCell>
+                    <StyledTableCell align="left"></StyledTableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                      <TableRow>
+                        <StyledTableCell align="left">
+                        <Grid container>
+                          <Grid item xs={12} md={8}>
+                            {assignment?.deskripsi}
+                          </Grid>
+                          <Grid item xs={12} md={4} container justify="center">
+                                
+                            <div className={classes.root}>
+                            
+                            {loading ? 
+                              <StyledTableRow>
+                              <StyledTableCell align="center" colSpan="5">
+                                <CircularProgress />
+                              </StyledTableCell>
+                            </StyledTableRow>
+                            : (
+                              assignment?.skor.length === 0 ? 
+                              <StyledTableRow>
+                              <StyledTableCell align="center" colSpan="5">
+                              <Rating name="half-rating-read" defaultValue={0}readOnly /> 
+                              </StyledTableCell>
+                            </StyledTableRow>
+                              :
+                              <StyledTableRow>
+                              <StyledTableCell align="center" colSpan="5">
+                              <Rating name="half-rating-read" value={assignment?.skor} precision={0.5} readOnly /> 
+                              </StyledTableCell>
+                            </StyledTableRow>
+                            )
+                            }
+
+                             </div>
+                                {/* <TextField
                                   required
                                   // value={pertanyaan.jawaban}
                                   // onChange={e=>handleChange(indexAspek, indexPertanyaan, e.target.value)}
@@ -129,66 +170,64 @@ const HasilPerforma = ({match, history, user}) => {
                                   fullWidth
                                   multiline
                             
-                                > Test </TextField>
-                              
-                              
-            
+                                > Test </TextField> */}
+                         
                             </Grid>
                           </Grid>
                         </StyledTableCell>
+                        <StyledTableCell align="left">
+                        {assignment?.skor}
+                        </StyledTableCell>
                       </TableRow>
-                    </>
                 </TableBody>
-              </>
-            )))}
           </MuiTable>
         </TableContainer>
-        <Loading open={fullLoading} />
-        <SuccessDialog open={success} handleClose={()=>history.push(`/mengisi-borang/${id}`)} />
-        <FailDialog open={!!fail} handleClose={()=>setFail(null)} text={fail?.detail} />
-
+    
+        <br></br>
+        <br></br>              
         <Grid container spacing={2} direction="column">
         <Grid item xs={12} container>
           <Grid item alignContent="flex-start">
             {/* <div className="m-12"> */}
-            <MainTitle title={`Evaluasi Diri | ${assignment?.user_dinilai?.username}`} className={classes.title} />
+            <MainTitle title={`Evaluasi Diri`} className={classes.title} />
             {/* </div> */}
           </Grid>
-
-          <TableContainer component={Paper}>
+         </Grid>
+         <Grid item xs={12} container>
+              {
+                assignment?.evaluasi_diri.length === 0 ? 
+                
+                  <TemplateButton
+                      onClick={()=>history.push(`/hasil-performa/${assignment.id}/add`)}
+                      type="button"
+                      buttonStyle="btnBlueOutline"
+                      buttonSize="btnMedium"
+                  >Tambah </TemplateButton>
+                  
+                :
+                <TableContainer component={Paper}>
           <MuiTable className={classes.table} aria-label="customized table">
             <TableHead>
               <TableRow>
-                <StyledTableCell align="left">  </StyledTableCell>
-                <StyledTableCell align="left">Nama </StyledTableCell>
-                <StyledTableCell align="left">Role </StyledTableCell>
-                <StyledTableCell align="left">Divisi</StyledTableCell>
+                
+                <StyledTableCell align="left"> Current Performance </StyledTableCell>
+                <StyledTableCell align="left">Action(s) to do </StyledTableCell>
+                <StyledTableCell align="left">Parameter</StyledTableCell>
+                <StyledTableCell align="left">Komentar Manajer</StyledTableCell>
+                <StyledTableCell align="left">Manajer</StyledTableCell>
                 <StyledTableCell align="left"></StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {loading ? 
-              <StyledTableRow>
-                <StyledTableCell align="center" colSpan="5">
-                  <CircularProgress />
-                </StyledTableCell>
-              </StyledTableRow>
-              : (
-                // listItem?.length === 0 ? 
-                // <StyledTableRow>
-                //   <StyledTableCell align="center" colSpan="5">
-                //     Tidak ada Daftar Karyawan
-                //   </StyledTableCell>
-                // </StyledTableRow>
-                // :
-                // listItem.map((row, i) => (
+               { assignment?.evaluasi_diri.map((row, i) => (
                   <StyledTableRow>
-                    <StyledTableCell component="th" scope="row">
-                      {/* {`${i+1}.`} */}
-                    </StyledTableCell>
-                    <StyledTableCell align="left"></StyledTableCell>
-                    <StyledTableCell align="left"></StyledTableCell>
-                    <StyledTableCell align="left"></StyledTableCell>
+                  
+                    <StyledTableCell align="left">{row.current_performance}</StyledTableCell>
+                    <StyledTableCell align="left">{row.to_do}</StyledTableCell>
+                    <StyledTableCell align="left">{row.parameter}</StyledTableCell>
+                    <StyledTableCell align="left">{row.feedback}</StyledTableCell>
+                    <StyledTableCell align="left">{row.manager_feedbacker?.username}</StyledTableCell>
+
                     <StyledTableCell align="left">
                     <Grid item sm={10}>
                       <Tooltip title="Edit">
@@ -196,21 +235,18 @@ const HasilPerforma = ({match, history, user}) => {
                           <CreateIcon style={{ color: "green"}}/>
                         </IconButton>
                       </Tooltip>
-                      <Tooltip title="Delete">
-                        <IconButton size="small" >
-                          <DeleteOutlineIcon style={{ color: "red"}}/>
-                        </IconButton>
-                      </Tooltip>
                     </Grid>
                     </StyledTableCell>
                   </StyledTableRow>
                 )
-                // )
-                }
-            </TableBody>
+                )}
+                </TableBody>
           </MuiTable>
         </TableContainer>
-        </Grid>
+              }
+          </Grid>
+            
+        
         <div className="flex w-full flex-wrap p-2">
           
         </div>

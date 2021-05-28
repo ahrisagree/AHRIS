@@ -7,4 +7,4 @@ const mapStateToProps = state => ({
 })
 
 
-export default connect(mapStateToProps, null)(HasilPerforma, DaftarHasilPerforma)
+export default connect(mapStateToProps, null)(DaftarHasilPerforma)

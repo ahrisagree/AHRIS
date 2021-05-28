@@ -148,7 +148,7 @@ const Home = (props) => {
       <Grid container spacing={2} direction="column">
       <Grid item xs={12}>
           <TextField
-          required="false"
+          required="true"
           variant="outlined"
           id="date"
           label="Tanggal"
@@ -168,7 +168,7 @@ const Home = (props) => {
 
       <Grid item xs={12}>
         <TextField
-          required="false"
+          required="true"
           variant="outlined"
           id="time"
           label="Jam masuk"
@@ -191,7 +191,6 @@ const Home = (props) => {
 
       <Grid item xs={12}>
         <TextField id="outlined-full-width"
-          required="false"
           label="Keterangan"
           style={{ margin: 10, width: "100%" }}
           margin="normal"
