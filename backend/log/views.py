@@ -79,6 +79,11 @@ class LogAktivitasViewSet(viewsets.ModelViewSet):
             request.data['jam_keluar'] = log.jam_keluar
         return super().update(request, *args, **kwargs)
 
+    def list(self, request, *args, **kwargs):
+        if request.query_params.get('disablepagination') != None:
+            self.pagination_class = None
+        return super().list(request, *args, **kwargs)
+
 
 # from django.shortcuts import render
 # from django.http import JsonResponse

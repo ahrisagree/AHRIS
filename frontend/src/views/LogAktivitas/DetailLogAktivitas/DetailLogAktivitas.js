@@ -6,6 +6,8 @@ import {
   Grid,
   Typography,
   MenuItem,
+  Tooltip,
+  IconButton
 } from '@material-ui/core';
 import TextField from 'components/CustomTextField';
 import MainTitle from 'components/MainTitle';
@@ -16,6 +18,9 @@ import Loading from 'components/Loading';
 import Dialog from 'components/Dialog';
 import DialogFail from 'components/DialogFail';
 import { Link } from 'react-router-dom';
+import DeleteOutlineIcon from '@material-ui/icons/DeleteOutlineRounded';
+import EditRounded from '@material-ui/icons/CreateRounded';
+
 
 
 const daftar_tipe = [
@@ -68,7 +73,7 @@ const useStyles = makeStyles((theme) => ({
 
 
 
-const DetailLogAktivitas = (props) => {
+const DetailLogAktivitas = (props, {history}) => {
   const classes = useStyles();
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState({});
@@ -89,7 +94,8 @@ const DetailLogAktivitas = (props) => {
   const [statusLog, setStatusLog] = React.useState("");
   const {user} = props;
   const [role, setRole] = React.useState(user.role);
-
+ 
+  const { id } = props.match.params;
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
@@ -98,8 +104,6 @@ const DetailLogAktivitas = (props) => {
   useEffect(() => {
     setLoading(true);
     const id = props.match.params.id;
-    console.log(id)
-
  
     getLog(id).then(res => {
       const { data } = res
@@ -140,6 +144,23 @@ const DetailLogAktivitas = (props) => {
 
     return (
       <div className="m-10">
+         <Grid item xs={12}>
+     
+         <Link to={`/edit-log/${id}`}>
+          <Tooltip title="Edit">
+            <IconButton size="small" style={{float: 'right'}}>
+               <EditRounded />
+            </IconButton>
+          </Tooltip>
+                    
+         </Link>
+    
+      <Tooltip title="Delete">
+        <IconButton size="small" style={{float: 'right'}} >
+          <DeleteOutlineIcon />
+        </IconButton>
+      </Tooltip>
+      </Grid>
         <MainTitle title="Detail Log Aktivitas" className="mb-8" />
         <Container component={Paper} className={classes.paper}>
 
@@ -322,6 +343,8 @@ const DetailLogAktivitas = (props) => {
               isDetail
               />
 
+
+      
 
           </Grid>
           

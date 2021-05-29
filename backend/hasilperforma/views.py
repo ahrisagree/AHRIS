@@ -12,7 +12,7 @@ class HasilPerformaViewSet(viewsets.ModelViewSet):
   queryset = HasilPerforma.objects.all().order_by('-id')
   serializer_class = HasilPerformaMiniSerializer
   filter_class = HasilPerformaFilter
-  filterset_fields = ['periode', 'divisi']
+  filterset_fields = ['periode', 'divisi', 'user']
   search_fields = ['user__username']
 
   def get_serializer_class(self):

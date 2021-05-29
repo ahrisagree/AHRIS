@@ -25,6 +25,9 @@ import EvaluasiDiri from "views/EvaluasiDiri";
 import Pembobotan from "views/KelolaHasilPerforma/Pembobotan";
 import EvaluasiPerforma from "views/EvaluasiPerforma";
 import DaftarEvaluasiPerforma from "views/DaftarEvaluasiPerforma";
+import DaftarGaji from "views/DaftarGaji";
+import KelolaGaji from "views/KelolaGaji";
+import EditAkun from "views/EditAkun";
 
 export default [
   {
@@ -123,6 +126,11 @@ export default [
     component: DaftarBorangPerforma,
   },
   {
+    path: '/daftar-karyawan-performa/:id/:id',
+    exact: true,
+    component: DaftarBorangPerforma,
+  },
+  {
     path: '/kelola-performa/:idDinilai/:idPaket',
     exact: true,
     component: Pembobotan
@@ -161,5 +169,15 @@ export default [
     path: '/daftar-evaluasi-performa',
     exact: true,
     component: DaftarEvaluasiPerforma
+  },
+  {
+    path: '/gaji/',
+    exact: true,
+    component: KelolaGaji
+  },
+  {
+    path: '/akun/edit/:idUser',
+    exact: true,
+    component: EditAkun
   },
 ]

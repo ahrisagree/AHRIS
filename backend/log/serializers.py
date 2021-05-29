@@ -66,4 +66,21 @@ class LogAktivitasDetailSerializer(serializers.ModelSerializer):
     user = UserListSerializer()
     class Meta:
         model = LogAktivitas
-        fields = '__all__'
+        fields = (
+            "id",
+            "manajer_penyetuju",
+            "user",
+            "tanggal",
+            "jam_masuk",
+            "jam_keluar",
+            "keterangan",
+            "aktivitas",
+            "link_deliverable",
+            "status_deliverable",
+            "notes",
+            "is_lembur",
+            "status_log",
+            "komentar",
+            "alasan_lembur",
+            "total_jam"
+        )
