@@ -23,15 +23,15 @@ import DialogFail from 'components/DialogFail';
 import TemplateButton from 'components/TemplateButton';
 import Loading from 'components/Loading';
 import Pagination from '@material-ui/lab/Pagination';
-import { editUser, getKaryawan, getDivisiAPI, getListDaftarKaryawan } from 'api/akun';
+import { getDivisiAPI } from 'api/akun';
 import { getListLog } from 'api/log';
-import { PAGE_SIZE, ROLES, STATUS_LOG } from 'utils/constant';
+import { PAGE_SIZE, ROLES } from 'utils/constant';
 import CircularProgress from 'components/Loading/CircularProgress';
 import { setQueryParams } from 'utils/setQueryParams';
 import { StyledTableCell, StyledTableRow } from "components/Table";
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
-import { getGaji, editGaji, getListGaji } from 'api/gaji';
-import DetailEditUser from 'views/DetailEditUser';
+import { editGaji, getListGaji } from 'api/gaji';
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -106,7 +106,6 @@ const KelolaGaji = ({history, match}) => {
   const [jam, setJam] = useState(0);
   const [penyesuaian, setPenyesuaian] = useState(0);
   const [honor, setHonor] = useState(0);
-  
   const [role, setRole] = React.useState("");
   const [username, setUsername] = React.useState("");
   const [nominal, setNominal] = React.useState("");
@@ -116,10 +115,9 @@ const KelolaGaji = ({history, match}) => {
   const [listLog, setListLog] = useState([]);
   const [total, setTotal] = useState(gaji+penyesuaian);
   const [detail, setDetail] = useState(null);
-
   const [update, setUpdate] = useState(0);
   const [periodeFilter, setPeriodeFilter] = useState(new Date().toISOString().substr(0,10));
-  
+  const [success, setSuccess] = useState(false);
   const params = new URLSearchParams(history.location.search);
   const { idUser } = match.params;
 
@@ -129,11 +127,17 @@ const KelolaGaji = ({history, match}) => {
 
   useEffect(()=>{
     setLoading(true)
-    const periode = periodeFilter
+    const periode = periodeFilter;
+    const search = params.get("search");
+    const role = params.get("role");
+    const divisi = params.get("divisi");
 
     getListGaji({
       page,
-      periode
+      periode,
+      search,
+      role,
+      divisi
     }).then(res=>{
       setListItem(res.data?.results);
       setCount(Math.ceil(res.data?.count/PAGE_SIZE));
@@ -142,7 +146,7 @@ const KelolaGaji = ({history, match}) => {
     }).finally(()=>{
       setLoading(false);
     })
-  }, [page, periodeFilter]);
+  }, [page, update, periodeFilter]);
 
   useEffect(()=>{
     getDivisiAPI().then(res=>{
@@ -198,6 +202,7 @@ const KelolaGaji = ({history, match}) => {
       nominal: detail.user.gaji+honor*jam+penyesuaian
     }).then(res=>{
       setUpdate(update+1);
+      setSuccess(true);
       console.log(res.data)
     }).catch(err=>{
       console.error(err.response);
@@ -355,7 +360,7 @@ const KelolaGaji = ({history, match}) => {
                 <StyledTableCell align="left">No </StyledTableCell>
                 <StyledTableCell align="left">Nama </StyledTableCell>
                 <StyledTableCell align="left">Gaji </StyledTableCell>
-                <StyledTableCell align="left">Jumlah Log</StyledTableCell>
+                <StyledTableCell align="left">Divisi</StyledTableCell>
                 
               </TableRow>
             </TableHead>
@@ -383,7 +388,7 @@ const KelolaGaji = ({history, match}) => {
                       <a style={{color:"#00A96F", textDecorationLine: "underline"}} onClick={()=>detailUser(row)}>{row.user.username}</a></StyledTableCell>
                     
                     <StyledTableCell align="left">{row.nominal}</StyledTableCell>
-                    <StyledTableCell align="left">{listLog?.length}</StyledTableCell>
+                    <StyledTableCell align="left">{row.user.divisi.map(x=> x.nama_divisi+", ")}</StyledTableCell>
                     
                     
                   </StyledTableRow>
@@ -571,7 +576,7 @@ const KelolaGaji = ({history, match}) => {
                 </StyledTableCell>
                 <StyledTableCell align="left">{row.tanggal}</StyledTableCell>
                 <StyledTableCell align="left">{row.is_lembur ? "Lembur" : "Reguler"}</StyledTableCell>
-                <StyledTableCell align="left">{row.total_jam}</StyledTableCell>
+                <StyledTableCell align="left">{row.total_jam/3600}</StyledTableCell>
                
               </StyledTableRow>
               :
@@ -586,6 +591,14 @@ const KelolaGaji = ({history, match}) => {
         :
         <Container></Container>
       }
+      <Dialog open={success} handleClose={()=>setSuccess(false)} ></Dialog>
+        <DialogFail
+          open={!!error.detail} 
+          handleClose={()=>{
+            setError({});
+          }} 
+          text={error.detail}
+          />
       </div>
 
     )

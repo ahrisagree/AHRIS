@@ -130,7 +130,7 @@ const DaftarKaryawan = ({history}) => {
 
         <Grid item xs={2} alignContent="">
         <div style={{position: 'relative', display: 'inline-block', padding: 2}}>
-                <SearchIcon style={{position: 'absolute', right: 0, top: 10, width: 25, height: 25}}/>
+                
                 <TextField
                     label="Search"
                     fullWidth
