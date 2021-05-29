@@ -13,6 +13,7 @@ import { getSumScoringAPI, postHasilPerformaAPI } from 'api/hasilperforma';
 import DialogSuccess from 'components/Dialog';
 import DialogFail from 'components/DialogFail';
 import Loading from 'components/Loading';
+import { periodFormated } from 'utils/periodeConverter';
 
 const PembobotanForm = ({classes, match, history, setYangBelum, yangBelum}) => {
   const [loading, setLoading] = useState(false);
@@ -27,19 +28,25 @@ const PembobotanForm = ({classes, match, history, setYangBelum, yangBelum}) => {
   const [hasilExist, setHasilPerformaExist] = useState(false);
   // const [kumulatif, setKumulatif] = useState(0);
   const params = new URLSearchParams(history.location.search);
-  const periode = params.get("periode") || new Date().toISOString().substr(0,10)
+  const periode = params.get("periode") || new Date().toISOString().substr(0,7)
 
   const {idPaket, idDinilai} = match.params;
 
   useEffect(()=>{
     setLoading(true);
-    getSumScoringAPI(idDinilai, idPaket, periode).then(res=>{
+    setListAspek(null);
+    setSkorKumulatif(0);
+    setCatatan("");
+    setHasilPerformaExist(false);
+    getSumScoringAPI(idDinilai, idPaket, periodFormated(periode)).then(res=>{
       setNamaPaket(res.data?.nama);
       setListAspek(res.data?.list_aspek.map(asp=>({...asp, deskripsi: ""})))
-      setSkorKumulatif(res.data?.list_aspek.reduce((x,y)=>x.skor*x.bobot+y.skor*y.bobot)/100)
+      if (res.data?.list_aspek?.length > 0) 
+        setSkorKumulatif(res.data.list_aspek.reduce((x,y)=>x.skor*x.bobot+y.skor*y.bobot)/100)
       setHasilPerformaExist(res.data?.hasil_performa_exist)
       setYangBelum(res.data?.list_not_answered || []);
     }).catch(err=>{
+      console.log(err)
       setNamaPaket("");
       setListAspek(null)
       setSkorKumulatif(0)
@@ -59,7 +66,7 @@ const PembobotanForm = ({classes, match, history, setYangBelum, yangBelum}) => {
       skor: skorKumulatif,
       user: idDinilai/1,
       paket: idPaket/1,
-      periode,
+      periode: periodFormated(periode),
       list_aspek: list_aspek
     }
     console.log(data)
@@ -158,7 +165,7 @@ const PembobotanForm = ({classes, match, history, setYangBelum, yangBelum}) => {
         </Grid>
         </>
       ))}
-      {list_aspek && (list_aspek !== [] ? (
+      {list_aspek && (list_aspek?.length > 0 ? (
         <>
         <Grid item xs={12}>
           <Typography style={{ fontWeight: 600, marginLeft: '1%', marginBottom: '3%', fontFamily: 'IBM Plex Sans', fontStyle: 'normal', 

@@ -160,6 +160,7 @@ const AssignResponden = ({
           <TextField
             label="Search"
             variant="outlined"
+            type="search"
             size="small"
             className={classes.mb}
             fullWidth
@@ -274,6 +275,11 @@ const AssignResponden = ({
             onChange={(_e,val)=>setPage(val)}
             />
         </div>
+        <Grid item xs={12} justify="center">
+          {selectedDinilai.length === 0 && !loading &&
+            <p className="text-red-500 text-center text-sm">Harap pilih karyawan yang akan dinilai</p>
+          }
+        </Grid>
         <Grid item xs={12} className={classes.button}>
         <TemplateButton 
           onClick={prevStep}
@@ -289,7 +295,7 @@ const AssignResponden = ({
           type="button"
           buttonStyle="btnBlue"
           buttonSize="btnLong"
-          disabled={loading}
+          disabled={loading || selectedDinilai.length === 0}
         >
           Selanjutnya
         </TemplateButton>

@@ -4,9 +4,9 @@ import Login from "./views/Login";
 import Profil from "./views/Profil";
 import Coba from "./views/Coba";
 import LogAktivitas from "./views/LogAktivitas/LogAktivitas";
-import DaftarLogKaryawan from "./views/LogAktivitas/DaftarLogKaryawan";
-import DetailLogAktivitas from "./views/LogAktivitas/DetailLogAktivitas";
-import DaftarLog from "./views/LogAktivitas/DaftarLog";
+import DaftarLogKaryawan from "./views/LogAktivitas/DaftarLogKaryawan/";
+import DetailLogAktivitas from "./views/LogAktivitas/DetailLogAktivitas/";
+import DaftarLog from "./views/LogAktivitas/DaftarLog/";
 import MyPresensi from "./views/LogAktivitas/MyPresensi/";
 import Register from "./views/Register";
 import DaftarKaryawan from "views/DaftarKaryawan";
@@ -93,7 +93,7 @@ export default [
     component: LogAktivitas
   },
   {
-    path: '/daftar-log/:id',
+    path: '/daftar-log',
     exact: true,
     component: DaftarLog
   },

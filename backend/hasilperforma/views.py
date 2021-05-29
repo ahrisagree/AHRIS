@@ -3,6 +3,7 @@ from rest_framework.permissions import IsAuthenticated
 from auth_app.permissions import *
 from .models import *
 from .serializers import *
+from backend.filters import HasilPerformaFilter
 
 
 class HasilPerformaViewSet(viewsets.ModelViewSet):
@@ -10,6 +11,9 @@ class HasilPerformaViewSet(viewsets.ModelViewSet):
   http_methods = ('get', 'post', 'patch')
   queryset = HasilPerforma.objects.all().order_by('-id')
   serializer_class = HasilPerformaMiniSerializer
+  filter_class = HasilPerformaFilter
+  filterset_fields = ['periode', 'divisi', 'user']
+  search_fields = ['user__username']
 
   def get_serializer_class(self):
     if self.request.method == "GET":

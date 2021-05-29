@@ -44,7 +44,8 @@ class LogAktivitasViewSet(viewsets.ModelViewSet):
         'status',
         'is_lembur',
         'penyetuju',
-        'date'
+        'date',
+        'divisi'
         ]
     search_fields = ['user__username']
 
@@ -77,6 +78,11 @@ class LogAktivitasViewSet(viewsets.ModelViewSet):
         if request.data.get('jam_keluar') == None:
             request.data['jam_keluar'] = log.jam_keluar
         return super().update(request, *args, **kwargs)
+
+    def list(self, request, *args, **kwargs):
+        if request.query_params.get('disablepagination') != None:
+            self.pagination_class = None
+        return super().list(request, *args, **kwargs)
 
 
 # from django.shortcuts import render

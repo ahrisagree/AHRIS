@@ -32,6 +32,18 @@ class LogAktivitas(models.Model):
         related_name='log')
     alasan_lembur = models.CharField(max_length=250, blank=True, null=True)
 
+    def total_jam(self):
+        mulai = datetime.timedelta(
+            hours=self.jam_masuk.hour,
+            minutes=self.jam_masuk.minute,
+            seconds=self.jam_masuk.second
+        )
+        selesai = datetime.timedelta(
+            hours=self.jam_keluar.hour,
+            minutes=self.jam_keluar.minute,
+            seconds=self.jam_keluar.second
+        )
+        return selesai - mulai
 
     # status_log 
     # 0 -> Menunggu Persetujuan

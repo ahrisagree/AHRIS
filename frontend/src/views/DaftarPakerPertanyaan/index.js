@@ -134,6 +134,7 @@ const DaftarPaketPertanyaan = ({history}) => {
               label="Search"
               variant="outlined"
               size="small"
+              type="search"
               fullWidth
               bordered={true}
               value={searchFilter}

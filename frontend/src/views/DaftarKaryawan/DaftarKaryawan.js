@@ -138,6 +138,7 @@ const DaftarKaryawan = ({history}) => {
                     value={searchFilter}
                     onChange={e=>setFilterSearch(e.target.value)}
                     variant="outlined"
+                    type="search"
                     className={classes.mb}
                     size="small"
                     hintText="Search by Name"

@@ -107,7 +107,7 @@ class AssignRespondenSerializer(serializers.Serializer):
 
 class ScoringAspekSerializer(serializers.Serializer):
   nama = serializers.CharField(max_length=255)
-  skor = serializers.IntegerField()
+  skor = serializers.FloatField()
   bobot = serializers.FloatField()
 
 class ScoringSerializer(serializers.Serializer):

@@ -42,7 +42,6 @@ const formSlice = createSlice({
       state.user = null;
       state.loading = false;
       state.error = {};
-      window.location.href = '/login';
     },
     [logoutThunk.fulfilled]: () => setupAuthToken(null),
     [logoutThunk.rejected]: () => setupAuthToken(null),

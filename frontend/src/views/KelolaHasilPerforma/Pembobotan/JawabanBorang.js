@@ -82,7 +82,7 @@ const JawabanBorang = ({classes, idAssignment, back, match}) => {
                             <p className="font-bold">{aspek.nama}</p>
                           </Grid>
                           <Grid item xs={2} container justify="flex-end">
-                            <p className="font-bold">{mean(aspek.list_jawaban)}</p>
+                            <p className="font-bold">{mean(aspek.list_jawaban) || ""}</p>
                           </Grid>
                         </Grid>
                     </StyledTableCell>

@@ -43,7 +43,7 @@ const ModalAssignConfirmation = ({
           variant="outlined"
           id="date"
           label="Periode"
-          type="date"
+          type="month"
           InputLabelProps={{
             shrink: true,
           }}
