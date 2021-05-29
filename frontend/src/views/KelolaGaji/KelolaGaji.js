@@ -118,6 +118,7 @@ const KelolaGaji = ({history, match}) => {
   const [detail, setDetail] = useState(null);
 
   const [update, setUpdate] = useState(0);
+  const [periodeFilter, setPeriodeFilter] = useState(new Date().toISOString().substr(0,10));
   
   const params = new URLSearchParams(history.location.search);
   const { idUser } = match.params;
@@ -128,9 +129,11 @@ const KelolaGaji = ({history, match}) => {
 
   useEffect(()=>{
     setLoading(true)
+    const periode = periodeFilter
 
     getListGaji({
-      page
+      page,
+      periode
     }).then(res=>{
       setListItem(res.data?.results);
       setCount(Math.ceil(res.data?.count/PAGE_SIZE));
@@ -139,7 +142,7 @@ const KelolaGaji = ({history, match}) => {
     }).finally(()=>{
       setLoading(false);
     })
-  }, [page, update]);
+  }, [page, periodeFilter]);
 
   useEffect(()=>{
     getDivisiAPI().then(res=>{
@@ -170,21 +173,11 @@ const KelolaGaji = ({history, match}) => {
 
   useEffect(()=>{
     setLoading(true)
-    {detail !== null?
+    if(detail !== null){
       getListLog({ 
-        disablepagination:true,
-        user: detail.user.pk
-      }).then(res=>{
-        setListLog(res.data?.results);
-        //setCount(Math.ceil(res.data?.count/PAGE_SIZE));
-      }).catch(err=>{
-      // Handle ERROR
-      }).finally(()=>{
-        setLoading(false);
-      })
-      :
-      getListLog({ 
-        
+        //disablepagination:true,
+        user: detail.user.pk,
+        status: 1
       }).then(res=>{
         setListLog(res.data?.results);
         //setCount(Math.ceil(res.data?.count/PAGE_SIZE));
@@ -194,17 +187,17 @@ const KelolaGaji = ({history, match}) => {
         setLoading(false);
       })
     }
+    }
     
 
-  }, [detail]);
+  , [detail]);
 
   const onSubmit = () => {
     setLoading(true)
-    editGaji(detail.user.pk, {
-      username: detail.user.username,
-      nominal: detail.nominal+honor*jam
+    editGaji(detail.id, {
+      nominal: detail.user.gaji+honor*jam+penyesuaian
     }).then(res=>{
-      
+      setUpdate(update+1);
       console.log(res.data)
     }).catch(err=>{
       console.error(err.response);
@@ -253,15 +246,38 @@ const KelolaGaji = ({history, match}) => {
     setFilterRole(null);
   }
 
-  const detailUser = () => {
-    setDetail();
+  const detailUser = (row) => {
+    setDetail(row);
+    setPenyesuaian(row.nominal-row.user.gaji);
   }
 
-  
+  const handleChangePeriod = (val) => {
+    setPeriodeFilter(val);
+    setPage(1);
+  }
+
+  console.log(jam*honor)
+  console.log(penyesuaian)
     return (
         <div className={classes.splitScreen}>
         <div className={classes.topPane}>
             <MainTitle title="Daftar Gaji" className="mb-8"></MainTitle>
+
+            <Grid item xs={10} alignContent="">
+        <div style={{position: 'relative', padding: 2}}>
+             <TextField
+            label="Periode"
+            variant="outlined"
+            size="small"
+            className={classes.mb}
+            fullWidth
+            type="date"
+            bordered={true}
+            value={periodeFilter}
+            onChange={e=>handleChangePeriod(e.target.value)}
+         />
+          </div>
+          </Grid>
 
             <Grid item xs={10}>
             
@@ -274,7 +290,7 @@ const KelolaGaji = ({history, match}) => {
             select
             bordered={true}
             value={roleFilter}
-            style= {{ width: "31%"}}
+            style= {{ width: "45%"}}
             onChange={e=>setFilterRole(e.target.value)}
           >
             {ROLES.map(r=>(
@@ -289,7 +305,7 @@ const KelolaGaji = ({history, match}) => {
           className={classes.mb}
           fullWidth
           value={divisiFilter}
-          style= {{width: "31%"}}
+          style= {{width: "45%", marginLeft: "9%"}}
           onChange={e=>setFilterDivisi(e.target.value)}
           // multiple
           select
@@ -301,7 +317,7 @@ const KelolaGaji = ({history, match}) => {
         </TextField>
         </Grid>
 
-        <Grid item xs={8}>
+        <Grid item xs={10}>
           <TextField
             label="Search"
             variant="outlined"
@@ -310,18 +326,15 @@ const KelolaGaji = ({history, match}) => {
             fullWidth
             bordered={true}
             value={searchFilter}
-            style= {{width: "92%"}}
             onChange={e=>setFilterSearch(e.target.value)}
           />
-        </Grid>
-        <Grid item xs={4}>
-        <Tooltip title="Download">
+          <Tooltip title="Download">
                         <IconButton size="medium">
                           <CloudDownloadIcon style={{ color: "#0A3142"}}/>
                         </IconButton>
                       </Tooltip>
         </Grid>
-
+        
         <Grid item xs={4}>
           {!(params.get("search") === searchFilter &&
             params.get("role") === roleFilter && 
@@ -367,10 +380,10 @@ const KelolaGaji = ({history, match}) => {
                       {`${i+1}.`}
                     </StyledTableCell>
                     <StyledTableCell align="left">
-                      <a style={{color:"#00A96F", textDecorationLine: "underline"}} onClick={()=>setDetail(row)}>{row.user.username}</a></StyledTableCell>
+                      <a style={{color:"#00A96F", textDecorationLine: "underline"}} onClick={()=>detailUser(row)}>{row.user.username}</a></StyledTableCell>
                     
                     <StyledTableCell align="left">{row.nominal}</StyledTableCell>
-                    <StyledTableCell align="left"></StyledTableCell>
+                    <StyledTableCell align="left">{listLog?.length}</StyledTableCell>
                     
                     
                   </StyledTableRow>
@@ -481,7 +494,7 @@ const KelolaGaji = ({history, match}) => {
             variant="outlined"
             type="number"
             value={penyesuaian}
-            onChange={e=>setPenyesuaian(e.target.value)}
+            onChange={e=>setPenyesuaian(e.target.value/1)}
             /> 
             </Typography>
             
@@ -499,7 +512,7 @@ const KelolaGaji = ({history, match}) => {
               <Typography style={{ fontWeight: 400,  fontFamily: 'IBM Plex Sans', fontStyle: 'normal', 
             fontSize: 18, lineHeight: '138%', position:'absolute', right:50, letterSpacing: '0.0075em', color: '#0A3142' }} 
             variant="subtitle1">
-              {jam*honor}
+              {detail.user.gaji+jam*honor+penyesuaian}
             </Typography>
             </Typography>
             
@@ -558,13 +571,11 @@ const KelolaGaji = ({history, match}) => {
                 </StyledTableCell>
                 <StyledTableCell align="left">{row.tanggal}</StyledTableCell>
                 <StyledTableCell align="left">{row.is_lembur ? "Lembur" : "Reguler"}</StyledTableCell>
-                <StyledTableCell align="left">{row.jam_keluar - row.jam_masuk}</StyledTableCell>
+                <StyledTableCell align="left">{row.total_jam}</StyledTableCell>
                
               </StyledTableRow>
               :
-              <StyledTableRow>
-              
-            </StyledTableRow>
+              <a></a>
                   
                 )))}
             </TableBody>
