@@ -90,13 +90,10 @@ const DaftarLog = (props) => {
   const [update, setUpdate] = useState(0);
   const [deleteLog, setDeleteLog] = useState(null);
   const [role, setRole] = useState("");
-  const history = props.match.params.history;
   const {user} = props;
 
   useEffect(()=>{
     setLoading(true)
-
-    // const id = props.match.params.id;
 
     getKaryawan(user.pk).then(res=>{
       const { data } = res

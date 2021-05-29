@@ -93,13 +93,9 @@ const DetailLogAktivitas = (props, {history}) => {
   const [notes, setNotes] = React.useState("");
   const [statusLog, setStatusLog] = React.useState("");
   const {user} = props;
-  const [role, setRole] = React.useState(user.role);
+  const role = React.useState(user.role);
  
   const { id } = props.match.params;
-
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-  };
 
   useEffect(() => {
     setLoading(true);
@@ -118,7 +114,7 @@ const DetailLogAktivitas = (props, {history}) => {
       setNotes(data.notes);
       setAlasanLembur(data.alasan_lembur);
       setKomentar(data.komentar);
-      setStatusLog(data.status_log);
+      setStatusLog(STATUS_LOG[data.status_log]);
     }).catch(err => {
       // HANDLE ERROR
     }).finally(() => {
@@ -166,7 +162,7 @@ const DetailLogAktivitas = (props, {history}) => {
 
           <Grid item xs={12}>
             <Typography style={{ fontWeight: 600, marginLeft: '1%', marginBottom: '3%', fontFamily: 'IBM Plex Sans', fontStyle: 'normal', 
-            fontWeight: 600, fontSize: 24, lineHeight: '138%', display: 'flex', alignItems: 'center', letterSpacing: '0.0075em', color: '#0A3142' }} 
+           fontSize: 24, lineHeight: '138%', display: 'flex', alignItems: 'center', letterSpacing: '0.0075em', color: '#0A3142' }} 
             variant="subtitle1">
               Log Aktivitas
             </Typography>
@@ -338,7 +334,7 @@ const DetailLogAktivitas = (props, {history}) => {
               style={{ margin: 8, width: "30%" }}
               margin="normal"
               className={classes.textField}
-              value={STATUS_LOG[statusLog]}
+              value={statusLog}
               disabled={true}
               isDetail
               />
