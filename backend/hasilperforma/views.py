@@ -1,4 +1,4 @@
-from rest_framework import viewsets, mixins
+from rest_framework import viewsets, mixins, exceptions
 from rest_framework.permissions import IsAuthenticated
 from auth_app.permissions import *
 from .models import *
@@ -34,8 +34,8 @@ class HasilPerformaViewSet(viewsets.ModelViewSet):
 
 
 class EvaluasiDiriViewSet(viewsets.ModelViewSet):
-  permission_classes = (IsAuthenticated, DefaultRolePermission, ManagerOnlyEditPermission)
-  http_methods = ('post', 'patch')
+  permission_classes = (IsAuthenticated, DefaultRolePermission, ManagerOnlyEditPermission, IsOwner)
+  http_methods = ('post', 'patch', 'delete')
   queryset = EvaluasiDiri.objects.all().order_by('-tanggal')
   serializer_class = EvaluasiDiriSerializer
 
@@ -49,3 +49,9 @@ class EvaluasiDiriViewSet(viewsets.ModelViewSet):
     if request.data['feedback']:
       request.data['manager_feedbacker'] = request.user.pk
     return super().update(request, *args, **kwargs)
+
+  def destroy(self, request, *args, **kwargs):
+    evaluasi_diri = self.get_object()
+    if evaluasi_diri.feedback != None:
+      raise exceptions.ValidationError({'detail':"Evaluasi diri yang sudah difeedback tidak dapat dihapus"})
+    return super().destroy(request, *args, **kwargs)
