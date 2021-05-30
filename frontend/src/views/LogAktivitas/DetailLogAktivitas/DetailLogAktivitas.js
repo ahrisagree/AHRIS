@@ -101,8 +101,6 @@ const DetailLogAktivitas = (props) => {
   useEffect(() => {
     setLoading(true);
     const id = props.match.params.id;
-    console.log(id)
-
  
     getLog(id).then(res => {
       const { data } = res
@@ -354,6 +352,8 @@ const DetailLogAktivitas = (props) => {
               isDetail
               />
 
+
+      
 
           </Grid>
           
