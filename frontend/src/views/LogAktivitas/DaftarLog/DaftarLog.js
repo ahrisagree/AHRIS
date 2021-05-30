@@ -216,7 +216,7 @@ const DaftarLog = (props) => {
                     <StyledTableCell align="left"><Status status={STATUS_LOG[row.status_log]} /></StyledTableCell>
                     <StyledTableCell align="center">
                     
-                    <Link to={`/detail-log/${row.id}`}>
+                    <Link to={`/log/${row.id}`}>
                     <Tooltip title="View">
                         <IconButton size="small">
                           <VisibilityIcon style={{ color: "#0A3142"}}/>
@@ -224,7 +224,7 @@ const DaftarLog = (props) => {
                       </Tooltip>
                     </Link>
                     
-                    <Link to={`/edit-log/${row.id}`}>
+                    <Link to={`/log/${row.id}/edit`}>
                     <Tooltip title="Edit">
                         <IconButton size="small" disabled={STATUS_LOG[row.status_log] === "Disetujui" ? true : false}>
                           <CreateIcon style={{ color: "green"}}/>
