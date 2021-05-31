@@ -12,10 +12,11 @@ import {
   Paper,
   Grid,
   Tooltip,
-  IconButton
+  IconButton,
+  MenuItem
 } from '@material-ui/core';
 import { getListLog, deleteLogAPI, getKaryawan } from 'api/log';
-import { PAGE_SIZE, STATUS_LOG } from 'utils/constant';
+import { PAGE_SIZE, STATUS_LOG, STATUS_LOG_LABEL } from 'utils/constant';
 import { StyledTableCell, StyledTableRow } from "components/Table";
 import MainTitle from "components/MainTitle";
 import CircularProgress from 'components/Loading/CircularProgress';
@@ -26,6 +27,9 @@ import Status from 'components/Status';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutlineRounded';
 import CreateIcon from '@material-ui/icons/CreateRounded';
+import { setQueryParams } from 'utils/setQueryParams';
+import CustomTextField from 'components/CustomTextField';
+import TextField from 'components/CustomTextField';
 
 const useStyles = makeStyles((theme) =>({
   root: {
@@ -90,10 +94,17 @@ const DaftarLog = (props) => {
   const [update, setUpdate] = useState(0);
   const [deleteLog, setDeleteLog] = useState(null);
   const [role, setRole] = useState("");
+  const {history} = props;
+  const params = new URLSearchParams(history.location.search);
+  
+  const [tanggalFilter, setFilterTanggal] = useState();
+  const [statusFilter, setFilterStatus] = useState(params.get("status"));
   const {user} = props;
 
   useEffect(()=>{
-    setLoading(true)
+    setLoading(true);
+    const tanggal = params.get("tanggal");
+    const status = params.get("status");
 
     getKaryawan(user.pk).then(res=>{
       const { data } = res
@@ -106,7 +117,9 @@ const DaftarLog = (props) => {
 
     getListLog({
       user: user.pk,  
-      page
+      page,
+      tanggal,
+      status,
     }).then(res=>{
       setListItem(res.data?.results);
       setCount(Math.ceil(res.data?.count/PAGE_SIZE));
@@ -129,6 +142,23 @@ const DaftarLog = (props) => {
     }).finally(()=>{
       setFullLoading(false);
     });
+  }
+
+  const doQuery = () => {
+    setQueryParams({
+      tanggal: tanggalFilter || "",
+      status: statusFilter || ""
+    }, history);
+    setPage(1);
+    setUpdate(update+1);
+  }
+
+  const resetQuery = () => {
+    setQueryParams({}, history);
+    setPage(1);
+    setUpdate(update+1);
+    setFilterTanggal(null);
+    setFilterStatus(null);
   }
 
 
@@ -174,8 +204,53 @@ const DaftarLog = (props) => {
           }
 
         </Grid>
-        
       </Grid>
+
+      <div className="flex w-full flex-wrap p-2">
+        <div className="w-full md:w-1/3 my-2 md:mr-2">
+                <CustomTextField
+                  variant="outlined"
+                  id="date"
+                  label="Tanggal"
+                  type="date"
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  value={tanggalFilter}
+                  onChange={e=>{setFilterTanggal(e.target.value)}}
+                  disabled={loading}
+                  />
+          </div>
+
+          <div className="w-full md:w-1/3 my-2 md:mr-2">
+              <TextField
+                label="Status"
+                variant="outlined"
+                size="small"
+                className={classes.mb}
+                fullWidth
+                value={statusFilter}
+                onChange={e=>setFilterStatus(e.target.value)}
+                select
+                bordered={true}
+              >
+                {STATUS_LOG_LABEL.map(s=>(
+                  <MenuItem value={s.value ===  0 ? '0' : s.value}>{s.label}</MenuItem>
+                ))}
+              </TextField>
+          </div>
+
+          <div className="flex items-center">
+            {!(params.get("tanggal") === tanggalFilter &&
+              params.get("status") === statusFilter) &&
+              <button onClick={doQuery} className="m-1">Apply</button>  
+            }
+            {(params.get("tanggal") ||
+             params.get("status")) &&
+            <button onClick={resetQuery} className="m-1">Reset</button>  
+            }
+          </div>
+        </div>
 
         <TableContainer component={Paper}>
           <MuiTable className={classes.table} aria-label="customized table">
