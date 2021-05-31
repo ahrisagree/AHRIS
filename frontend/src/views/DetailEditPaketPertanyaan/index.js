@@ -3,7 +3,7 @@ import Loading from 'components/Loading';
 import React, { useEffect, useState } from 'react';
 import BuatPaketPertanyaan from 'views/BuatPaketPertanyaan';
 
-const DetailEditPaketPertanyaan = ({match}) => {
+const DetailEditPaketPertanyaan = ({match,history}) => {
   useEffect(()=>{
     const { id } = match.params;
     setLoading(true)
@@ -18,7 +18,8 @@ const DetailEditPaketPertanyaan = ({match}) => {
   
   const [paket, setPaket] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [editMode, setEditMode] = useState(false); 
+  const { path } = match;
+  const [editMode, setEditMode] = useState(path.substr(-4) === "edit");
 
   if (paket) {
     return (
@@ -28,6 +29,7 @@ const DetailEditPaketPertanyaan = ({match}) => {
         paket={paket}
         loading={loading}
         setEditMode={setEditMode}
+        history={history}
       />
     )
   } 

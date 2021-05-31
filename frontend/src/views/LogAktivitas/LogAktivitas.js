@@ -270,7 +270,6 @@ const LogAktivitas = () => {
 
 
             <TextField id="outlined-full-width"
-            required="true"
             label="Keterangan"
             style={{ margin: 10, width: "48%" }}
             margin="normal"
@@ -334,7 +333,6 @@ const LogAktivitas = () => {
             multiline
             rows={2}
             variant="outlined"
-            required="true"
             style={{ margin: 8, width: "98%" }}
             margin="normal"
             onChange={e=>{setNotes(e.target.value); delete error.notes}}

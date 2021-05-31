@@ -50,7 +50,7 @@ class LogAktivitasViewSet(viewsets.ModelViewSet):
     search_fields = ['user__username']
 
     def get_queryset(self):
-        if not self.request.user.has_role('Admin', 'Manager'):
+        if not self.request.user.has_role('Admin', 'Manager', 'Administrasi'):
             return LogAktivitas.objects.filter(user=self.request.user).order_by('-tanggal')
         return super().get_queryset()
         
@@ -60,7 +60,6 @@ class LogAktivitasViewSet(viewsets.ModelViewSet):
         return super().get_serializer_class()
 
     def create(self, request, *args, **kwargs):
-        print(request.user.id)
         request.data['user'] = request.user.id
         return super().create(request, *args, **kwargs)
 
