@@ -58,12 +58,14 @@ const EvaluasiDiri = ({match, history}) => {
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState({});
 
-  const [tanggal, setTanggal] = React.useState("");
+  
   const [current_performance, setCurrent_Performance] = React.useState("");
   const [to_do, setTo_do] = React.useState("");
   const [parameter, setParameter] = React.useState("");
   const [feedback, setFeedback] = React.useState("");
-  const [createEvaluasi, setCreateLog] = React.useState(false);
+  // const [createEvaluasi, setCreateEvaluasi] = React.useState(false);
+  const [update, setUpdate] = React.useState(0);
+
 
 
 
@@ -72,13 +74,12 @@ const EvaluasiDiri = ({match, history}) => {
     const { id } = match.params;
     setLoading(true);
     postEvaluasiDiri({
-      tanggal,
       current_performance,
       to_do,
       parameter,
       feedback,
       hasil_performa : id,
-    }).then(()=>history.push('/hasil-performa/${id}')
+    }).then(()=>history.push(`/hasil-performa/${id}`)
     ).catch(err=>{
       console.error(err.response);
       setError(err.response && err.response.data);
@@ -111,6 +112,8 @@ const EvaluasiDiri = ({match, history}) => {
               style={{ margin: 8, width: "98%" }}
               margin="normal"
               variant="outlined"
+              error={!!error.current_performance}
+              helperText={error.current_performance && error.current_performance[0]}
               disabled={loading}
               />
           </Grid>
@@ -125,7 +128,10 @@ const EvaluasiDiri = ({match, history}) => {
             variant="outlined"
             required="true"
             style={{ margin: 8, width: "98%" }}
+            error={!!error.to_do}
             margin="normal"
+            error={!!error.to_do}
+            helperText={error.to_do && error.to_do[0]}
             disabled={loading}
             />
             
@@ -142,6 +148,8 @@ const EvaluasiDiri = ({match, history}) => {
             required="true"
             style={{ margin: 8, width: "98%" }}
             margin="normal"
+            error={!!error.parameter}
+            helperText={error.parameter && error.parameter[0]}
             disabled={loading}
             />
             
@@ -160,14 +168,15 @@ const EvaluasiDiri = ({match, history}) => {
         </div>
 
         </Container>
-        <Loading open={loading} />
-      <DialogFail
-        open={!!error.detail} 
-        handleClose={()=>{
-          setError({})
-        }} 
-        text={error.detail}
-        />
+        {/* <Dialog open={!!createEvaluasi} handleClose={()=>setCreateEvaluasi(false)} ></Dialog> */}
+        <DialogFail
+          open={!!error.detail} 
+          handleClose={()=>{
+            delete error.detail;
+            setUpdate(update+1);
+          }} 
+          text={error.detail}
+          />
       </div>
     )
 };

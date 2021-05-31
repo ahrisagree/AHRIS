@@ -20,6 +20,7 @@ import { getDetailHasilPerforma} from 'api/hasilperforma';
 import CircularProgress from 'components/Loading/CircularProgress';
 import TemplateButton from 'components/TemplateButton';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutlineRounded';
+import DeleteConfirmationDialog from 'components/DialogConf';
 import CreateIcon from '@material-ui/icons/CreateRounded';
 
 
@@ -35,7 +36,7 @@ const HasilPerforma = ({match, history, user}) => {
   const [fail, setFail] = useState(null); 
   
   const [assignment, setAssignment] = useState(null);
-  const [paketPertanyaan, setPaketPertanyaan] = useState(null);
+  const [deleteEvaluasiDiri, setDeleteEvaluasiDiri] = useState(null);
   
   const { id } = match.params;
   useEffect(()=>{
@@ -53,13 +54,18 @@ const HasilPerforma = ({match, history, user}) => {
   
   }, []);
 
+  // const handleDeleteEvaluasiDiri = () => {
+  //   setLoading(true);
+  //   deleteEvaluasiDiriAPI(deleteEvaluasiDiri.id).then(()=>{
+  //    setDeleteEvaluasiDiri(null);
+  //    setUpdate(update+1);
+  //   }).catch(err=>{
+  //     // Handle ERROR
+  //     }).finally(()=>{
+  //       setLoading(false);
+  //     });
+  //   }
 
-
-  // const handleChange = (indexAspek, indexPertanyaan, jawaban) => {
-  //   const newPaket =  {...paketPertanyaan};
-  //   newPaket.list_aspek[indexAspek].list_pertanyaan[indexPertanyaan].jawaban = jawaban;
-  //   setPaketPertanyaan(newPaket);
-  // }
 
   return (
     <div className={classes.root1}>
@@ -68,7 +74,7 @@ const HasilPerforma = ({match, history, user}) => {
         <Grid item xs={12} container>
           <Grid item alignContent="flex-start">
             {/* <div className="m-12"> */}
-            <MainTitle title={`Hasil Performa`} className={classes.title} />
+            <MainTitle title={`${assignment?.nama} | ${assignment?.periode} `} className={classes.title} />
             {/* </div> */}
           </Grid>
         </Grid>
@@ -105,18 +111,24 @@ const HasilPerforma = ({match, history, user}) => {
                             {aspek.deskripsi}
                           </Grid>
                           <Grid item xs={12} md={4} container justify="center">
-                                
-                            <div className={classes.root}>
+                          {aspek.skor === 0 ?
+                          (<div className={classes.root}>
+                           </div>)
+                           :
+                            ( <div className={classes.root}>
                               <Rating name="half-rating-read" value={aspek.skor} precision={0.5} readOnly />
-                             </div>
-                                
+                             </div> )
+                             }                               
                          
-                            </Grid>
+                          </Grid>
                           </Grid>
                         </StyledTableCell>
-                        <StyledTableCell align="left">
+                        {aspek.skor === 0 ?
+                        (<StyledTableCell align="left">
+                        </StyledTableCell>)
+                        : (<StyledTableCell align="left">
                         {aspek.skor}
-                        </StyledTableCell>
+                        </StyledTableCell>)}
                       </TableRow>
                 </TableBody>
               </>
@@ -161,16 +173,6 @@ const HasilPerforma = ({match, history, user}) => {
                             }
 
                              </div>
-                                {/* <TextField
-                                  required
-                                  // value={pertanyaan.jawaban}
-                                  // onChange={e=>handleChange(indexAspek, indexPertanyaan, e.target.value)}
-                                  label="Jawaban"
-                                  margin="normal"
-                                  fullWidth
-                                  multiline
-                            
-                                > Test </TextField> */}
                          
                             </Grid>
                           </Grid>
@@ -183,7 +185,7 @@ const HasilPerforma = ({match, history, user}) => {
           </MuiTable>
         </TableContainer>
     
-        <br></br>
+      
         <br></br>              
         <Grid container spacing={2} direction="column">
         <Grid item xs={12} container>
@@ -230,9 +232,11 @@ const HasilPerforma = ({match, history, user}) => {
 
                     <StyledTableCell align="left">
                     <Grid item sm={10}>
-                      <Tooltip title="Edit">
-                        <IconButton size="small" onClick={()=>history.push(`/akun/`)}>
-                          <CreateIcon style={{ color: "green"}}/>
+                    <Tooltip title="Delete">
+                        <IconButton size="small" 
+                        // onClick={handleDeleteEvaluasiDiri}
+                        >
+                          <DeleteOutlineIcon style={{ color: "red"}}/>
                         </IconButton>
                       </Tooltip>
                     </Grid>
@@ -252,6 +256,11 @@ const HasilPerforma = ({match, history, user}) => {
         </div>
 
       </Grid>
+      {/* <DeleteConfirmationDialog 
+          open={!!deleteEvaluasiDiri}
+          handleCancel={()=>setDeletEvaluasiDiri(null)}
+          handleConfirm={handleDeleteKaryawan}
+        /> */}
     </div>
   );
 };
