@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import Pagination from "@material-ui/lab/Pagination";
-import Button  from "components/TemplateButton";
 import TemplateButton  from "components/TemplateButton";
 import {
   makeStyles,
@@ -14,7 +13,7 @@ import {
   Container,
   MenuItem
 } from '@material-ui/core';
-import { buatPresensiAPI, getListPresensiKaryawan, getListPresensi } from 'api/log';
+import { buatPresensiAPI, getListPresensiKaryawan } from 'api/log';
 import { getDivisiAPI } from 'api/akun';
 import { PAGE_SIZE } from 'utils/constant';
 import { StyledTableCell, StyledTableRow } from "components/Table";
@@ -232,7 +231,6 @@ const Home = ({history}) => {
 
       <Grid item xs={12}>
         <TextField id="outlined-full-width"
-          required="false"
           label="Keterangan"
           style={{ margin: 10, width: "100%" }}
           margin="normal"

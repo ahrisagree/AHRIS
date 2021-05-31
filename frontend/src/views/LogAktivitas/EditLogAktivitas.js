@@ -83,11 +83,6 @@ const EditLogAktivitas = (props) => {
   const [notes, setNotes] = React.useState("");
 
 
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-  };
-
-
   useEffect(() => {
     setLoading(true);
     const id = props.match.params.id;

@@ -95,6 +95,7 @@ const DetailLogAktivitas = (props) => {
   const {user} = props;
   const [role] = React.useState(user.role);
   const [deleteConfirm, setDeleteConfirm] = useState(false);
+
  
   const { id } = props.match.params;
 
@@ -115,7 +116,7 @@ const DetailLogAktivitas = (props) => {
       setNotes(data.notes);
       setAlasanLembur(data.alasan_lembur);
       setKomentar(data.komentar);
-      setStatusLog(data.status_log);
+      setStatusLog(STATUS_LOG[data.status_log]);
     }).catch(err => {
       // HANDLE ERROR
     }).finally(() => {
@@ -347,7 +348,7 @@ const DetailLogAktivitas = (props) => {
               style={{ margin: 8, width: "30%" }}
               margin="normal"
               className={classes.textField}
-              value={STATUS_LOG[statusLog]}
+              value={statusLog}
               disabled={true}
               isDetail
               />
