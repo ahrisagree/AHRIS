@@ -62,7 +62,7 @@ class LogAktivitasFilter(FilterSet):
   periode = PeriodeFilter(field_name='tanggal')
   status = filters.NumberFilter(field_name='status_log')
   is_lembur = filters.BooleanFilter(field_name='is_lembur')
-  penyetuju = filters.NumberFilter(field_name='manajer_penyetuju__username', lookup_expr='icontains')
+  penyetuju = filters.CharFilter(field_name='manajer_penyetuju__username', lookup_expr='icontains')
   penyetuju_id = filters.NumberFilter(field_name='manajer_penyetuju__pk')
   date = filters.DateFromToRangeFilter(field_name='tanggal')
   divisi = CharMultipleFilter(

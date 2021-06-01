@@ -70,6 +70,7 @@ const DaftarPemberi = ({classes, history, match, selectJawaban, yangBelum}) => {
             type="month"
             bordered={true}
             value={periode}
+            disabled
             onChange={e=>handleFilterPeriode(e.target.value)}
             />
         </div>

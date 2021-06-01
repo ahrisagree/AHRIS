@@ -34,7 +34,7 @@ class HasilPerformaViewSet(viewsets.ModelViewSet):
 
 
 class EvaluasiDiriViewSet(viewsets.ModelViewSet):
-  permission_classes = (IsAuthenticated, DefaultRolePermission, ManagerOnlyEditPermission, IsOwner)
+  permission_classes = (IsAuthenticated, DefaultRolePermission, ManagerOnlyEditPermission, EvaluasiDiriDeletePermission)
   http_methods = ('post', 'patch', 'delete')
   queryset = EvaluasiDiri.objects.all().order_by('-tanggal')
   serializer_class = EvaluasiDiriSerializer
