@@ -31,7 +31,7 @@ export const TEST_NAVIGATION = [
       },
       {
         menu: 'My Presensi',
-        path: '/log/daftar-presensi',
+        path: '/my-presensi',
       }
     ]
   },
