@@ -9,7 +9,7 @@ function convertToCSV(objArray) {
       for (var index in array[i]) {
           if (line !== '') line += ','
 
-          line += array[i][index];
+          line += array[i][index].split(',').join("");
       }
 
       str += line + '\r\n';
@@ -50,8 +50,16 @@ function exportCSVFile(header ,listData, fileTitle) {
 
 export function exportGaji(data, fileName) {
   const header = {
-
+    nama: "Nama",
+    gaji: "Gaji",
+    periode: "Periode"
   }
+  const listData = data.map(row => ({
+    nama: row.user.username,
+    gaji: row.nominal,
+    periode: row.periode,
+  }));
+  exportCSVFile(header, listData, fileName)
 }
 
 export function exportLog(data, fileName) {
