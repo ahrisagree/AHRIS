@@ -126,6 +126,7 @@ const DaftarKaryawan = ({history}) => {
         <Grid item xs={12} container>
 
         <Grid item xs={2} alignContent="">
+        <div style={{position: 'relative', padding: 2}}>
                 <TextField
                     label="Search"
                     fullWidth
@@ -138,6 +139,7 @@ const DaftarKaryawan = ({history}) => {
                     size="small"
                     hintText="Search by Name"
                   />
+                  </div>
         </Grid>
           <Grid item xs={2} alignContent="">
           <div style={{position: 'relative', padding: 2}}>
