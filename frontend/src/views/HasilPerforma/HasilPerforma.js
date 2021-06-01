@@ -23,6 +23,8 @@ import DeleteOutlineIcon from '@material-ui/icons/DeleteOutlineRounded';
 import DeleteConfirmationDialog from 'components/DialogConf';
 import CreateIcon from '@material-ui/icons/CreateRounded';
 import { deleteEvaluasiDiriAPI } from 'api/hasilperforma';
+import FailDialog from 'components/DialogFail';
+
 
 
 const useStyles = makeStyles({})
@@ -54,7 +56,7 @@ const HasilPerforma = ({match, history, user}) => {
     })
 
   
-  }, []);
+  }, [update]);
 
   const handleDeleteEvaluasiDiri = () => {
     setLoading(true);
@@ -62,7 +64,7 @@ const HasilPerforma = ({match, history, user}) => {
      setDeleteEvaluasiDiri(null);
      setUpdate(update+1);
     }).catch(err=>{
-      // Handle ERROR
+      setFail(err && err.response && err.response.data);
       }).finally(()=>{
         setLoading(false);
       });
@@ -263,6 +265,7 @@ const HasilPerforma = ({match, history, user}) => {
           handleCancel={()=>setDeleteEvaluasiDiri(null)}
           handleConfirm={handleDeleteEvaluasiDiri}
         />
+        <FailDialog open={!!fail} handleClose={()=>setFail(null)} text={fail?.detail} />
     </div>
   );
 };
