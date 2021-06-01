@@ -33,6 +33,7 @@ import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 import { editGaji, getListGaji } from 'api/gaji';
 import { exportGaji } from 'utils/csv';
 import { periodFormated } from 'utils/periodeConverter';
+import { MicNone } from '@material-ui/icons';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -83,6 +84,11 @@ const useStyles = makeStyles((theme) => ({
   },
   topPane: {
     width: "50%",
+    marginRight:'0.5rem',
+    marginTop:'1.4rem'
+  },
+  topPaneFull: {
+    width: "100%",
     marginRight:'0.5rem',
     marginTop:'1.4rem'
   },
@@ -284,7 +290,7 @@ const KelolaGaji = ({history, match}) => {
   console.log(penyesuaian)
     return (
         <div className={classes.splitScreen}>
-        <div className={classes.topPane} style={{width: 'unset'}}>
+        <div className={detail ? classes.topPane : classes.topPaneFull}>
             <MainTitle title="Daftar Gaji" className="mb-8"></MainTitle>
 
             <Grid item xs={10} alignContent="">
@@ -424,7 +430,7 @@ const KelolaGaji = ({history, match}) => {
         </div>
 
         </div>
-        {detail !== null ?
+        {detail !== null &&
 
          
         <div className={classes.bottomPane}>
@@ -607,8 +613,6 @@ const KelolaGaji = ({history, match}) => {
         </TableContainer>
             </Container>
         </div>
-        :
-        <Container></Container>
       }
       <Dialog open={success} handleClose={()=>setSuccess(false)} ></Dialog>
         <DialogFail

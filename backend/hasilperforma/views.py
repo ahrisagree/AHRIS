@@ -52,6 +52,7 @@ class EvaluasiDiriViewSet(viewsets.ModelViewSet):
 
   def destroy(self, request, *args, **kwargs):
     evaluasi_diri = self.get_object()
+    print(evaluasi_diri.feedback)
     if evaluasi_diri.feedback != None:
       raise exceptions.ValidationError({'detail':"Evaluasi diri yang sudah difeedback tidak dapat dihapus"})
     return super().destroy(request, *args, **kwargs)
