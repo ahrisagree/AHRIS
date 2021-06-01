@@ -193,14 +193,21 @@ const DaftarLogKaryawan = (props) => {
 
   const exportCSV = () => {
     const search = params.get("search");
+    const user = params.get("user");
     const status = params.get("status");
     const penyetuju = params.get("penyetuju");
     const date_after = params.get("date_after");
     const date_before = params.get("date_before");
+    // console.log(karyawanOptions.find(x => x.pk === user/1));
+    // console.log(karyawanOptions.find(x => x.pk === user/1)?.username);
+    // console.log(karyawanOptions.find(x => x.pk === user/1)?.username || "List Log");
+    // console.log(karyawanOptions);
+    // console.log(user);
+
     getListLogKaryawan({
-      search, status, penyetuju, date_after, date_before, disablepagination: true 
+      search, user, status, penyetuju, date_after, date_before, disablepagination: true 
     }).then(res=>{
-      exportLog(res.data, "Nama file");
+      exportLog(res.data, karyawanOptions.find(x => x.pk === user/1)?.username || "List Log");
     })
   }
 
@@ -312,8 +319,6 @@ const DaftarLogKaryawan = (props) => {
                 />
           </div>
 
-    
-
 
           <div className="flex items-center">
             {!(params.get("search") === searchFilter &&
@@ -337,7 +342,7 @@ const DaftarLogKaryawan = (props) => {
         <Grid item xs={1} alignContent="flex-end">
             <Tooltip title="Download">
                 <IconButton size="medium">
-                  <CloudDownloadIcon style={{ color: "#0A3142", position:"absolute", right: 0}}/>
+                  <CloudDownloadIcon style={{ color: "#0A3142", position:"absolute", right: 0}} onClick={exportCSV}/>
                 </IconButton>
               </Tooltip>
         </Grid>
