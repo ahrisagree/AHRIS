@@ -14,6 +14,9 @@ import { StyledTableCell, StyledTableRow } from "components/Table";
 import MainTitle from "components/MainTitle";
 import { getListHasilPerforma } from 'api/hasilperforma';
 import CircularProgress from 'components/Loading/CircularProgress';
+import { periodFormated } from 'utils/periodeConverter';
+import CustomTextField from 'components/CustomTextField';
+
 
 
 const useStyles = makeStyles((theme) =>({
@@ -83,23 +86,27 @@ const DaftarEvaluasiPerforma = ({history, match, user}) => {
     const [loading, setLoading] = useState(false);
     const [assignment, setAssignment] = useState(null);
     const [listHasilPerforma, setHasilPerforma] = React.useState([]);
+    const [periodeFilter, setPeriodeFilter] = useState(new Date().toISOString().substr(0,7));
 
   
 
     useEffect(()=>{
       setLoading(true)
       // const { id } = match.params;
-      getListHasilPerforma({}).then(res=>{
+      getListHasilPerforma({
+        periode: periodFormated(periodeFilter)
+      }).then(res=>{
         setAssignment(res.data?.results);
         setHasilPerforma(res.data?.results);
         console.log(res.data?.nama);
+        
       }).catch(err=>{
       // Handle ERROR
       }).finally(()=>{
         setLoading(false);
       })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [periodeFilter]);
    
     return (
 
@@ -115,6 +122,24 @@ const DaftarEvaluasiPerforma = ({history, match, user}) => {
       </Grid>
 
       <Grid item xs={12} container>
+
+      <Grid item xs={12} justify="flex-end" container>
+          <Grid item xs={4} md={3} >
+            <div style={{position: 'relative', padding: 2}}>
+                <CustomTextField
+                label="Periode"
+                variant="outlined"
+                size="small"
+                className={classes.mb}
+                fullWidth
+                type="month"
+                bordered={true}
+                value={periodeFilter}
+                onChange={e=>setPeriodeFilter(e.target.value)}
+                />
+            </div>
+          </Grid>
+        </Grid>
         
         </Grid>
       </Grid>
@@ -157,7 +182,7 @@ const DaftarEvaluasiPerforma = ({history, match, user}) => {
                     {/* {assignment.list_paket_jawaban.find(x=>x.paket_pertanyaan===row.id) ? 
                     "Sudah Diisi": */}
                       <TemplateButton
-                          onClick={()=>history.push(`/evaluasi-performa/${row.id}`)}
+                          onClick={()=>history.push(`/evaluasi-performa/${row.id}/?periode=${periodeFilter}`)}
                           type="button"
                           buttonStyle="btnGreen"
                           buttonSize="btnLong"

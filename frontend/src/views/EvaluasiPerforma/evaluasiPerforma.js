@@ -144,7 +144,7 @@ const EvaluasiPerforma = (props) => {
         <Grid item xs={12} container>
           <Grid item alignContent="flex-start">
             {/* <div className="m-12"> */}
-            <MainTitle title={`Hasil Performa | ${assignment?.user?.username}`} className={classes.title} />
+            <MainTitle title={`Hasil Performa | ${assignment?.user?.username} | ${assignment?.nama} | ${assignment?.periode.substr(0,7)} `} className={classes.title} />
             {/* </div> */}
           </Grid>
         </Grid>
@@ -188,17 +188,6 @@ const EvaluasiPerforma = (props) => {
                               <Rating name="half-rating-read" value={aspek.skor} precision={0.5} readOnly />
                              </div>)
                                 }
-                                {/* /* <TextField
-                                  required
-                                  // value={pertanyaan.jawaban}
-                                  // onChange={e=>handleChange(indexAspek, indexPertanyaan, e.target.value)}
-                                  label="Jawaban"
-                                  margin="normal"
-                                  fullWidth
-                                  multiline
-                            
-                                > Test </TextField> */}
-          
                             </Grid>
                           </Grid>
                         </StyledTableCell>

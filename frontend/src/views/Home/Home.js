@@ -178,8 +178,8 @@ const Home = ({history}) => {
 
   }
 
-
-    return (
+  return (
+        
     <div className={classes.root1}>
 
       <MainTitle title="Isi Presensi" className="mb-8" />
@@ -258,6 +258,8 @@ const Home = ({history}) => {
 
       </Grid>
       </Container>
+      <br></br>
+      <br></br>
       
 
 
@@ -397,4 +399,4 @@ const Home = ({history}) => {
   );
 }
 
-export default Home;  
+export default Home;

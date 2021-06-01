@@ -25,7 +25,6 @@ import {
 import Loading from 'components/Loading';
 import { EditRounded } from '@material-ui/icons';
 import { Link } from 'react-router-dom';
-import {Link} from 'react-router-dom';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutlineRounded';
 import DeleteConfirmationDialog from 'components/DialogConf';
 

@@ -21,13 +21,13 @@ import { Accordion, AccordionDetails, AccordionSummary } from '@material-ui/core
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import TemplateButton from 'components/TemplateButton';
 import {
-  // ADMINISTRASI_NAVIGATION,
-  // ADMIN_NAVIGATION,
-  // KARYAWAN_NAVIGATION,
-  // MANAGER_NAVIGATION,
-  TEST_NAVIGATION 
+  ADMINISTRASI_NAVIGATION,
+  ADMIN_NAVIGATION,
+  KARYAWAN_NAVIGATION,
+  MANAGER_NAVIGATION,
+  // TEST_NAVIGATION 
 } from 'utils/navigation';
-// import { ROLE } from 'utils/constant';
+import { ROLE } from 'utils/constant';
 
 
 const drawerWidth = 240;
@@ -234,24 +234,24 @@ const NavigationDrawer = ({children, history, location, user, logoutThunk}) => {
   const {pathname} = location;
 
   // gini dulu nanti dipisahin ke constant
-  let navigationMenu = TEST_NAVIGATION
+  let navigationMenu = []
 
-  // switch (user.role) {
-  //   case ROLE.admin:
-  //     navigationMenu = ADMIN_NAVIGATION
-  //     break;
-  //   case ROLE.karyawan:
-  //     navigationMenu = KARYAWAN_NAVIGATION
-  //     break;
-  //   case ROLE.manager:
-  //     navigationMenu = MANAGER_NAVIGATION
-  //     break;
-  //   case ROLE.administrasi:
-  //     navigationMenu = ADMINISTRASI_NAVIGATION
-  //     break;
-  //   default:
-  //     break;
-  // }
+  switch (user?.role) {
+    case ROLE.admin:
+      navigationMenu = ADMIN_NAVIGATION
+      break;
+    case ROLE.karyawan:
+      navigationMenu = KARYAWAN_NAVIGATION
+      break;
+    case ROLE.manager:
+      navigationMenu = MANAGER_NAVIGATION
+      break;
+    case ROLE.administrasi:
+      navigationMenu = ADMINISTRASI_NAVIGATION
+      break;
+    default:
+      break;
+  }
 
   const handleAccordion = panel => (_e, isExpanded) => {
     setAccordion(isExpanded ? panel : -1);
