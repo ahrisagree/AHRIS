@@ -6,7 +6,8 @@ import {
   Grid,
   MenuItem,
   Chip,
-  IconButton
+  IconButton,
+  Tooltip
 } from '@material-ui/core';
 import TextField from 'components/CustomTextField';
 import Dialog from 'components/Dialog';
@@ -14,10 +15,12 @@ import DialogFail from 'components/DialogFail';
 import MainTitle from 'components/MainTitle';
 import TemplateButton from 'components/TemplateButton';
 import { ROLES } from 'utils/constant';
-import { getDivisiAPI, editUser, getKaryawan } from 'api/akun';
+import { getDivisiAPI, editUser, getKaryawan, deleteKaryawanAPI } from 'api/akun';
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
 import Loading from 'components/Loading';
 import { EditRounded } from '@material-ui/icons';
+import DeleteOutlineIcon from '@material-ui/icons/DeleteOutlineRounded';
+import DeleteConfirmationDialog from 'components/DialogConf';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -67,6 +70,7 @@ const filter = createFilterOptions();
 
 const DetailEditUser = (props) => {
   const classes = useStyles();
+  const { path } = props.match
 
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState({});
@@ -77,7 +81,10 @@ const DetailEditUser = (props) => {
   const [divisi, setDivisi] = React.useState([]);
   const [gaji, setGaji] = React.useState("");
   const [opsiDivisi, setOpsiDivisi] = React.useState([]);
-  const [editMode, setEditMode] = React.useState(false);
+  const [editMode, setEditMode] = React.useState(path.substr(-4) === "edit");
+  const [deleteKaryawan, setDeleteKaryawan] = React.useState(null);
+  const [update, setUpdate] = React.useState(0);
+  const [fullLoading, setFullLoading] = React.useState(false);
 
   
   useEffect(()=>{
@@ -109,6 +116,19 @@ const DetailEditUser = (props) => {
     setEditMode(false)
   }
 
+  const handleDeleteKaryawan = () => {
+    setFullLoading(true);
+    const { idUser } = props.match.params;
+    deleteKaryawanAPI(idUser).then(()=>{
+     setDeleteKaryawan(null);
+     setUpdate(update+1);
+    }).catch(err=>{
+      // Handle ERROR
+      }).finally(()=>{
+        setFullLoading(false);
+      });
+    }
+
   const onSubmit = () => {
     const { idUser } = props.match.params;
     setLoading(true)
@@ -134,11 +154,22 @@ const DetailEditUser = (props) => {
           <h4 style={{fontFamily: "IBM Plex Sans", fontSize: "24px", fontWeight:600}}>Buat Akun</h4>
           <div style={{width:414, height: 12, backgroundColor:"#FFB800", borderRadius: 4}}></div>
       </div> */}
+      <Grid item xs={12}>
       {!editMode && 
+      <Tooltip title="Edit">
         <IconButton onClick={()=>setEditMode(true)} style={{float: 'right'}}>
           <EditRounded />
         </IconButton>
+      </Tooltip>
+        
       }
+      <Tooltip title="Delete">
+        <IconButton size="small" style={{float: 'right', marginTop:'1%'}} onClick={()=>setDeleteKaryawan(true)}>
+          <DeleteOutlineIcon />
+        </IconButton>
+      </Tooltip>
+      </Grid>
+      
       <MainTitle title={editMode ? "Edit Akun" : "Detail Akun"} className="mb-8" />
       <Container component={Paper} className={classes.paper}>
         <Grid item xs={12}>
@@ -304,6 +335,12 @@ const DetailEditUser = (props) => {
         }} 
         text={error.detail}
         />
+        <DeleteConfirmationDialog 
+          open={!!deleteKaryawan}
+          handleCancel={()=>setDeleteKaryawan(null)}
+          handleConfirm={handleDeleteKaryawan}
+        />
+        <Loading open={fullLoading} />
 
     </div>
   )

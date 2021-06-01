@@ -13,7 +13,7 @@ class PresensiViewSet(viewsets.ModelViewSet):
     queryset = Presensi.objects.all().order_by('-id')
     serializer_class = PresensiSerializer
     filter_class = PresensiFilter
-    filterset_fields = ['tanggal', 'user', 'periode']
+    filterset_fields = ['tanggal', 'user', 'periode', 'date', 'divisi']
     search_fields = ['user__username']
 
     def get_serializer_class(self):
@@ -37,11 +37,20 @@ class LogAktivitasViewSet(viewsets.ModelViewSet):
     queryset = LogAktivitas.objects.all().order_by('-tanggal')
     serializer_class = LogAktivitasSerializer
     filter_class = LogAktivitasFilter
-    filterset_fields = ['tanggal', 'user', 'periode', 'status', 'is_lembur']
+    filterset_fields = [
+        'tanggal',
+        'user',
+        'periode',
+        'status',
+        'is_lembur',
+        'penyetuju',
+        'date',
+        'divisi'
+        ]
     search_fields = ['user__username']
 
     def get_queryset(self):
-        if not self.request.user.has_role('Admin', 'Manager'):
+        if not self.request.user.has_role('Admin', 'Manager', 'Administrasi'):
             return LogAktivitas.objects.filter(user=self.request.user).order_by('-tanggal')
         return super().get_queryset()
         
@@ -51,7 +60,6 @@ class LogAktivitasViewSet(viewsets.ModelViewSet):
         return super().get_serializer_class()
 
     def create(self, request, *args, **kwargs):
-        print(request.user.id)
         request.data['user'] = request.user.id
         return super().create(request, *args, **kwargs)
 
@@ -69,6 +77,11 @@ class LogAktivitasViewSet(viewsets.ModelViewSet):
         if request.data.get('jam_keluar') == None:
             request.data['jam_keluar'] = log.jam_keluar
         return super().update(request, *args, **kwargs)
+
+    def list(self, request, *args, **kwargs):
+        if request.query_params.get('disablepagination') != None:
+            self.pagination_class = None
+        return super().list(request, *args, **kwargs)
 
 
 # from django.shortcuts import render

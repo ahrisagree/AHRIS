@@ -83,11 +83,6 @@ const EditLogAktivitas = (props) => {
   const [notes, setNotes] = React.useState("");
 
 
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-  };
-
-
   useEffect(() => {
     setLoading(true);
     const id = props.match.params.id;
@@ -262,7 +257,6 @@ const EditLogAktivitas = (props) => {
             variant="outlined"
             className={classes.textField}
             value={aktivitas}
-            required="true"
             style={{ margin: 8, width: "98%" }}
             margin="normal"
             onChange={e=>{setAktivitas(e.target.value); delete error.aktivitas}}

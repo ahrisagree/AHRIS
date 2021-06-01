@@ -3,7 +3,8 @@ import {
   IconButton,
   makeStyles, 
   MenuItem, 
-  Paper, 
+  Paper,
+  Tooltip, 
 } from '@material-ui/core';
 import TextField from 'components/CustomTextField';
 import SectionPertanyaan from 'components/PaketPertanyaan/SectionPertanyaan';
@@ -14,6 +15,7 @@ import DialogSuccess from 'components/Dialog';
 import DialogFail from 'components/DialogFail';
 import { JENIS_PAKET, newAspekTemplate } from 'utils/constant';
 import {
+  deletePaketPertanyaanAPI,
   editPaketPertanyaanAPI,
   getKategoriAPI,
   getListPaketPertanyaanAPI,
@@ -22,6 +24,9 @@ import {
 } from 'api/borang';
 import Loading from 'components/Loading';
 import { EditRounded } from '@material-ui/icons';
+import {Link} from 'react-router-dom';
+import DeleteOutlineIcon from '@material-ui/icons/DeleteOutlineRounded';
+import DeleteConfirmationDialog from 'components/DialogConf';
 
 const useStyles = makeStyles((theme) => ({
   smallSelection: {
@@ -43,7 +48,7 @@ const initialState = {
   data: {list_aspek: [newAspekTemplate]} // data nya isi list aspek nanti pas post baru gabungin
 }
 
-const BuatPaketPertanyaan = ({paket, isEdit, isDetail, setEditMode}) => {
+const BuatPaketPertanyaan = ({paket, isEdit, isDetail, setEditMode, history}) => {
   const classes = useStyles()
 
   const [nama, setNama] = useState(paket?.nama || initialState.nama)
@@ -57,6 +62,7 @@ const BuatPaketPertanyaan = ({paket, isEdit, isDetail, setEditMode}) => {
   const [update, setUpdate] = useState(0);
   const [kategoriOption, setKategoriOption] = useState([]);
   const [templateOption, setTemplateOption] = useState([]);
+  const [deletePaket, setDeletePaket] = useState(false);
 
   const editable = !loading && !isDetail;
   
@@ -133,11 +139,25 @@ const BuatPaketPertanyaan = ({paket, isEdit, isDetail, setEditMode}) => {
 
   const cancelEdit = () => {
     if (paket) {
-      setEditMode(false);
-      setNama(paket.nama);
-      setKategori(paket.kategori);
-      setJenis(paket.jenis);
-      setData({list_aspek: paket.list_aspek})
+      // setEditMode(false);
+      // setNama(paket.nama);
+      // setKategori(paket.kategori);
+      // setJenis(paket.jenis);
+      // setData({list_aspek: paket.list_aspek})
+      history.push(`/paket-pertanyaan/${paket.id}`)
+    }
+  }
+
+  const handleDeletePaket = () => {
+    if (paket) {
+      setLoading(true);
+      deletePaketPertanyaanAPI(paket.id).then(()=>{
+        history.push(`/paket-pertanyaan`)
+      }).catch(err=>{
+        setError((err?.response && err.response.data) || {});
+      }).finally(()=>
+        setLoading(false)
+      )
     }
   }
 
@@ -198,9 +218,22 @@ const BuatPaketPertanyaan = ({paket, isEdit, isDetail, setEditMode}) => {
   return (
     <div style={{maxWidth: '55rem', margin: 'auto'}}>
       {isDetail && 
-        <IconButton onClick={() => setEditMode && setEditMode(true)} style={{float: 'right'}}>
-          <EditRounded />
-        </IconButton>
+        <div>
+          {!isEdit && 
+            <Tooltip title="Edit" style={{float: 'right'}}>
+              <Link to={`/paket-pertanyaan/${paket.id}/edit`}>
+                <IconButton onClick={() => setEditMode && setEditMode(true)}>
+                  <EditRounded />
+                </IconButton>
+              </Link>
+            </Tooltip>
+          }
+          <Tooltip title="Delete">
+            <IconButton size="small" style={{float: 'right', marginTop:'1%'}} onClick={()=>setDeletePaket(true)}>
+              <DeleteOutlineIcon />
+            </IconButton>
+          </Tooltip>
+        </div>
       }
       <MainTitle 
         title={isDetail ? "Detail Paket Pertanyaan" : (
@@ -337,6 +370,11 @@ const BuatPaketPertanyaan = ({paket, isEdit, isDetail, setEditMode}) => {
           setUpdate(update+1);
         }} 
         text={errorState.detail || (errorState.non_field_errors && errorState.non_field_errors[0]) ||"Terdapat field yang yang belum diisi"}
+        />
+        <DeleteConfirmationDialog 
+          open={!!deletePaket}
+          handleCancel={()=>setDeletePaket(null)}
+          handleConfirm={handleDeletePaket}
         />
     </div>
   );

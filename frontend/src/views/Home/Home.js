@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import Pagination from "@material-ui/lab/Pagination";
-import Button  from "components/TemplateButton";
 import TemplateButton  from "components/TemplateButton";
 import {
   makeStyles,
@@ -12,8 +11,10 @@ import {
   Paper,
   Grid,
   Container,
+  MenuItem
 } from '@material-ui/core';
-import { buatPresensiAPI, getListPresensiKaryawan, getListPresensi } from 'api/log';
+import { buatPresensiAPI, getListPresensiKaryawan } from 'api/log';
+import { getDivisiAPI } from 'api/akun';
 import { PAGE_SIZE } from 'utils/constant';
 import { StyledTableCell, StyledTableRow } from "components/Table";
 import MainTitle from "components/MainTitle";
@@ -22,7 +23,9 @@ import Loading from 'components/Loading';
 import TextField from 'components/CustomTextField';
 import Dialog from 'components/Dialog';
 import DialogFail from 'components/DialogFail';
+import { setQueryParams } from 'utils/setQueryParams';
 import Moment from 'moment';
+import CustomTextField from 'components/CustomTextField';
 
 const useStyles = makeStyles((theme) =>({
   root: {
@@ -80,7 +83,7 @@ const useStyles = makeStyles((theme) =>({
   }
 }));
 
-const Home = (props) => {
+const Home = ({history}) => {
   
   const classes = useStyles();
   const [loading, setLoading] = useState(false);
@@ -96,16 +99,26 @@ const Home = (props) => {
   const [jamMasuk, setJamMasuk] = useState(new_time.toString());
   const [keterangan, setKeterangan] = useState("");
   const [createPresensi, setCreatePresensi] = React.useState(false);
+  
+  const [divisiOptions, setDivisiOptions] = useState([]);
+ 
+  const params = new URLSearchParams(history.location.search);
+
+  const [searchFilter, setFilterSearch] = useState(params.get("search"));
+  const [divisiFilter, setFilterDivisi] = useState(params.get("divisi"));
+  const [tanggalFilter, setFilterTanggal] = useState();
 
   const [error, setError] = React.useState({});
 
-  const history = props.match.params.history;
 
   useEffect(()=>{
     setLoading(true)
+    const search = params.get("search");
+    const divisi = params.get("divisi");
+    const tanggal = params.get("tanggal");
     
     getListPresensiKaryawan({  
-      page
+      page, search, divisi, tanggal
     }).then(res=>{
       setListItem(res.data?.results);
       setCount(Math.ceil(res.data?.count/PAGE_SIZE));
@@ -117,6 +130,33 @@ const Home = (props) => {
     
 
   }, [page, update]);
+
+  useEffect(()=>{
+    getDivisiAPI().then(res=>{
+      setDivisiOptions(res.data);
+    }).catch(err=>{
+      console.error(err.response);
+    })
+  }, [])
+
+  const doQuery = () => {
+    setQueryParams({
+      search: searchFilter || "",
+      divisi: divisiFilter || "",
+      tanggal: tanggalFilter || ""
+    }, history);
+    setPage(1);
+    setUpdate(update+1);
+  }
+
+  const resetQuery = () => {
+    setQueryParams({}, history);
+    setPage(1);
+    setUpdate(update+1);
+    setFilterSearch(null);
+    setFilterDivisi(null);
+    setFilterTanggal(null);
+  }
 
   const onSubmit = () => {
     buatPresensiAPI(
@@ -162,7 +202,7 @@ const Home = (props) => {
           onChange={e=>{setTanggal(e.target.value); delete error.tanggal}}
           error={!!error.tanggal}
           helperText={error.tanggal && error.tanggal[0]}
-          disabled={false}
+          disabled={true}
           />
       </Grid>
 
@@ -182,10 +222,10 @@ const Home = (props) => {
             step: 300, 
           }}
           value={jamMasuk}
-          onChange={e=>{setJamMasuk(e.target.value); delete error.jamMasuk}}
-          error={!!error.jamMasuk}
-          helperText={error.jamMasuk && error.jamMasuk[0]}
-          disabled={loading}
+          onChange={e=>{setJamMasuk(e.target.value); delete error.jam_masuk}}
+          error={!!error.jam_masuk}
+          helperText={error.jam_masuk && error.jam_masuk[0]}
+          disabled={true}
         />
       </Grid>
 
@@ -227,6 +267,68 @@ const Home = (props) => {
           </Grid>
           <Grid item xs={8}/>
       </Grid>
+
+      <div className="flex w-full flex-wrap p-2">
+          <div className="w-full md:w-1/3 my-2 md:mr-2">
+
+            <CustomTextField
+              label="Search"
+              variant="outlined"
+              size="small"
+              fullWidth
+              bordered={true}
+              value={searchFilter}
+              onChange={e=>setFilterSearch(e.target.value)}
+              />
+            
+          </div>
+
+          <div className="w-full md:w-1/3 my-2 md:mr-2">
+              <TextField
+                label="Divisi"
+                variant="outlined"
+                size="small"
+                className={classes.mb}
+                fullWidth
+                value={divisiFilter}
+                onChange={e=>setFilterDivisi(e.target.value)}
+                select
+                bordered={true}
+              >
+                {divisiOptions.map(d=>(
+                  <MenuItem value={d.nama_divisi}>{d.nama_divisi}</MenuItem>
+                ))}
+              </TextField>
+          </div>
+
+          <div className="w-full md:w-1/3 my-2 md:mr-2">
+              <CustomTextField
+                variant="outlined"
+                id="date"
+                label="Tanggal"
+                type="date"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                value={tanggalFilter}
+                onChange={e=>{setFilterTanggal(e.target.value)}}
+                disabled={loading}
+                />
+          </div>
+          
+          <div className="flex items-center">
+            {!(params.get("search") === searchFilter &&
+              params.get("divisi") === divisiFilter && 
+              params.get("tanggal") === tanggalFilter) &&
+              <button onClick={doQuery} className="m-1">Apply</button>  
+            }
+            {(params.get("search") ||
+             params.get("divisi") || 
+             params.get("tanggal")) &&
+            <button onClick={resetQuery} className="m-1">Reset</button>  
+            }
+          </div>
+        </div>
       
 
       <TableContainer component={Paper}>
@@ -261,8 +363,8 @@ const Home = (props) => {
                     <StyledTableCell component="th" scope="row">
                       {`${i+1}.`}
                     </StyledTableCell>
-                    <StyledTableCell align="left">{row.user === null ? "Tidak ada user" : row.user.username}</StyledTableCell>
-                    <StyledTableCell align="left">{row.user === null ? "Tidak ada user" : row.user.role}</StyledTableCell>
+                    <StyledTableCell align="left">{row.user === null ? "Tidak ada user" : row.user?.username}</StyledTableCell>
+                    <StyledTableCell align="left">{row.user === null ? "Tidak ada user" : row.user?.role}</StyledTableCell>
                     <StyledTableCell align="left">{row.tanggal}</StyledTableCell>
                     <StyledTableCell align="left">{row.jam_masuk.split(".")[0]}</StyledTableCell>
                     <StyledTableCell align="left">{row.keterangan}</StyledTableCell>

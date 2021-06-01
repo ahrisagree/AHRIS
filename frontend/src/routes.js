@@ -4,9 +4,9 @@ import Login from "./views/Login";
 import Profil from "./views/Profil";
 import Coba from "./views/Coba";
 import LogAktivitas from "./views/LogAktivitas/LogAktivitas";
-import DaftarLogKaryawan from "./views/LogAktivitas/DaftarLogKaryawan";
-import DetailLogAktivitas from "./views/LogAktivitas/DetailLogAktivitas";
-import DaftarLog from "./views/LogAktivitas/DaftarLog";
+import DaftarLogKaryawan from "./views/LogAktivitas/DaftarLogKaryawan/";
+import DetailLogAktivitas from "./views/LogAktivitas/DetailLogAktivitas/";
+import DaftarLog from "./views/LogAktivitas/DaftarLog/";
 import MyPresensi from "./views/LogAktivitas/MyPresensi/";
 import Register from "./views/Register";
 import DaftarKaryawan from "views/DaftarKaryawan";
@@ -25,6 +25,7 @@ import Pembobotan from "views/KelolaHasilPerforma/Pembobotan";
 import DaftarHasilPerforma from "views/HasilPerforma/index";
 import HasilPerforma from "views/HasilPerforma/HasilPerforma";
 
+import KelolaGaji from "views/KelolaGaji";
 
 export default [
   {
@@ -68,6 +69,11 @@ export default [
     component: DetailEditPaketPertanyaan,
   },
   {
+    path: '/paket-pertanyaan/:id/edit',
+    exact: true,
+    component: DetailEditPaketPertanyaan,
+  },
+  {
     path: '/akun',
     exact: true,
     component: DaftarKaryawan
@@ -93,7 +99,7 @@ export default [
     component: LogAktivitas
   },
   {
-    path: '/daftar-log/:id',
+    path: '/log',
     exact: true,
     component: DaftarLog
   },
@@ -103,12 +109,12 @@ export default [
     component: DaftarLogKaryawan
   },
   {
-    path: '/detail-log/:id',
+    path: '/log/:id',
     exact: true,
     component: DetailLogAktivitas
   },
   {
-    path: '/edit-log/:id',
+    path: '/log/:id/edit',
     exact: true,
     component: EditLogAktivitas
   },
@@ -123,6 +129,11 @@ export default [
     component: DaftarBorangPerforma,
   },
   {
+    path: '/daftar-karyawan-performa/:id/:id',
+    exact: true,
+    component: DaftarBorangPerforma,
+  },
+  {
     path: '/kelola-performa/:idDinilai/:idPaket',
     exact: true,
     component: Pembobotan
@@ -133,12 +144,7 @@ export default [
     component: DetailEditUser
   },
   {
-    path: '/log/presensi',
-    exact: true,
-    component: Home
-  },
-  {
-    path: '/log/daftar-presensi',
+    path: 'my-presensi',
     exact: true,
     component: MyPresensi
   },
@@ -161,5 +167,15 @@ export default [
     path: '/hasil-performa/:id/add',
     exact: true,
     component: EvaluasiDiri
+  },
+  {
+    path: '/gaji/',
+    exact: true,
+    component: KelolaGaji
+  },
+  {
+    path: '/akun/:idUser/edit',
+    exact: true,
+    component: DetailEditUser
   },
 ]

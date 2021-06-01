@@ -84,10 +84,6 @@ const LogAktivitas = () => {
   const [createLog, setCreateLog] = React.useState(false);
   const [update, setUpdate] = React.useState(0);
 
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-  };
-
 
   const onSubmit = () => {
     setLoading(true)

@@ -23,10 +23,9 @@ import { getDivisiAPI, getListDaftarKaryawan, deleteKaryawanAPI } from 'api/akun
 import { PAGE_SIZE, ROLES } from 'utils/constant';
 import CircularProgress from 'components/Loading/CircularProgress';
 import DeleteConfirmationDialog from 'components/DialogConf';
-import SearchIcon from '@material-ui/icons/Search';
-import _, {debounce} from 'lodash';
 import Loading from 'components/Loading';
 import { setQueryParams } from 'utils/setQueryParams';
+import VisibilityIcon from '@material-ui/icons/Visibility';
 // import { PinDropSharp } from '@material-ui/icons';
 
 
@@ -127,8 +126,6 @@ const DaftarKaryawan = ({history}) => {
         <Grid item xs={12} container>
 
         <Grid item xs={2} alignContent="">
-        <div style={{position: 'relative', display: 'inline-block', padding: 2}}>
-                <SearchIcon style={{position: 'absolute', right: 0, top: 10, width: 25, height: 25}}/>
                 <TextField
                     label="Search"
                     fullWidth
@@ -136,11 +133,11 @@ const DaftarKaryawan = ({history}) => {
                     value={searchFilter}
                     onChange={e=>setFilterSearch(e.target.value)}
                     variant="outlined"
+                    type="search"
                     className={classes.mb}
                     size="small"
                     hintText="Search by Name"
                   />
-          </div>
         </Grid>
           <Grid item xs={2} alignContent="">
           <div style={{position: 'relative', padding: 2}}>
@@ -244,8 +241,13 @@ const DaftarKaryawan = ({history}) => {
                     <StyledTableCell align="left">{row.divisi.map(x=> x.nama_divisi+", ")}</StyledTableCell>
                     <StyledTableCell align="left">
                     <Grid item sm={10}>
-                      <Tooltip title="Edit">
+                    <Tooltip title="View">
                         <IconButton size="small" onClick={()=>history.push(`/akun/${row.pk}`)}>
+                          <VisibilityIcon style={{ color: "#0A3142"}}/>
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Edit">
+                        <IconButton size="small" onClick={()=>history.push(`/akun/${row.pk}/edit`)}>
                           <CreateIcon style={{ color: "green"}}/>
                         </IconButton>
                       </Tooltip>

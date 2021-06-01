@@ -9,26 +9,16 @@ import {
   TableRow,
   Paper,
   Grid,
-  IconButton,
-  Tooltip,
-  TextField,
   MenuItem,
 } from '@material-ui/core';
-import SearchIcon from '@material-ui/icons/Search';
-import _, {debounce} from 'lodash';
-import DeleteOutlineIcon from '@material-ui/icons/DeleteOutlineRounded';
-import CreateIcon from '@material-ui/icons/CreateRounded';
 import { StyledTableCell, StyledTableRow } from "components/Table";
 import MainTitle from "components/MainTitle";
+import TextField from 'components/CustomTextField';
 import Pagination from '@material-ui/lab/Pagination';
 import { getDivisiAPI, getListDaftarKaryawan } from 'api/akun';
-import { getListAssignment } from 'api/borang';
 import { PAGE_SIZE, ROLES } from 'utils/constant';
 import CircularProgress from 'components/Loading/CircularProgress';
-import DeleteConfirmationDialog from 'components/DialogConf';
-import CreateableSelection from 'components/CreateableSelection';
 import { setQueryParams } from 'utils/setQueryParams';
-import DaftarKaryawan from 'views/DaftarKaryawan';
 
 const useStyles = makeStyles((theme) =>({
   root: {
@@ -208,21 +198,19 @@ const useStyles = makeStyles((theme) =>({
 
         <Grid item xs={5}/>
           <Grid item lg={2} alignContent="">
-          <div style={{position: 'relative', display: 'inline-block'}}>
-          <SearchIcon style={{position: 'absolute', right: 0, top: 10, width: 25, height: 25}}/>
-                <TextField
-                    label="Search"
-                    fullWidth
-                    bordered={true}
-                    value={searchFilter}
-                    onChange={e=>setFilterSearch(e.target.value)}
-                    variant="outlined"
-                    className={classes.mb}
-                    size="small"
-                    hintText="Search by Name"
-                    // onChange={_,debounce((event, value) => this.handleSearch(value), 500)}
-                  />
-          </div>
+          <TextField
+              label="Search"
+              type="search"
+              fullWidth
+              bordered={true}
+              value={searchFilter}
+              onChange={e=>setFilterSearch(e.target.value)}
+              variant="outlined"
+              className={classes.mb}
+              size="small"
+              hintText="Search by Name"
+              // onChange={_,debounce((event, value) => this.handleSearch(value), 500)}
+            />
           </Grid>
           <Grid item xs={1}>
           <div style={{position: 'relative', padding: 2}}>
@@ -288,7 +276,7 @@ const useStyles = makeStyles((theme) =>({
                         onClick={()=>history.push(`/kelola-performa/${row.pk}`)}
                         type="button"
                         buttonStyle="btnGreen"
-                        buttonSize="btnLong"
+                        buttonSize="btnMedium"
                     >
                         Lihat Borang
                     </TemplateButton>

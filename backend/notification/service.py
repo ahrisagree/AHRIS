@@ -14,7 +14,7 @@ class NotifService:
   def logApprovedNotif(log):
     Notification.objects.create(
       user = log.user,
-      text = "Log Aktifitas anda telah disetujui",
+      text = "Log Aktivitas anda telah disetujui",
       link = base_link['log'].format(log.id)
     )
 
@@ -22,7 +22,7 @@ class NotifService:
   def logRejectedNotif(log):
     Notification.objects.create(
       user = log.user,
-      text = "Log Aktifitas anda telah ditolak",
+      text = "Log Aktivitas anda telah ditolak",
       link = base_link['log'].format(log.id)
     )
 
@@ -30,6 +30,6 @@ class NotifService:
   def newAssignmentNotif(log):
     Notification.objects.create(
       user = log.user,
-      text = "Log Aktifitas anda telah disetujui",
+      text = "Log Aktivitas anda telah disetujui",
       link = base_link['log'].format(log.id)
     )

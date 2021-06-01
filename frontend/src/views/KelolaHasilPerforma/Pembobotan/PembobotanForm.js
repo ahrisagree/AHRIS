@@ -13,8 +13,9 @@ import { getSumScoringAPI, postHasilPerformaAPI } from 'api/hasilperforma';
 import DialogSuccess from 'components/Dialog';
 import DialogFail from 'components/DialogFail';
 import Loading from 'components/Loading';
+import { periodFormated } from 'utils/periodeConverter';
 
-const PembobotanForm = ({classes, match, history}) => {
+const PembobotanForm = ({classes, match, history, setYangBelum, yangBelum}) => {
   const [loading, setLoading] = useState(false);
   const [fullLoading, setFullLoading] = useState(false);
   const [errorState, setErrorState] = useState(null);
@@ -27,28 +28,36 @@ const PembobotanForm = ({classes, match, history}) => {
   const [hasilExist, setHasilPerformaExist] = useState(false);
   // const [kumulatif, setKumulatif] = useState(0);
   const params = new URLSearchParams(history.location.search);
-  const periode = params.get("periode") || new Date().toISOString().substr(0,10)
+  const periode = params.get("periode") || new Date().toISOString().substr(0,7)
 
   const {idPaket, idDinilai} = match.params;
 
   useEffect(()=>{
     setLoading(true);
-    getSumScoringAPI(idDinilai, idPaket, periode).then(res=>{
+    setListAspek(null);
+    setSkorKumulatif(0);
+    setCatatan("");
+    setHasilPerformaExist(false);
+    getSumScoringAPI(idDinilai, idPaket, periodFormated(periode)).then(res=>{
       setNamaPaket(res.data?.nama);
       setListAspek(res.data?.list_aspek.map(asp=>({...asp, deskripsi: ""})))
-      setSkorKumulatif(res.data?.list_aspek.reduce((x,y)=>x.skor*x.bobot+y.skor*y.bobot)/100)
+      if (res.data?.list_aspek?.length > 0) 
+        setSkorKumulatif(res.data.list_aspek.reduce((x,y)=>x.skor*x.bobot+y.skor*y.bobot)/100)
       setHasilPerformaExist(res.data?.hasil_performa_exist)
+      setYangBelum(res.data?.list_not_answered || []);
     }).catch(err=>{
+      console.log(err)
       setNamaPaket("");
       setListAspek(null)
       setSkorKumulatif(0)
       setHasilPerformaExist(false)
+      setYangBelum([]);
     }).finally(()=>{
       setLoading(false);
     })
     
-  }, [idDinilai, idPaket, periode]);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [idDinilai, idPaket, periode, setYangBelum]);
 
   const submitHasilPerforma = () => {
     const data = {
@@ -57,7 +66,7 @@ const PembobotanForm = ({classes, match, history}) => {
       skor: skorKumulatif,
       user: idDinilai/1,
       paket: idPaket/1,
-      periode,
+      periode: periodFormated(periode),
       list_aspek: list_aspek
     }
     console.log(data)
@@ -156,7 +165,7 @@ const PembobotanForm = ({classes, match, history}) => {
         </Grid>
         </>
       ))}
-      {list_aspek && list_aspek !== [] && (
+      {list_aspek && (list_aspek?.length > 0 ? (
         <>
         <Grid item xs={12}>
           <Typography style={{ fontWeight: 600, marginLeft: '1%', marginBottom: '3%', fontFamily: 'IBM Plex Sans', fontStyle: 'normal', 
@@ -194,19 +203,27 @@ const PembobotanForm = ({classes, match, history}) => {
     
           <div className="flex justify-center py-6">
             {!hasilExist ? 
-              <TemplateButton
-              type="button"
-              buttonStyle="btnBlue"
-              buttonSize="btnLong"
-              disabled={loading}
-              onClick={submitHasilPerforma}
-              >
-                  Simpan
-              </TemplateButton>
-            : <h6>Sudah Ada Hasil Performa</h6>  
+              <>
+                {yangBelum && yangBelum.length !== 0 &&  
+                  <h6 className="text-yellow-500 mb-2">
+                    Masih ada {yangBelum.length} penilai yang belum mengisi penilaian
+                  </h6>
+                }
+                <TemplateButton
+                type="button"
+                buttonStyle="btnBlue"
+                buttonSize="btnLong"
+                disabled={loading}
+                onClick={submitHasilPerforma}
+                >
+                    Simpan
+                </TemplateButton>
+              </>
+            : <h6>Hasil Performa Telah Dibuat</h6>  
           }
           </div>
         </>
+      ) : <h6>Belum Ada Penilai yang menjawab</h6>
       )}
       <Loading open={fullLoading} />
       <DialogSuccess open={success} handleClose={()=>handleSuccess()} />

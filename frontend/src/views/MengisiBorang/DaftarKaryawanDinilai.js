@@ -18,6 +18,8 @@ import { PAGE_SIZE } from 'utils/constant';
 import CircularProgress from 'components/Loading/CircularProgress';
 // import { setQueryParams } from 'utils/setQueryParams';
 import TextField from 'components/CustomTextField';
+import { periodFormated } from 'utils/periodeConverter';
+import Status from 'components/Status';
 
 
 
@@ -93,7 +95,7 @@ const DaftarKaryawanDinilai = ({history}) => {
     // const params = new URLSearchParams(history.location.search);
     // const [roleFilter, setFilterRole] = useState(params.get("role"));
     // const [searchFilter, setFilterSearch] = useState(params.get("search"));
-    const [periodeFilter, setPeriodeFilter] = useState(new Date().toISOString().substr(0,10));
+    const [periodeFilter, setPeriodeFilter] = useState(new Date().toISOString().substr(0,7));
 
     useEffect(()=>{
       setLoading(true)
@@ -102,7 +104,7 @@ const DaftarKaryawanDinilai = ({history}) => {
       // const id = params.idUser;
       getListAssignment({
         page, 
-        periode,
+        periode: periodFormated(periode)
         // search, 
       }).then(res=>{
         setListItem(res.data?.results);
@@ -160,7 +162,7 @@ const DaftarKaryawanDinilai = ({history}) => {
             size="small"
             className={classes.mb}
             fullWidth
-            type="date"
+            type="month"
             bordered={true}
             value={periodeFilter}
             onChange={e=>handleChangePeriod(e.target.value)}
@@ -237,19 +239,24 @@ const DaftarKaryawanDinilai = ({history}) => {
                     <StyledTableCell align="left">{row.user_dinilai.role}</StyledTableCell>
                     <StyledTableCell align="left">{row.user_dinilai.divisi.map(x=> x.nama_divisi+", ")}</StyledTableCell>
                     <StyledTableCell align="left">
-                      {row.list_paket_jawaban.length} / 
-                      {row.list_paket_pertanyaan.length}
+                      {row.list_paket_jawaban.length >= row.list_paket_pertanyaan.length ? 
+                      <Status status="Done" />
+                      :
+                      `${row.list_paket_jawaban.length} / ${row.list_paket_pertanyaan.length}`
+                      }
                     </StyledTableCell>
                     <StyledTableCell align="left">
                     <Grid item sm={10}>
-                    <TemplateButton
-                        onClick={()=>history.push(`/mengisi-borang/${row.id}`)}
-                        type="button"
-                        buttonStyle="btnGreen"
-                        buttonSize="btnLong"
-                    >
-                        Lihat Borang
-                    </TemplateButton>
+                    {row.list_paket_jawaban.length < row.list_paket_pertanyaan.length &&
+                      <TemplateButton
+                          onClick={()=>history.push(`/mengisi-borang/${row.id}`)}
+                          type="button"
+                          buttonStyle="btnGreen"
+                          buttonSize="btnMedium"
+                      >
+                          Lihat Borang
+                      </TemplateButton>
+                    }
                     </Grid>
                     </StyledTableCell>
                   </StyledTableRow>

@@ -40,19 +40,14 @@ table: {
   minWidth: 500,
 },
 pagination: {
-  '& > *': {
     marginTop: theme.spacing(1),
     color: "#0B3242",
-    marginLeft: "90%",
-    // color: "primary",
-  },
+    display: 'flex',
+    justifyContent: 'flex-end'
 },
 button: {
-    position: "relative",
-    alignSelf: "center",
-    alignItems: "center",
-    marginLeft: "40%"
-    
+  display: 'flex',
+  justifyContent: 'space-evenly'
 },
 
 }));
@@ -155,6 +150,7 @@ const AssignPaket = ({
             <CustomTextField
               label="Search"
               variant="outlined"
+              type="search"
               size="small"
               fullWidth
               bordered={true}
@@ -265,17 +261,21 @@ const AssignPaket = ({
             onChange={(_e,val)=>setPage(val)}
             />
         </div>
-
+        <Grid item xs={12} justify="center">
+          {selectedBorang.length === 0 && !loading &&
+            <p className="text-red-500 text-center text-sm">Harap pilih Paket Pertanyaan untuk penilaian</p>
+          }
+        </Grid>
         <Grid item xs={12} className={classes.button}>
-                  <TemplateButton 
-                    onClick={nextStep}
-                    type="button"
-                    buttonStyle="btnBlue"
-                    buttonSize="btnLong"
-                    disabled={loading}
-                  >
-                    Selanjutnya
-                  </TemplateButton>
+          <TemplateButton 
+            onClick={nextStep}
+            type="button"
+            buttonStyle="btnBlue"
+            buttonSize="btnLong"
+            disabled={loading || selectedBorang.length === 0}
+          >
+            Selanjutnya
+          </TemplateButton>
         </Grid>
     </div>
   );

@@ -8,6 +8,8 @@ import DialogSuccess from 'components/Dialog';
 import DialogFail from 'components/DialogFail';
 import Loading from 'components/Loading';
 import CustomTextField from 'components/CustomTextField';
+import ModalAssignConfirmation from 'components/ModalAssignConfirmation';
+import { periodFormated } from 'utils/periodeConverter';
 
 
 const stepComponent = [
@@ -26,7 +28,9 @@ const AssignmentManager = (props) => {
   const [selectedPenilai, setSelectedPenilai] = useState([]);
   const [selectedDinilai, setSelectedDinilai] = useState([]);
 
-  const [periode, setPeriode] = useState(new Date().toISOString().substr(0,10));
+  const [showConfirmation, setShowConfirmation] = useState(false);
+
+  const [periode, setPeriode] = useState(new Date().toISOString().substr(0,7));
 
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -58,9 +62,10 @@ const AssignmentManager = (props) => {
       list_penilai: selectedPenilai.map(x=>x.pk),
       list_dinilai: selectedDinilai.map(x=>x.pk),
       list_borang: selectedBorang.map(x=>x.id),
-      periode
+      periode: periodFormated(periode)
     }).then(()=>{
       setSuccess(true);
+      setShowConfirmation(false);
       setSelectedPenilai([]);
       setSelectedDinilai([]);
       setSelectedBorang([]);
@@ -82,7 +87,7 @@ const AssignmentManager = (props) => {
         variant="outlined"
         id="date"
         label="Periode"
-        type="date"
+        type="month"
         InputLabelProps={{
           shrink: true,
         }}
@@ -104,7 +109,7 @@ const AssignmentManager = (props) => {
         nextStep,
         prevStep,
         onSelect,
-        submit
+        submit: ()=>setShowConfirmation(true)
       })}
       <DialogSuccess open={success} handleClose={()=>setSuccess(false)} />
       <DialogFail
@@ -113,6 +118,16 @@ const AssignmentManager = (props) => {
         text={error.detail && error.detail[0]}
       />
       <Loading open={loading} />
+      <ModalAssignConfirmation
+        open={showConfirmation}
+        onCancel={()=>setShowConfirmation(false)}
+        selectedBorang={selectedBorang}
+        selectedDinilai={selectedDinilai}
+        selectedPenilai={selectedPenilai}
+        periode={periode}
+        handleChangePeriode={e=>{setPeriode(e.target.value); delete error.periode}}
+        submit={submit}
+      />
     </>
   )
 }

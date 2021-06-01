@@ -9,7 +9,7 @@ class AdminPermission(BasePermission):
 class IsOwner(BasePermission):
 
     def has_object_permission(self, request, view, obj):
-        return obj.owner == request.user
+        return obj.user == request.user
 
 class DefaultRolePermission(BasePermission):
 
@@ -49,4 +49,14 @@ class ManagerOnlyEditPermission(BasePermission):
     def has_permission(self, request, view):
         if request.method in ['PATCH', 'PUT']:
             return request.user.has_role('Manager')
+        return True
+
+class AdministrasiOnlyPermission(BasePermission):
+    def has_permission(self, request, view):
+        return request.user.has_role('Administrasi', 'Admin')
+
+class EvaluasiDiriDeletePermission(BasePermission):
+    def has_object_permission(self, request, view, obj):
+        if request.method == 'DELETE':
+            return obj.hasil_performa.user == request.user
         return True
