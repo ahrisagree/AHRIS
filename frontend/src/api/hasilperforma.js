@@ -10,7 +10,7 @@ export const postHasilPerformaAPI = data =>
 export const getListHasilPerforma =  query => {
     let formatedQuery = ""
     Object.keys(query).forEach(qkey=>formatedQuery+=query[qkey]?`${qkey}=${query[qkey]}&`:'');
-    return axios.get(`${baseUrl}/evaluation/result/`);
+    return axios.get(`${baseUrl}/evaluation/result/?${formatedQuery}`);
 
 }
 export const getDetailHasilPerforma = (id) => {
