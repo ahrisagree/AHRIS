@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import ReactExport from "react-export-excel";
 import {
   makeStyles,
   Paper,
@@ -94,6 +95,9 @@ const useStyles = makeStyles((theme) => ({
   table: {
   }
 }));
+const ExcelFile = ReactExport.ExcelFile;
+const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
+const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
 
 const KelolaGaji = ({history, match}) => {
   const classes = useStyles();
@@ -124,7 +128,7 @@ const KelolaGaji = ({history, match}) => {
   const [roleFilter, setFilterRole] = useState(params.get("role"));
   const [divisiFilter, setFilterDivisi] = useState(params.get("divisi"));
   const [searchFilter, setFilterSearch] = useState(params.get("search"));
-
+  
   useEffect(()=>{
     setLoading(true)
     const periode = periodeFilter;
@@ -260,6 +264,8 @@ const KelolaGaji = ({history, match}) => {
     setPeriodeFilter(val);
     setPage(1);
   }
+
+  
 
   console.log(jam*honor)
   console.log(penyesuaian)
@@ -428,7 +434,7 @@ const KelolaGaji = ({history, match}) => {
               <Typography style={{ fontWeight: 400,  fontFamily: 'IBM Plex Sans', fontStyle: 'normal', 
             fontSize: 18, lineHeight: '138%', position:'absolute', right:50, letterSpacing: '0.0075em', color: '#0A3142' }} 
             variant="subtitle1">
-              {detail.user.gaji}
+              Rp.{detail.user.gaji}
             </Typography>
             </Typography>
             
@@ -599,8 +605,16 @@ const KelolaGaji = ({history, match}) => {
           }} 
           text={error.detail}
           />
+
+<ExcelFile element={<button>Download Data</button>}>
+                <ExcelSheet data={listItem} name="Employees">
+                    <ExcelColumn label="Name" value="user.username"/>
+                    <ExcelColumn label="Gaji" value="nominal"/>
+                </ExcelSheet>
+            </ExcelFile>
       </div>
 
+      
     )
 };
 export default KelolaGaji;   

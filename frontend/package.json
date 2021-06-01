@@ -17,13 +17,17 @@
     "@types/date-fns": "^2.6.0",
     "autoprefixer": "^9.8.6",
     "axios": "^0.21.1",
+    "bootstrap": "^5.0.1",
     "connected-react-router": "^6.8.0",
     "date-fns": "^2.21.1",
+    "file-saver": "^2.0.5",
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.33",
     "postcss": "^7.0.35",
     "react": "^16.13.1",
+    "react-bootstrap": "^1.6.0",
     "react-dom": "^16.13.1",
+    "react-export-excel": "^0.5.3",
     "react-moment": "^1.1.1",
     "react-redux": "^7.2.1",
     "react-reveal": "^1.2.2",
@@ -31,7 +35,8 @@
     "react-scripts": "3.4.3",
     "redux": "^4.0.5",
     "redux-persist": "^6.0.0",
-    "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.1.2"
+    "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.1.2",
+    "xlsx": "^0.17.0"
   },
   "scripts": {
     "start": "craco start",
