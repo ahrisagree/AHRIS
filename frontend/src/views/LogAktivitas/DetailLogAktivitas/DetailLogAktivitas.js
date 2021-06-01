@@ -5,7 +5,6 @@ import {
   Container,
   Grid,
   Typography,
-  MenuItem,
   Tooltip,
   IconButton
 } from '@material-ui/core';
@@ -22,17 +21,6 @@ import DeleteOutlineIcon from '@material-ui/icons/DeleteOutlineRounded';
 import EditRounded from '@material-ui/icons/CreateRounded';
 import DeleteConfirmationDialog from 'components/DialogConf';
 
-
-const daftar_tipe = [
-  {
-    value: false,
-    label: 'Reguler',
-  },
-  {
-    value: true,
-    label: 'Lembur',
-  },
-];
 
 const useStyles = makeStyles((theme) => ({
   root: {
