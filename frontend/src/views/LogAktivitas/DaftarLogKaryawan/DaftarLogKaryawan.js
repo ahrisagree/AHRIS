@@ -14,7 +14,7 @@ import {
   Tooltip,
   IconButton
 } from '@material-ui/core';
-import { getListLogKaryawan, getKaryawan, setujuiLogAPI } from 'api/log';
+import { getListLogKaryawan, setujuiLogAPI } from 'api/log';
 import { getListDaftarKaryawan } from 'api/akun';
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 import { PAGE_SIZE, STATUS_LOG_LABEL, STATUS_LOG } from 'utils/constant';
@@ -88,12 +88,12 @@ const DaftarLogKaryawan = (props) => {
   const [listItem, setListItem] = useState([]);
   const [page, setPage] = useState(1);
   const [count, setCount] = useState(0);
-  const [fullLoading, setFullLoading] = useState(false);
+  const [fullLoading] = useState(false);
   const [update, setUpdate] = useState(0);
-  const [statusLog, setStatusLog] = React.useState("");
+
   const {user} = props;
   const {history} = props;
-  const [role, setRole] = React.useState(user.role);
+  const [role] = React.useState(user.role);
   const [karyawanOptions, setKaryawanOptions] = useState([]);
 
   const params = new URLSearchParams(history.location.search);
@@ -198,11 +198,6 @@ const DaftarLogKaryawan = (props) => {
     const penyetuju = params.get("penyetuju");
     const date_after = params.get("date_after");
     const date_before = params.get("date_before");
-    // console.log(karyawanOptions.find(x => x.pk === user/1));
-    // console.log(karyawanOptions.find(x => x.pk === user/1)?.username);
-    // console.log(karyawanOptions.find(x => x.pk === user/1)?.username || "List Log");
-    // console.log(karyawanOptions);
-    // console.log(user);
 
     getListLogKaryawan({
       search, user, status, penyetuju, date_after, date_before, disablepagination: true 

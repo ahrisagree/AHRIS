@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import Pagination from "@material-ui/lab/Pagination";
-import Button  from "components/TemplateButton";
 import TemplateButton  from "components/TemplateButton";
 import {
   makeStyles,
@@ -13,13 +12,15 @@ import {
   Grid,
 } from '@material-ui/core';
 import { getListPresensi } from 'api/log';
-import { PAGE_SIZE, STATUS_LOG } from 'utils/constant';
+import { PAGE_SIZE } from 'utils/constant';
 import { StyledTableCell, StyledTableRow } from "components/Table";
 import MainTitle from "components/MainTitle";
 import CircularProgress from 'components/Loading/CircularProgress';
 import { Link } from 'react-router-dom';
 import Loading from 'components/Loading';
-import DeleteConfirmationDialog from 'components/DialogConf';
+import { setQueryParams } from 'utils/setQueryParams';
+import CustomTextField from 'components/CustomTextField';
+
 
 const useStyles = makeStyles((theme) =>({
   root: {
@@ -80,19 +81,23 @@ const MyPresensi = (props) => {
   const [listItem, setListItem] = useState([]);
   const [page, setPage] = useState(1);
   const [count, setCount] = useState(0);
-  const [fullLoading, setFullLoading] = useState(false);
+  const [fullLoading] = useState(false);
   const [update, setUpdate] = useState(0);
-  const history = props.match.params.history;
   const {user} = props;
+  const {history} = props;
+
+  const params = new URLSearchParams(history.location.search);
+  const [tanggalFilter, setFilterTanggal] = useState();
+
 
   useEffect(()=>{
     setLoading(true)
-
-    // const id = props.match.params.id;
+    const tanggal = params.get("tanggal");
 
     getListPresensi({
       user: user.pk,  
-      page
+      page,
+      tanggal
     }).then(res=>{
       setListItem(res.data?.results);
       setCount(Math.ceil(res.data?.count/PAGE_SIZE));
@@ -103,6 +108,21 @@ const MyPresensi = (props) => {
     })
 
   }, [page, update, user]);
+
+  const doQuery = () => {
+    setQueryParams({
+      tanggal: tanggalFilter || ""
+    }, history);
+    setPage(1);
+    setUpdate(update+1);
+  }
+
+  const resetQuery = () => {
+    setQueryParams({}, history);
+    setPage(1);
+    setUpdate(update+1);
+    setFilterTanggal(null);
+  }
 
 
     return (
@@ -130,6 +150,32 @@ const MyPresensi = (props) => {
             </Link>
           </Grid>
       </Grid>
+
+      <div className="w-full md:w-1/3 my-2 md:mr-2">
+        <CustomTextField
+          variant="outlined"
+          id="date"
+          label="Tanggal"
+          type="date"
+          InputLabelProps={{
+            shrink: true,
+          }}
+          value={tanggalFilter}
+          onChange={e=>{setFilterTanggal(e.target.value)}}
+          disabled={loading}
+          />
+
+        <div className="flex items-center">
+              {!(params.get("tanggal") === tanggalFilter) &&
+                <button onClick={doQuery} className="m-1">Apply</button>  
+              }
+              {(params.get("tanggal")) &&
+              <button onClick={resetQuery} className="m-1">Reset</button>  
+              }
+        </div>
+      
+      </div>
+
 
         <TableContainer component={Paper}>
           <MuiTable className={classes.table} aria-label="customized table">
