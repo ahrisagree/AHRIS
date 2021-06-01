@@ -1,11 +1,5 @@
 import React, { useEffect, useState  } from 'react';
-import Pagination from "@material-ui/lab/Pagination";
-import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
-import CreateIcon from '@material-ui/icons/Create';
-import Breadcrumbs from 'components/Breadcrumbs';
 import TemplateButton from 'components/TemplateButton';
-import CustomTextField from 'components/CustomTextField';
-import Button  from "components/Button";
 import {
   makeStyles,
   Table as MuiTable,
@@ -15,17 +9,12 @@ import {
   TableRow,
   Paper,
   Grid,
-  Tooltip,
-  MenuItem,
 } from '@material-ui/core';
 import { StyledTableCell, StyledTableRow } from "components/Table";
 import MainTitle from "components/MainTitle";
-import { getListAssignment } from 'api/borang';
-import { PAGE_SIZE, ROLES } from 'utils/constant';
+import { getDetailAssignment } from 'api/borang';
 import CircularProgress from 'components/Loading/CircularProgress';
-import { setQueryParams } from 'utils/setQueryParams';
-import TextField from 'components/CustomTextField';
-
+import Status from 'components/Status';
 
 
 const useStyles = makeStyles((theme) =>({
@@ -90,53 +79,28 @@ const useStyles = makeStyles((theme) =>({
       },
 }));
 
-const DaftarBorang = ({history}) => {
+const DaftarBorang = ({history, match}) => {
     const classes = useStyles();
     const [loading, setLoading] = useState(false);
-    const [listItem, setListItem] = useState([]);
-    const [page, setPage] = useState(1);
-    const [count, setCount] = useState(0);
-    const [update, setUpdate] = useState(0);
-    const params = new URLSearchParams(history.location.search);
-    const [roleFilter, setFilterRole] = useState(params.get("role"));
-    const [searchFilter, setFilterSearch] = useState(params.get("search"));
-    const [role, setRole] = React.useState("");
+    const [assignment, setAssignment] = useState(null);
+    const [listBorang, setPaketBorang] = React.useState([]);
 
   
 
     useEffect(()=>{
       setLoading(true)
-      const search = params.get("search");
-      getListAssignment({
-        page, role, search, 
-      }).then(res=>{
-        setRole(res.data?.results.user_dinilai);
-        setListItem(res.data?.results);
-        setCount(Math.ceil(res.data?.count/PAGE_SIZE));
+      const { id } = match.params;
+      getDetailAssignment(id).then(res=>{
+        setAssignment(res.data);
+        setPaketBorang(res.data?.list_paket_pertanyaan);
+        console.log(res.data?.list_paket_pertanyaan);
       }).catch(err=>{
       // Handle ERROR
       }).finally(()=>{
         setLoading(false);
       })
-    }, [page, update]);
-
-
-    const doQuery = () => {
-      setQueryParams({
-        role: roleFilter || "",
-        search: searchFilter || ""
-      }, history);
-      setPage(1);
-      setUpdate(update+1);
-    }
-  
-    const resetQuery = () => {
-      setQueryParams({}, history);
-      setPage(1);
-      setFilterRole(null)
-      setFilterSearch(null)
-    }
-
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
    
     return (
 
@@ -147,63 +111,14 @@ const DaftarBorang = ({history}) => {
       <Grid item xs={12} container>
           <Grid item xs={4} alignContent="flex-start">
             {/* <div className="m-12"> */}
-            <MainTitle title="Daftar Borang" className={classes.title} />
+            <MainTitle title={`Daftar Borang Penilaian | ${assignment?.user_dinilai?.username}`} className={classes.title} />
             {/* </div> */}
           </Grid>
           <Grid item xs={8}/>
-        </Grid>
+      </Grid>
 
-        <Grid item xs={12} container>
-        <Grid item xs={2} alignContent="">
-        <div style={{position: 'relative', padding: 2}}>
-             <TextField
-            label="Role"
-            variant="outlined"
-            size="small"
-            className={classes.mb}
-            fullWidth
-            select
-            bordered={true}
-            value={roleFilter}
-            onChange={e=>setFilterRole(e.target.value)}
-          >
-            {ROLES.map(r=>(
-            <MenuItem value={r}>{r}</MenuItem>
-          ))}
-          </TextField>
-          </div>
-          </Grid>
-        <Grid item xs={2} alignContent="">
-        <div style={{position: 'relative', padding: 2}}>
-          <TextField
-            label="Search"
-            variant="outlined"
-            size="small"
-            className={classes.mb}
-            fullWidth
-            bordered={true}
-            value={searchFilter}
-            onChange={e=>setFilterSearch(e.target.value)}
-          />
-          </div>
-        </Grid>
-        <Grid item xs={2}>
-        <div style={{position: 'relative', padding: 2}}>
-          {!(params.get("role") === roleFilter && 
-          params.get("search") === searchFilter) &&
-            <TemplateButton 
-            type="button"
-            buttonStyle="btnBlueOutline"
-            buttonSize="btnMedium" onClick={doQuery}>Apply</TemplateButton>  
-          }
-          {(params.get("search") ||
-            params.get("role")) &&
-            <TemplateButton type="button"
-            buttonStyle="btnBlueOutline"
-            buttonSize="btnMedium" onClick={resetQuery}>Reset</TemplateButton>  
-          }
-        </div>
-        </Grid>
+      <Grid item xs={12} container>
+        
         </Grid>
       </Grid>
 
@@ -212,9 +127,9 @@ const DaftarBorang = ({history}) => {
             <TableHead>
               <TableRow>
                 <StyledTableCell align="left">No </StyledTableCell>
-                <StyledTableCell align="left">Nama </StyledTableCell>
-                <StyledTableCell align="left">Role </StyledTableCell>
-                <StyledTableCell align="left">Divisi</StyledTableCell>
+                <StyledTableCell align="left">Nama Borang </StyledTableCell>
+                <StyledTableCell align="left">Jenis Paket </StyledTableCell>
+                <StyledTableCell align="left">Kategori</StyledTableCell>
                 <StyledTableCell align="left"></StyledTableCell>
               </TableRow>
             </TableHead>
@@ -226,33 +141,35 @@ const DaftarBorang = ({history}) => {
                 </StyledTableCell>
               </StyledTableRow>
               : (
-                listItem?.length === 0 ? 
+                listBorang?.length === 0 ? 
                 <StyledTableRow>
                   <StyledTableCell align="center" colSpan="5">
                     Tidak ada borang yang perlu diisi
                   </StyledTableCell>
                 </StyledTableRow>
                 :
-                listItem.map((row, i) => (
+                listBorang.map((row, i) => (
                   <StyledTableRow key={row.username}>
                     <StyledTableCell component="th" scope="row">
                       {`${i+1}.`}
                     </StyledTableCell>
-                    <StyledTableCell align="left">{row.user_dinilai.username}</StyledTableCell>
-                    <StyledTableCell align="left">{row.user_dinilai.role}</StyledTableCell>
-                    <StyledTableCell align="left">{row.user_dinilai.divisi.map(x=> x.nama_divisi+", ")}</StyledTableCell>
+                    <StyledTableCell align="left">{row.nama}</StyledTableCell>
+                    <StyledTableCell align="left">{row.jenis}</StyledTableCell>
+                    <StyledTableCell align="left">{row.kategori.nama}</StyledTableCell>
+                    
                     <StyledTableCell align="left">
                     <Grid item sm={10}>
-                    <TemplateButton
-                        onClick={() => {
-                        console.log("Ini nanti diganti");
-                        }}
-                        type="button"
-                        buttonStyle="btnGreen"
-                        buttonSize="btnLong"
-                    >
-                        Isi Penilaian
-                    </TemplateButton>
+                    {assignment.list_paket_jawaban.find(x=>x.paket_pertanyaan===row.id) ? 
+                    <Status status="Sudah Diisi" />:
+                      <TemplateButton
+                          onClick={()=>history.push(`/mengisi-borang/${assignment.id}/${row.id}`)}
+                          type="button"
+                          buttonStyle="btnGreen"
+                          buttonSize="btnMedium"
+                      >
+                          Isi Penilaian
+                      </TemplateButton>
+                    }
                     </Grid>
                     </StyledTableCell>
                   </StyledTableRow>
@@ -260,13 +177,6 @@ const DaftarBorang = ({history}) => {
             </TableBody>
           </MuiTable>
         </TableContainer>
-        <div className={classes.pagination}>
-          <Pagination 
-            count={count} 
-            page={page} 
-            onChange={(_e,val)=>setPage(val)}
-            />
-        </div>
     </div>
     </div>
   );

@@ -2,9 +2,10 @@ from rest_framework import serializers
 from .models import Assignment
 from auth_app.models import AppUser
 from borang.models import PaketPertanyaan
-from borang.serializers import PaketPertanyaanSerializer
-from jawaban.serializers import PaketJawabanSerializer
+from borang.serializers import PaketPertanyaanSerializer, PaketPertanyaanMiniSerializer
+from jawaban.serializers import PaketJawabanSerializer, PaketJawabanMiniSerializer
 from auth_app.serializers import UserListSerializer
+from datetime import date
 
 class AssignmentSerializer(serializers.ModelSerializer):
   user_penilai = UserListSerializer()
@@ -23,6 +24,8 @@ class AssignmentSerializer(serializers.ModelSerializer):
 class AssignmentDetailSerializer(serializers.ModelSerializer):
   user_penilai = UserListSerializer()
   user_dinilai = UserListSerializer()
+  # list_paket_pertanyaan = PaketPertanyaanMiniSerializer(many=True)
+  # list_paket_jawaban = PaketJawabanMiniSerializer(many=True)
   list_paket_pertanyaan = PaketPertanyaanSerializer(many=True)
   list_paket_jawaban = PaketJawabanSerializer(many=True)
   class Meta:
@@ -50,8 +53,9 @@ class AssignRespondenSerializer(serializers.Serializer):
   periode = serializers.DateField()
 
   def validate_periode(self, periode):
-    # TODO normalize periodenya nanti
-    return periode
+    # standarized period from normal date, auto day = 1
+    standarized_period = periode.replace(day=1)
+    return standarized_period
 
   def validate_list_penilai(self, list_penilai):
     list_penilai_obj = []
@@ -99,3 +103,15 @@ class AssignRespondenSerializer(serializers.Serializer):
         assignment.list_paket_pertanyaan.add(*list_borang_data)
         list_assignment.append(AssignmentSerializer(assignment).data)
     return list_assignment
+
+
+class ScoringAspekSerializer(serializers.Serializer):
+  nama = serializers.CharField(max_length=255)
+  skor = serializers.FloatField()
+  bobot = serializers.FloatField()
+
+class ScoringSerializer(serializers.Serializer):
+  nama = serializers.CharField(max_length=255)
+  list_aspek = ScoringAspekSerializer(many=True)
+  hasil_performa_exist = serializers.BooleanField()
+  list_not_answered = UserListSerializer(many=True)

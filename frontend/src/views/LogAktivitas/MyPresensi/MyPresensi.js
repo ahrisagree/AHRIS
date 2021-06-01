@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import Pagination from "@material-ui/lab/Pagination";
-import Button  from "components/TemplateButton";
 import TemplateButton  from "components/TemplateButton";
 import {
   makeStyles,
@@ -12,13 +11,16 @@ import {
   Paper,
   Grid,
 } from '@material-ui/core';
-import { getListLog } from 'api/log';
-import { PAGE_SIZE, STATUS_LOG } from 'utils/constant';
+import { getListPresensi } from 'api/log';
+import { PAGE_SIZE } from 'utils/constant';
 import { StyledTableCell, StyledTableRow } from "components/Table";
 import MainTitle from "components/MainTitle";
 import CircularProgress from 'components/Loading/CircularProgress';
 import { Link } from 'react-router-dom';
 import Loading from 'components/Loading';
+import { setQueryParams } from 'utils/setQueryParams';
+import CustomTextField from 'components/CustomTextField';
+
 
 const useStyles = makeStyles((theme) =>({
   root: {
@@ -72,21 +74,30 @@ const useStyles = makeStyles((theme) =>({
     }
 }));
 
-const DaftarLog = ({history}) => {
+const MyPresensi = (props) => {
   
   const classes = useStyles();
   const [loading, setLoading] = useState(false);
   const [listItem, setListItem] = useState([]);
   const [page, setPage] = useState(1);
   const [count, setCount] = useState(0);
-  const [fullLoading, setFullLoading] = useState(false);
+  const [fullLoading] = useState(false);
   const [update, setUpdate] = useState(0);
+  const {user} = props;
+  const {history} = props;
+
+  const params = new URLSearchParams(history.location.search);
+  const [tanggalFilter, setFilterTanggal] = useState();
+
 
   useEffect(()=>{
     setLoading(true)
-    
-    getListLog({
-      page
+    const tanggal = params.get("tanggal");
+
+    getListPresensi({
+      user: user.pk,  
+      page,
+      tanggal
     }).then(res=>{
       setListItem(res.data?.results);
       setCount(Math.ceil(res.data?.count/PAGE_SIZE));
@@ -95,51 +106,88 @@ const DaftarLog = ({history}) => {
     }).finally(()=>{
       setLoading(false);
     })
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, update]);
+
+  }, [page, update, user]);
+
+  const doQuery = () => {
+    setQueryParams({
+      tanggal: tanggalFilter || ""
+    }, history);
+    setPage(1);
+    setUpdate(update+1);
+  }
+
+  const resetQuery = () => {
+    setQueryParams({}, history);
+    setPage(1);
+    setUpdate(update+1);
+    setFilterTanggal(null);
+  }
+
 
     return (
     <div className={classes.root1}>
       <Grid container spacing={2} direction="column">
       <Grid item xs={12} container>
           <Grid item xs={4} alignContent="flex-start">
-            <MainTitle title="Daftar Log" className={classes.title} />
+            <MainTitle title="Daftar Presensi" className={classes.title} />
           </Grid>
           <Grid item xs={8}/>
         </Grid>
-
-        <Grid item container direction="row" justify="space-between">
-          <Grid item xs={10}>
-            <Button
-                variant="outlined"
-                color="primary" 
-                size="small"
-                >
-            + Create Log
-            </Button>
-          </Grid>
-
-          <Grid item xs={2}>
-                <TemplateButton size="small"
-                    type="button"
-                    buttonStyle="btnGreenOutline"
-                    >
-                    Daftar Karyawan
-                </TemplateButton>
-          </Grid>
-
-        </Grid>
+        
       </Grid>
+
+      <Grid item container direction="row" justify="space-between">
+          <Grid item xs={10}>
+            <Link to={`/log-aktivitas`}>
+              <TemplateButton 
+                type="button" 
+                buttonStyle="btnGreen" 
+                buttonSize="btnMedium"
+                >
+                Buat Log
+                </TemplateButton>
+            </Link>
+          </Grid>
+      </Grid>
+
+      <div className="w-full md:w-1/3 my-2 md:mr-2">
+        <CustomTextField
+          variant="outlined"
+          id="date"
+          label="Tanggal"
+          type="date"
+          InputLabelProps={{
+            shrink: true,
+          }}
+          value={tanggalFilter}
+          onChange={e=>{setFilterTanggal(e.target.value)}}
+          disabled={loading}
+          />
+
+        <div className="flex items-center">
+              {!(params.get("tanggal") === tanggalFilter) &&
+                <button onClick={doQuery} className="m-1">Apply</button>  
+              }
+              {(params.get("tanggal")) &&
+              <button onClick={resetQuery} className="m-1">Reset</button>  
+              }
+        </div>
+      
+      </div>
+
 
         <TableContainer component={Paper}>
           <MuiTable className={classes.table} aria-label="customized table">
             <TableHead>
               <TableRow>
-                <StyledTableCell align="left">No </StyledTableCell>
-                <StyledTableCell align="left">Tanggal </StyledTableCell>
-                <StyledTableCell align="left">Tipe Log </StyledTableCell>
-                <StyledTableCell align="left">Status</StyledTableCell>
-                <StyledTableCell align="center">Action</StyledTableCell>
+                <StyledTableCell align="left"> No </StyledTableCell>
+                <StyledTableCell align="left"> Nama </StyledTableCell>
+                <StyledTableCell align="left"> Role </StyledTableCell>
+                <StyledTableCell align="left"> Tanggal </StyledTableCell>
+                <StyledTableCell align="left"> Jam Masuk </StyledTableCell>
+                <StyledTableCell align="left"> Keterangan </StyledTableCell>
+                <StyledTableCell align="left"> Status Log Aktivitas </StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -153,7 +201,7 @@ const DaftarLog = ({history}) => {
                 listItem?.length === 0 ? 
                 <StyledTableRow>
                   <StyledTableCell align="center" colSpan="5">
-                    Tidak ada Log Aktivitas
+                    Tidak ada Presensi
                   </StyledTableCell>
                 </StyledTableRow>
                 :
@@ -162,38 +210,12 @@ const DaftarLog = ({history}) => {
                     <StyledTableCell component="th" scope="row">
                       {`${i+1}.`}
                     </StyledTableCell>
+                    <StyledTableCell align="left">{row.user?.username}</StyledTableCell>
+                    <StyledTableCell align="left">{row.user?.role}</StyledTableCell>
                     <StyledTableCell align="left">{row.tanggal}</StyledTableCell>
-                    <StyledTableCell align="left">{row.is_lembur ? "Lembur" : "Reguler"}</StyledTableCell>
-                    <StyledTableCell align="left">{STATUS_LOG[row.status_log]}</StyledTableCell>
-                    <StyledTableCell align="center">
-                    
-                    <Link to={`/detail-log/${row.id}`}>
-                    <TemplateButton 
-                      type="button" 
-                      buttonStyle="btnGreen" 
-                      buttonSize="btnMedium"
-                      >
-                      View
-                      </TemplateButton>
-                    </Link>
- 
-                      <TemplateButton
-                      type="button"
-                      buttonStyle="btnYellow"
-                      buttonSize="btnMedium"
-                      >
-                      Edit
-                      </TemplateButton>
- 
-                      <TemplateButton
-                      type="button"
-                      buttonStyle="btnDanger"
-                      buttonSize="btnMedium"
-                      >
-                      Delete
-                    </TemplateButton>
-                  
-                    </StyledTableCell>
+                    <StyledTableCell align="left">{row.jam_masuk.split(".")[0]}</StyledTableCell>
+                    <StyledTableCell align="left">{row.keterangan}</StyledTableCell>
+                    <StyledTableCell align="left">{row.log !== null ? "Sudah mengisi log" : "Belum mengisi log"}</StyledTableCell>
                   </StyledTableRow>
                 )))}
             </TableBody>
@@ -211,4 +233,4 @@ const DaftarLog = ({history}) => {
   );
 }
 
-export default DaftarLog;
+export default MyPresensi;

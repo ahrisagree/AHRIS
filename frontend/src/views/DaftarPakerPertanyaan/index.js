@@ -26,6 +26,7 @@ import { Link } from 'react-router-dom';
 import Loading from 'components/Loading';
 import { setQueryParams } from 'utils/setQueryParams';
 import CustomTextField from 'components/CustomTextField';
+import VisibilityIcon from '@material-ui/icons/Visibility';
 
 const useStyles = makeStyles({})
 const DaftarPaketPertanyaan = ({history}) => {
@@ -134,6 +135,7 @@ const DaftarPaketPertanyaan = ({history}) => {
               label="Search"
               variant="outlined"
               size="small"
+              type="search"
               fullWidth
               bordered={true}
               value={searchFilter}
@@ -223,8 +225,15 @@ const DaftarPaketPertanyaan = ({history}) => {
                     <StyledTableCell align="left">{row.kategori?.nama}</StyledTableCell>
                     <StyledTableCell align="left">
                     <Grid item sm={10}>
-                      <Tooltip title="Edit">
+                      <Tooltip title="View">
                         <Link to={`/paket-pertanyaan/${row.id}`}>
+                          <IconButton size="small">
+                            <VisibilityIcon style={{ color: "#0A3142"}}/>
+                          </IconButton>
+                        </Link>
+                      </Tooltip>
+                      <Tooltip title="Edit">
+                        <Link to={`/paket-pertanyaan/${row.id}/edit`}>
                           <IconButton size="small">
                             <CreateIcon style={{ color: "green"}}/>
                           </IconButton>
