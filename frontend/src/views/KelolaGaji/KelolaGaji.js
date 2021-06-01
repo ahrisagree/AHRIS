@@ -23,15 +23,17 @@ import DialogFail from 'components/DialogFail';
 import TemplateButton from 'components/TemplateButton';
 import Loading from 'components/Loading';
 import Pagination from '@material-ui/lab/Pagination';
-import { editUser, getKaryawan, getDivisiAPI, getListDaftarKaryawan } from 'api/akun';
+import { getDivisiAPI } from 'api/akun';
 import { getListLog } from 'api/log';
-import { PAGE_SIZE, ROLES, STATUS_LOG } from 'utils/constant';
+import { PAGE_SIZE, ROLES } from 'utils/constant';
 import CircularProgress from 'components/Loading/CircularProgress';
 import { setQueryParams } from 'utils/setQueryParams';
 import { StyledTableCell, StyledTableRow } from "components/Table";
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
-import { getGaji, editGaji, getListGaji } from 'api/gaji';
-import DetailEditUser from 'views/DetailEditUser';
+import { editGaji, getListGaji } from 'api/gaji';
+import { exportGaji } from 'utils/csv';
+import { periodFormated } from 'utils/periodeConverter';
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -106,7 +108,6 @@ const KelolaGaji = ({history, match}) => {
   const [jam, setJam] = useState(0);
   const [penyesuaian, setPenyesuaian] = useState(0);
   const [honor, setHonor] = useState(0);
-  
   const [role, setRole] = React.useState("");
   const [username, setUsername] = React.useState("");
   const [nominal, setNominal] = React.useState("");
@@ -116,9 +117,9 @@ const KelolaGaji = ({history, match}) => {
   const [listLog, setListLog] = useState([]);
   const [total, setTotal] = useState(gaji+penyesuaian);
   const [detail, setDetail] = useState(null);
-
   const [update, setUpdate] = useState(0);
-  
+  const [periodeFilter, setPeriodeFilter] = useState(new Date().toISOString().substr(0,7));
+  const [success, setSuccess] = useState(false);
   const params = new URLSearchParams(history.location.search);
   const { idUser } = match.params;
 
@@ -128,9 +129,17 @@ const KelolaGaji = ({history, match}) => {
 
   useEffect(()=>{
     setLoading(true)
+    const periode = periodeFilter;
+    const search = params.get("search");
+    const role = params.get("role");
+    const divisi = params.get("divisi");
 
     getListGaji({
-      page
+      page,
+      periode: periodFormated(periode),
+      search,
+      role,
+      divisi
     }).then(res=>{
       setListItem(res.data?.results);
       setCount(Math.ceil(res.data?.count/PAGE_SIZE));
@@ -139,7 +148,7 @@ const KelolaGaji = ({history, match}) => {
     }).finally(()=>{
       setLoading(false);
     })
-  }, [page, update]);
+  }, [page, update, periodeFilter]);
 
   useEffect(()=>{
     getDivisiAPI().then(res=>{
@@ -148,6 +157,23 @@ const KelolaGaji = ({history, match}) => {
       console.error(err.response);
     })
   }, [])
+
+  const exportToCSV = () => {
+    const periode = periodeFilter;
+    const search = params.get("search");
+    const role = params.get("role");
+    const divisi = params.get("divisi");
+
+    getListGaji({
+      periode: periodFormated(periode),
+      search,
+      role,
+      divisi,
+      disablepagination: true
+    }).then(res=>{
+      exportGaji(res.data, `Gaji ${periode}`)
+    })
+  }
 
 
   /*useEffect(()=>{
@@ -170,21 +196,11 @@ const KelolaGaji = ({history, match}) => {
 
   useEffect(()=>{
     setLoading(true)
-    {detail !== null?
+    if(detail !== null){
       getListLog({ 
-        disablepagination:true,
-        user: detail.user.pk
-      }).then(res=>{
-        setListLog(res.data?.results);
-        //setCount(Math.ceil(res.data?.count/PAGE_SIZE));
-      }).catch(err=>{
-      // Handle ERROR
-      }).finally(()=>{
-        setLoading(false);
-      })
-      :
-      getListLog({ 
-        
+        //disablepagination:true,
+        user: detail.user.pk,
+        status: 1
       }).then(res=>{
         setListLog(res.data?.results);
         //setCount(Math.ceil(res.data?.count/PAGE_SIZE));
@@ -194,17 +210,18 @@ const KelolaGaji = ({history, match}) => {
         setLoading(false);
       })
     }
+    }
     
 
-  }, [detail]);
+  , [detail]);
 
   const onSubmit = () => {
     setLoading(true)
-    editGaji(detail.user.pk, {
-      username: detail.user.username,
-      nominal: detail.nominal+honor*jam
+    editGaji(detail.id, {
+      nominal: detail.user.gaji+honor*jam+penyesuaian
     }).then(res=>{
-      
+      setUpdate(update+1);
+      setSuccess(true);
       console.log(res.data)
     }).catch(err=>{
       console.error(err.response);
@@ -253,15 +270,38 @@ const KelolaGaji = ({history, match}) => {
     setFilterRole(null);
   }
 
-  const detailUser = () => {
-    setDetail();
+  const detailUser = (row) => {
+    setDetail(row);
+    setPenyesuaian(row.nominal-row.user.gaji);
   }
 
-  
+  const handleChangePeriod = (val) => {
+    setPeriodeFilter(val);
+    setPage(1);
+  }
+
+  console.log(jam*honor)
+  console.log(penyesuaian)
     return (
         <div className={classes.splitScreen}>
-        <div className={classes.topPane}>
+        <div className={classes.topPane} style={{width: 'unset'}}>
             <MainTitle title="Daftar Gaji" className="mb-8"></MainTitle>
+
+            <Grid item xs={10} alignContent="">
+        <div style={{position: 'relative', padding: 2}}>
+             <TextField
+            label="Periode"
+            variant="outlined"
+            size="small"
+            className={classes.mb}
+            fullWidth
+            type="month"
+            bordered={true}
+            value={periodeFilter}
+            onChange={e=>handleChangePeriod(e.target.value)}
+         />
+          </div>
+          </Grid>
 
             <Grid item xs={10}>
             
@@ -274,7 +314,7 @@ const KelolaGaji = ({history, match}) => {
             select
             bordered={true}
             value={roleFilter}
-            style= {{ width: "31%"}}
+            style= {{ width: "45%"}}
             onChange={e=>setFilterRole(e.target.value)}
           >
             {ROLES.map(r=>(
@@ -289,7 +329,7 @@ const KelolaGaji = ({history, match}) => {
           className={classes.mb}
           fullWidth
           value={divisiFilter}
-          style= {{width: "31%"}}
+          style= {{width: "45%", marginLeft: "9%"}}
           onChange={e=>setFilterDivisi(e.target.value)}
           // multiple
           select
@@ -301,7 +341,7 @@ const KelolaGaji = ({history, match}) => {
         </TextField>
         </Grid>
 
-        <Grid item xs={8}>
+        <Grid item xs={10}>
           <TextField
             label="Search"
             variant="outlined"
@@ -310,18 +350,15 @@ const KelolaGaji = ({history, match}) => {
             fullWidth
             bordered={true}
             value={searchFilter}
-            style= {{width: "92%"}}
             onChange={e=>setFilterSearch(e.target.value)}
           />
+          <Tooltip title="Download">
+            <IconButton size="medium" onClick={exportToCSV}>
+              <CloudDownloadIcon style={{ color: "#0A3142"}}/>
+            </IconButton>
+          </Tooltip>
         </Grid>
-        <Grid item xs={4}>
-        <Tooltip title="Download">
-                        <IconButton size="medium">
-                          <CloudDownloadIcon style={{ color: "#0A3142"}}/>
-                        </IconButton>
-                      </Tooltip>
-        </Grid>
-
+        
         <Grid item xs={4}>
           {!(params.get("search") === searchFilter &&
             params.get("role") === roleFilter && 
@@ -342,7 +379,7 @@ const KelolaGaji = ({history, match}) => {
                 <StyledTableCell align="left">No </StyledTableCell>
                 <StyledTableCell align="left">Nama </StyledTableCell>
                 <StyledTableCell align="left">Gaji </StyledTableCell>
-                <StyledTableCell align="left">Jumlah Log</StyledTableCell>
+                <StyledTableCell align="left">Divisi</StyledTableCell>
                 
               </TableRow>
             </TableHead>
@@ -367,10 +404,10 @@ const KelolaGaji = ({history, match}) => {
                       {`${i+1}.`}
                     </StyledTableCell>
                     <StyledTableCell align="left">
-                      <a style={{color:"#00A96F", textDecorationLine: "underline"}} onClick={()=>setDetail(row)}>{row.user.username}</a></StyledTableCell>
+                      <a style={{color:"#00A96F", textDecorationLine: "underline"}} onClick={()=>detailUser(row)}>{row.user.username}</a></StyledTableCell>
                     
                     <StyledTableCell align="left">{row.nominal}</StyledTableCell>
-                    <StyledTableCell align="left"></StyledTableCell>
+                    <StyledTableCell align="left">{row.user.divisi.map(x=> x.nama_divisi+", ")}</StyledTableCell>
                     
                     
                   </StyledTableRow>
@@ -481,7 +518,7 @@ const KelolaGaji = ({history, match}) => {
             variant="outlined"
             type="number"
             value={penyesuaian}
-            onChange={e=>setPenyesuaian(e.target.value)}
+            onChange={e=>setPenyesuaian(e.target.value/1)}
             /> 
             </Typography>
             
@@ -499,7 +536,7 @@ const KelolaGaji = ({history, match}) => {
               <Typography style={{ fontWeight: 400,  fontFamily: 'IBM Plex Sans', fontStyle: 'normal', 
             fontSize: 18, lineHeight: '138%', position:'absolute', right:50, letterSpacing: '0.0075em', color: '#0A3142' }} 
             variant="subtitle1">
-              {jam*honor}
+              {detail.user.gaji+jam*honor+penyesuaian}
             </Typography>
             </Typography>
             
@@ -558,13 +595,11 @@ const KelolaGaji = ({history, match}) => {
                 </StyledTableCell>
                 <StyledTableCell align="left">{row.tanggal}</StyledTableCell>
                 <StyledTableCell align="left">{row.is_lembur ? "Lembur" : "Reguler"}</StyledTableCell>
-                <StyledTableCell align="left">{row.jam_keluar - row.jam_masuk}</StyledTableCell>
+                <StyledTableCell align="left">{row.total_jam/3600}</StyledTableCell>
                
               </StyledTableRow>
               :
-              <StyledTableRow>
-              
-            </StyledTableRow>
+              <a></a>
                   
                 )))}
             </TableBody>
@@ -575,6 +610,14 @@ const KelolaGaji = ({history, match}) => {
         :
         <Container></Container>
       }
+      <Dialog open={success} handleClose={()=>setSuccess(false)} ></Dialog>
+        <DialogFail
+          open={!!error.detail} 
+          handleClose={()=>{
+            setError({});
+          }} 
+          text={error.detail}
+          />
       </div>
 
     )

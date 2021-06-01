@@ -30,6 +30,8 @@ class GajiViewSet(viewsets.ReadOnlyModelViewSet, mixins.UpdateModelMixin):
     period = today.replace(day=1)
     if (not Gaji.objects.filter(periode=period).exists()): 
       self.perform_generate_gaji(period)
+    if request.query_params.get('disablepagination') != None:
+            self.pagination_class = None
     return super().list(request, *args, **kwargs)
 
 

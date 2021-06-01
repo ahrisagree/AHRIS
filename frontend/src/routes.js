@@ -145,7 +145,7 @@ export default [
     component: DetailEditUser
   },
   {
-    path: 'my-presensi',
+    path: '/my-presensi',
     exact: true,
     component: MyPresensi
   },

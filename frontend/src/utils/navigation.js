@@ -185,7 +185,7 @@ export const ADMIN_NAVIGATION = [
       },
       {
         menu: 'Presensi Saya',
-        path: '/log/daftar-presensi',
+        path: '/my-presensi',
       }
     ]
   },
