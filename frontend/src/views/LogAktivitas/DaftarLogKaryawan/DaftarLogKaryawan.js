@@ -27,6 +27,7 @@ import { setQueryParams } from 'utils/setQueryParams';
 import CustomTextField from 'components/CustomTextField';
 import TextField from 'components/CustomTextField';
 import Status from 'components/Status';
+import { exportLog } from 'utils/csv';
 
 const useStyles = makeStyles((theme) =>({
   root: {
@@ -188,6 +189,19 @@ const DaftarLogKaryawan = (props) => {
     setFilterPenyetuju(null);
     setFilterTanggalSetelah(null);
     setFilterTanggalSebelum(null);
+  }
+
+  const exportCSV = () => {
+    const search = params.get("search");
+    const status = params.get("status");
+    const penyetuju = params.get("penyetuju");
+    const date_after = params.get("date_after");
+    const date_before = params.get("date_before");
+    getListLogKaryawan({
+      search, status, penyetuju, date_after, date_before, disablepagination: true 
+    }).then(res=>{
+      exportLog(res.data, "Nama file");
+    })
   }
 
     return (
