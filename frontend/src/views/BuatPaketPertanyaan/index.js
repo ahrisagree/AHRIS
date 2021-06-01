@@ -22,6 +22,7 @@ import {
 } from 'api/borang';
 import Loading from 'components/Loading';
 import { EditRounded } from '@material-ui/icons';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   smallSelection: {
@@ -313,6 +314,7 @@ const BuatPaketPertanyaan = ({paket, isEdit, isDetail, setEditMode}) => {
             </TemplateButton>
           }
           {!isDetail && 
+            <Link to ={`/paket-pertanyaan/`}>
             <TemplateButton
               onClick={!isEdit ? sendData : sendEditData}
               type="button"
@@ -322,6 +324,7 @@ const BuatPaketPertanyaan = ({paket, isEdit, isDetail, setEditMode}) => {
             >
               Simpan
             </TemplateButton>
+            </Link>
           }
           <Loading open={loading} />
         </div>

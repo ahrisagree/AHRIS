@@ -24,6 +24,10 @@ import CircularProgress from 'components/Loading/CircularProgress';
 import TemplateButton from 'components/TemplateButton';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutlineRounded';
 import CreateIcon from '@material-ui/icons/CreateRounded';
+import Dialog from 'components/Dialog';
+import DialogFail from 'components/DialogFail';
+import Loading from 'components/Loading';
+
 
 function RedditTextField(props) {
   const classes = useStylesReddit();
@@ -51,9 +55,12 @@ const useStylesReddit = makeStyles((theme) => ({
 }));
 
 const useStyles = makeStyles({})
-const EvaluasiPerforma = ({match, history, user}) => {
+const EvaluasiPerforma = (props) => {
   const classes = useStyles();
   const [loading, setLoading] = useState(false);
+  const { id } = props.match.params;
+  const [update, setUpdate] = useState(0);
+  const [page, setPage] = useState(1);  
   
 
   // const [update, setUpdate] = useState(0);
@@ -66,13 +73,16 @@ const EvaluasiPerforma = ({match, history, user}) => {
   const [assignment, setAssignment] = useState(null);
   const [paketPertanyaan, setPaketPertanyaan] = useState(null);
   
-  const { id } = match.params;
+
   useEffect(()=>{
     setLoading(true)
-    
+    const id = props.match.params.id;
     getDetailHasilPerforma(id).then(res=>{
+      const { data } = res;
       const hasilperformaData = res.data;
       setAssignment(hasilperformaData);
+      setFeedback(data.feedback);
+      console.log(data)
     }).catch(err=>{
       console.log(err.response && err.response.data);
     }).finally(()=>{
@@ -80,17 +90,38 @@ const EvaluasiPerforma = ({match, history, user}) => {
     })
 
   
-  }, []);
+  }, [update]);
+
+  // const onSubmit = () => {
+  //   const { idUser } = props.match.params;
+  //   setLoading(true)
+  //   editUser(idUser, {
+  //     username: username,
+  //     divisi: divisi,
+  //     role: role,
+  //     gaji: gaji
+  //   }).then(res=>{
+  //     setSuccess(true);
+  //     console.log(res.data)
+  //   }).catch(err=>{
+  //     console.error(err.response);
+  //     setError(err.response && err.response.data);
+  //   }).finally(()=>{
+  //     setLoading(false);
+  //   })
+  // }
 
   const onSubmit = () => {
     // generate password
-    const { id } = match.params;
+    const { id } = props.match.params;
     setLoading(true);
-    commentManager({
-      feedback,
+    commentManager( id, {
+      feedback: feedback,
     }).then(res=>{
       setFeedback("");
       setRegistFeedback(true);
+      setSuccess(true);
+      setUpdate(update+1);
     }).catch(err=>{
       console.error(err.response);
       setError(err.response && err.response.data);
@@ -98,6 +129,7 @@ const EvaluasiPerforma = ({match, history, user}) => {
       setLoading(false);
     })
   }
+
 
   // const handleChange = (indexAspek, indexPertanyaan, jawaban) => {
   //   const newPaket =  {...paketPertanyaan};
@@ -148,11 +180,15 @@ const EvaluasiPerforma = ({match, history, user}) => {
                             {aspek.deskripsi}
                           </Grid>
                           <Grid item xs={12} md={4} container justify="center">
-                                
-                            <div className={classes.root}>
+                              {aspek.skor === 0 ?
+                            (<div className={classes.root}>
+                              </div>)
+                              :
+                              ( <div className={classes.root}>
                               <Rating name="half-rating-read" value={aspek.skor} precision={0.5} readOnly />
-                             </div>
-                                {/* <TextField
+                             </div>)
+                                }
+                                {/* /* <TextField
                                   required
                                   // value={pertanyaan.jawaban}
                                   // onChange={e=>handleChange(indexAspek, indexPertanyaan, e.target.value)}
@@ -162,13 +198,16 @@ const EvaluasiPerforma = ({match, history, user}) => {
                                   multiline
                             
                                 > Test </TextField> */}
-                         
+          
                             </Grid>
                           </Grid>
                         </StyledTableCell>
-                        <StyledTableCell align="left">
-                        {aspek.skor}
-                        </StyledTableCell>
+                        {aspek.skor === 0 ?
+                        (<StyledTableCell align="left">
+                        </StyledTableCell>)
+                        : (<StyledTableCell align="left">
+                          {aspek.skor}
+                          </StyledTableCell>)}
                       </TableRow>
                 </TableBody>
               </>
@@ -327,6 +366,15 @@ const EvaluasiPerforma = ({match, history, user}) => {
             </TemplateButton>
         </div>
         {/* </Paper> */}
+        <Loading open={loading} />
+        <Dialog open={success} handleClose={()=>setSuccess(false)} ></Dialog>
+        <DialogFail
+          open={!!error.detail} 
+          handleClose={()=>{
+            setError({});
+          }} 
+          text={error.detail}
+          />
     </div>
   );
 };
