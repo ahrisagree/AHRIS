@@ -128,6 +128,8 @@ const KelolaGaji = ({history, match}) => {
   const [roleFilter, setFilterRole] = useState(params.get("role"));
   const [divisiFilter, setFilterDivisi] = useState(params.get("divisi"));
   const [searchFilter, setFilterSearch] = useState(params.get("search"));
+  const [tanggalSetelahFilter, setFilterTanggalSetelah] = useState();
+  const [tanggalSebelumFilter, setFilterTanggalSebelum] = useState();
   
   useEffect(()=>{
     setLoading(true)
@@ -181,6 +183,8 @@ const KelolaGaji = ({history, match}) => {
 
   useEffect(()=>{
     setLoading(true)
+    const date_after = params.get("date_after");
+    const date_before = params.get("date_before");
     if(detail !== null){
       getListLog({ 
         //disablepagination:true,
@@ -241,7 +245,18 @@ const KelolaGaji = ({history, match}) => {
     setQueryParams({
       role: roleFilter || "",
       divisi: divisiFilter || "",
-      search: searchFilter || ""
+      search: searchFilter || "",
+      date_after: tanggalSetelahFilter || "",
+      date_before: tanggalSebelumFilter || ""
+    }, history);
+    setPage(1);
+    setUpdate(update+1);
+  }
+
+  const doQuery2 = () => {
+    setQueryParams({
+      date_after: tanggalSetelahFilter || "",
+      date_before: tanggalSebelumFilter || ""
     }, history);
     setPage(1);
     setUpdate(update+1);
@@ -253,6 +268,15 @@ const KelolaGaji = ({history, match}) => {
     setFilterDivisi(null);
     setFilterSearch(null);
     setFilterRole(null);
+    setFilterTanggalSetelah(null);
+    setFilterTanggalSebelum(null);
+  }
+
+  const resetQuery2 = () => {
+    setQueryParams({}, history);
+    setPage(1);
+    setFilterTanggalSetelah(null);
+    setFilterTanggalSebelum(null);
   }
 
   const detailUser = (row) => {
@@ -339,11 +363,16 @@ const KelolaGaji = ({history, match}) => {
             value={searchFilter}
             onChange={e=>setFilterSearch(e.target.value)}
           />
-          <Tooltip title="Download">
+          <ExcelFile element={<Tooltip title="Download">
                         <IconButton size="medium">
                           <CloudDownloadIcon style={{ color: "#0A3142"}}/>
                         </IconButton>
-                      </Tooltip>
+                      </Tooltip>}>
+                <ExcelSheet data={listItem} name="Employees">
+                    <ExcelColumn label="Nama" value="user.username"/>
+                    <ExcelColumn label="Gaji" value="nominal"/>
+                </ExcelSheet>
+          </ExcelFile>
         </Grid>
         
         <Grid item xs={4}>
@@ -549,6 +578,50 @@ const KelolaGaji = ({history, match}) => {
             </div>
 
             <MainTitle title="Daftar Log" style={{marginTop:75}} className="mb-8"></MainTitle>
+            <div className="w-full md:w-1/3 my-2 md:mr-2">
+              <TextField
+                variant="outlined"
+                id="date"
+                label="Dari Tanggal"
+                type="date"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                value={tanggalSetelahFilter}
+                onChange={e=>{setFilterTanggalSetelah(e.target.value)}}
+                disabled={loading}
+                />
+          </div>
+
+          <div className="w-full md:w-1/3 my-2 md:mr-2">
+              <TextField
+                variant="outlined"
+                id="date"
+                label="Sampai Tanggal"
+                type="date"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                value={tanggalSebelumFilter}
+                onChange={e=>{setFilterTanggalSebelum(e.target.value)}}
+                disabled={loading}
+                />
+          </div>
+
+          <div className="flex items-center">
+            {!(
+              params.get("date_after") === tanggalSetelahFilter &&
+              params.get("date_before") === tanggalSebelumFilter 
+             ) &&
+              <button onClick={doQuery2} className="m-1">Apply</button>  
+            }
+            {(
+             params.get("date_after") ||
+             params.get("date_before") 
+             ) &&
+            <button onClick={resetQuery2} className="m-1">Reset</button>  
+            }
+          </div>
             <TableContainer component={Paper}>
           <MuiTable className={classes.table} aria-label="customized table">
             <TableHead>
@@ -556,7 +629,7 @@ const KelolaGaji = ({history, match}) => {
                 <StyledTableCell align="left">No </StyledTableCell>
                 <StyledTableCell align="left">Tanggal </StyledTableCell>
                 <StyledTableCell align="left">Tipe Log </StyledTableCell>
-                <StyledTableCell align="left">Waktu </StyledTableCell>
+                <StyledTableCell align="left">Durasi </StyledTableCell>
               
                
               </TableRow>
@@ -582,7 +655,7 @@ const KelolaGaji = ({history, match}) => {
                 </StyledTableCell>
                 <StyledTableCell align="left">{row.tanggal}</StyledTableCell>
                 <StyledTableCell align="left">{row.is_lembur ? "Lembur" : "Reguler"}</StyledTableCell>
-                <StyledTableCell align="left">{row.total_jam/3600}</StyledTableCell>
+                <StyledTableCell align="left">{row.total_jam/3600} jam</StyledTableCell>
                
               </StyledTableRow>
               :
@@ -605,13 +678,6 @@ const KelolaGaji = ({history, match}) => {
           }} 
           text={error.detail}
           />
-
-<ExcelFile element={<button>Download Data</button>}>
-                <ExcelSheet data={listItem} name="Employees">
-                    <ExcelColumn label="Name" value="user.username"/>
-                    <ExcelColumn label="Gaji" value="nominal"/>
-                </ExcelSheet>
-            </ExcelFile>
       </div>
 
       
