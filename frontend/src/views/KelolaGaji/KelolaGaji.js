@@ -31,6 +31,8 @@ import { setQueryParams } from 'utils/setQueryParams';
 import { StyledTableCell, StyledTableRow } from "components/Table";
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 import { editGaji, getListGaji } from 'api/gaji';
+import { exportGaji } from 'utils/csv';
+import { periodFormated } from 'utils/periodeConverter';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -116,7 +118,7 @@ const KelolaGaji = ({history, match}) => {
   const [total, setTotal] = useState(gaji+penyesuaian);
   const [detail, setDetail] = useState(null);
   const [update, setUpdate] = useState(0);
-  const [periodeFilter, setPeriodeFilter] = useState(new Date().toISOString().substr(0,10));
+  const [periodeFilter, setPeriodeFilter] = useState(new Date().toISOString().substr(0,7));
   const [success, setSuccess] = useState(false);
   const params = new URLSearchParams(history.location.search);
   const { idUser } = match.params;
@@ -134,7 +136,7 @@ const KelolaGaji = ({history, match}) => {
 
     getListGaji({
       page,
-      periode,
+      periode: periodFormated(periode),
       search,
       role,
       divisi
@@ -155,6 +157,23 @@ const KelolaGaji = ({history, match}) => {
       console.error(err.response);
     })
   }, [])
+
+  const exportToCSV = () => {
+    const periode = periodeFilter;
+    const search = params.get("search");
+    const role = params.get("role");
+    const divisi = params.get("divisi");
+
+    getListGaji({
+      periode: periodFormated(periode),
+      search,
+      role,
+      divisi,
+      disablepagination: true
+    }).then(res=>{
+      exportGaji(res.data, `Gaji ${periode}`)
+    })
+  }
 
 
   /*useEffect(()=>{
@@ -265,7 +284,7 @@ const KelolaGaji = ({history, match}) => {
   console.log(penyesuaian)
     return (
         <div className={classes.splitScreen}>
-        <div className={classes.topPane}>
+        <div className={classes.topPane} style={{width: 'unset'}}>
             <MainTitle title="Daftar Gaji" className="mb-8"></MainTitle>
 
             <Grid item xs={10} alignContent="">
@@ -276,7 +295,7 @@ const KelolaGaji = ({history, match}) => {
             size="small"
             className={classes.mb}
             fullWidth
-            type="date"
+            type="month"
             bordered={true}
             value={periodeFilter}
             onChange={e=>handleChangePeriod(e.target.value)}
@@ -334,10 +353,10 @@ const KelolaGaji = ({history, match}) => {
             onChange={e=>setFilterSearch(e.target.value)}
           />
           <Tooltip title="Download">
-                        <IconButton size="medium">
-                          <CloudDownloadIcon style={{ color: "#0A3142"}}/>
-                        </IconButton>
-                      </Tooltip>
+            <IconButton size="medium" onClick={exportToCSV}>
+              <CloudDownloadIcon style={{ color: "#0A3142"}}/>
+            </IconButton>
+          </Tooltip>
         </Grid>
         
         <Grid item xs={4}>

@@ -9,11 +9,7 @@ function convertToCSV(objArray) {
       for (var index in array[i]) {
           if (line !== '') line += ','
 
-          if (isNaN(array[i][index])) {
-            line += array[i][index].split(',').join(" ");
-          } else {
-            line += array[i][index];
-          }
+        line += String(array[i][index]).split(',').join(" ");
       }
 
       str += line + '\r\n';
@@ -56,12 +52,14 @@ export function exportGaji(data, fileName) {
   const header = {
     nama: "Nama",
     gaji: "Gaji",
-    periode: "Periode"
+    periode: "Periode",
+    divisi: "Divisi"
   }
   const listData = data.map(row => ({
     nama: row.user.username,
     gaji: row.nominal,
     periode: row.periode,
+    divisi: row.user.divisi.map((x)=> x.nama_divisi).join("; ")
   }));
   exportCSVFile(header, listData, fileName)
 }
