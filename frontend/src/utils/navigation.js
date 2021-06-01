@@ -24,7 +24,16 @@ export const TEST_NAVIGATION = [
   {
     menu: 'Presensi',
     icon: <CheckIcon style={{ color: 'white' }}/>,
-    path: '/'
+    children: [
+      {
+        menu: 'Buat Presensi',
+        path: '/',
+      },
+      {
+        menu: 'My Presensi',
+        path: '/log/daftar-presensi',
+      }
+    ]
   },
   {
     menu: 'Daily Log',
@@ -32,7 +41,7 @@ export const TEST_NAVIGATION = [
     children: [
       {
         menu: 'List Daily Log',
-        path: '/daftar-log',
+        path: '/log',
       },
       {
         menu: 'Submit Log',
@@ -76,7 +85,7 @@ export const TEST_NAVIGATION = [
   },
   {
     menu: 'Gaji',
-    path: '/',
+    path: '/gaji',
     icon: <LocalAtmRoundedIcon style={{ color: 'white' }}/>,
   }
 ]

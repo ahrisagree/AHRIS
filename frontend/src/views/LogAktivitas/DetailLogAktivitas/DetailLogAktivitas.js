@@ -12,7 +12,7 @@ import {
 import TextField from 'components/CustomTextField';
 import MainTitle from 'components/MainTitle';
 import TemplateButton from 'components/TemplateButton';
-import { getLog, komentarLogAPI } from 'api/log';
+import { deleteLogAPI, getLog, komentarLogAPI } from 'api/log';
 import { STATUS_LOG } from 'utils/constant';
 import Loading from 'components/Loading';
 import Dialog from 'components/Dialog';
@@ -20,7 +20,7 @@ import DialogFail from 'components/DialogFail';
 import { Link } from 'react-router-dom';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutlineRounded';
 import EditRounded from '@material-ui/icons/CreateRounded';
-
+import DeleteConfirmationDialog from 'components/DialogConf';
 
 
 const daftar_tipe = [
@@ -73,7 +73,7 @@ const useStyles = makeStyles((theme) => ({
 
 
 
-const DetailLogAktivitas = (props, {history}) => {
+const DetailLogAktivitas = (props) => {
   const classes = useStyles();
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState({});
@@ -93,13 +93,11 @@ const DetailLogAktivitas = (props, {history}) => {
   const [notes, setNotes] = React.useState("");
   const [statusLog, setStatusLog] = React.useState("");
   const {user} = props;
-  const [role, setRole] = React.useState(user.role);
+  const [role] = React.useState(user.role);
+  const [deleteConfirm, setDeleteConfirm] = useState(false);
+
  
   const { id } = props.match.params;
-
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-  };
 
   useEffect(() => {
     setLoading(true);
@@ -118,7 +116,7 @@ const DetailLogAktivitas = (props, {history}) => {
       setNotes(data.notes);
       setAlasanLembur(data.alasan_lembur);
       setKomentar(data.komentar);
-      setStatusLog(data.status_log);
+      setStatusLog(STATUS_LOG[data.status_log]);
     }).catch(err => {
       // HANDLE ERROR
     }).finally(() => {
@@ -142,31 +140,45 @@ const DetailLogAktivitas = (props, {history}) => {
     })
   }
 
+  const deleteLog = () => {
+    const { id } = props.match.params;
+    setLoading(true);
+    deleteLogAPI(id).then(()=>{
+      props.history.push('/log');
+    }).catch(err=>{
+      setError(err.response && err.response.data);
+    }).finally(()=>{
+      setLoading(false)
+    })
+  }
+
     return (
       <div className="m-10">
          <Grid item xs={12}>
      
-         <Link to={`/edit-log/${id}`}>
+         <Tooltip title="Delete">
+        <IconButton size="small" style={{float: 'right'}} onClick={()=>setDeleteConfirm(true)}>
+          <DeleteOutlineIcon />
+        </IconButton>
+      </Tooltip>
+
+         <Link to={`/log/${id}/edit`} style={{float: 'right'}}>
           <Tooltip title="Edit">
-            <IconButton size="small" style={{float: 'right'}}>
+            <IconButton size="small" >
                <EditRounded />
             </IconButton>
           </Tooltip>
                     
          </Link>
     
-      <Tooltip title="Delete">
-        <IconButton size="small" style={{float: 'right'}} >
-          <DeleteOutlineIcon />
-        </IconButton>
-      </Tooltip>
+      
       </Grid>
         <MainTitle title="Detail Log Aktivitas" className="mb-8" />
         <Container component={Paper} className={classes.paper}>
 
           <Grid item xs={12}>
             <Typography style={{ fontWeight: 600, marginLeft: '1%', marginBottom: '3%', fontFamily: 'IBM Plex Sans', fontStyle: 'normal', 
-            fontWeight: 600, fontSize: 24, lineHeight: '138%', display: 'flex', alignItems: 'center', letterSpacing: '0.0075em', color: '#0A3142' }} 
+            fontSize: 24, lineHeight: '138%', display: 'flex', alignItems: 'center', letterSpacing: '0.0075em', color: '#0A3142' }} 
             variant="subtitle1">
               Log Aktivitas
             </Typography>
@@ -249,7 +261,6 @@ const DetailLogAktivitas = (props, {history}) => {
 
 
             <TextField id="outlined-full-width"
-            required="true"
             label="Keterangan"
             style={{ margin: 10, width: "34%" }}
             margin="normal"
@@ -297,7 +308,6 @@ const DetailLogAktivitas = (props, {history}) => {
 
             <TextField id="outlined-multiline-static"
             label="Notes"
-            required="true"
             style={{ margin: 8, width: "30%" }}
             margin="normal"
             className={classes.textField}
@@ -338,7 +348,7 @@ const DetailLogAktivitas = (props, {history}) => {
               style={{ margin: 8, width: "30%" }}
               margin="normal"
               className={classes.textField}
-              value={STATUS_LOG[statusLog]}
+              value={statusLog}
               disabled={true}
               isDetail
               />
@@ -409,6 +419,11 @@ const DetailLogAktivitas = (props, {history}) => {
           }} 
           text={error.detail}
           />
+         <DeleteConfirmationDialog 
+          open={!!deleteConfirm}
+          handleCancel={()=>setDeleteConfirm(false)}
+          handleConfirm={deleteLog}
+        />
       </div>
     )
 };

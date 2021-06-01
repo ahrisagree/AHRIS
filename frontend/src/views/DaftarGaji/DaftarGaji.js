@@ -128,11 +128,10 @@ const DaftarGaji = ({history}) => {
         <Grid item xs={12} container>
 
         <Grid item xs={2} alignContent="">
-        <div style={{position: 'relative', display: 'inline-block', padding: 2}}>
-                <SearchIcon style={{position: 'absolute', right: 0, top: 10, width: 25, height: 25}}/>
                 <TextField
                     label="Search"
                     fullWidth
+                    type="search"
                     bordered={true}
                     value={searchFilter}
                     onChange={e=>setFilterSearch(e.target.value)}
@@ -141,7 +140,6 @@ const DaftarGaji = ({history}) => {
                     size="small"
                     hintText="Search by Name"
                   />
-          </div>
         </Grid>
           <Grid item xs={2} alignContent="">
           <div style={{position: 'relative', padding: 2}}>

@@ -122,18 +122,18 @@ const DaftarLogKaryawan = (props) => {
   }, [page, update]);
 
 
-    const sendDisetujui = (id) => {
-      setLoading(true)
-      setujuiLogAPI(id, {
-        status_log: 1,
-      }).then(res => {
-        setUpdate(true);
-      }).catch(err => {
+  const sendDisetujui = (id) => {
+    setLoading(true)
+    setujuiLogAPI(id, {
+      status_log: 1,
+    }).then(res => {
+      setUpdate(true);
+    }).catch(err => {
 
-      }).finally(() => {
-        setLoading(false);
-      })
-    }
+    }).finally(() => {
+      setLoading(false);
+    })
+  }
 
   const sendDitolak = (id) => {
     setLoading(true);
@@ -187,7 +187,7 @@ const DaftarLogKaryawan = (props) => {
           <div className="w-full md:w-1/3 my-2 md:mr-2">
 
             <CustomTextField
-              label="Search"
+              label="Nama Karyawan"
               variant="outlined"
               size="small"
               fullWidth
@@ -235,7 +235,7 @@ const DaftarLogKaryawan = (props) => {
               <CustomTextField
                 variant="outlined"
                 id="date"
-                label="Dari"
+                label="Dari Tanggal"
                 type="date"
                 InputLabelProps={{
                   shrink: true,
@@ -250,7 +250,7 @@ const DaftarLogKaryawan = (props) => {
               <CustomTextField
                 variant="outlined"
                 id="date"
-                label="Sampai"
+                label="Sampai Tanggal"
                 type="date"
                 InputLabelProps={{
                   shrink: true,
@@ -327,7 +327,7 @@ const DaftarLogKaryawan = (props) => {
                     <StyledTableCell align="left">{row.manajer_penyetuju !== null ? row.manajer_penyetuju.username : "" }</StyledTableCell>
                     <StyledTableCell align="center">
                     
-                    <Link to={`/detail-log/${row.id}`}>
+                    <Link to={`/log/${row.id}`}>
                     <TemplateButton 
                       type="button" 
                       buttonStyle="btnGreen" 

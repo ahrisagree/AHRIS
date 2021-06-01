@@ -27,7 +27,6 @@ import EvaluasiPerforma from "views/EvaluasiPerforma";
 import DaftarEvaluasiPerforma from "views/DaftarEvaluasiPerforma";
 import DaftarGaji from "views/DaftarGaji";
 import KelolaGaji from "views/KelolaGaji";
-import EditAkun from "views/EditAkun";
 
 export default [
   {
@@ -71,6 +70,11 @@ export default [
     component: DetailEditPaketPertanyaan,
   },
   {
+    path: '/paket-pertanyaan/:id/edit',
+    exact: true,
+    component: DetailEditPaketPertanyaan,
+  },
+  {
     path: '/akun',
     exact: true,
     component: DaftarKaryawan
@@ -96,7 +100,7 @@ export default [
     component: LogAktivitas
   },
   {
-    path: '/daftar-log',
+    path: '/log',
     exact: true,
     component: DaftarLog
   },
@@ -106,12 +110,12 @@ export default [
     component: DaftarLogKaryawan
   },
   {
-    path: '/detail-log/:id',
+    path: '/log/:id',
     exact: true,
     component: DetailLogAktivitas
   },
   {
-    path: '/edit-log/:id',
+    path: '/log/:id/edit',
     exact: true,
     component: EditLogAktivitas
   },
@@ -141,12 +145,7 @@ export default [
     component: DetailEditUser
   },
   {
-    path: '/log/presensi',
-    exact: true,
-    component: Home
-  },
-  {
-    path: '/log/daftar-presensi',
+    path: 'my-presensi',
     exact: true,
     component: MyPresensi
   },
@@ -176,8 +175,8 @@ export default [
     component: KelolaGaji
   },
   {
-    path: '/akun/edit/:idUser',
+    path: '/akun/:idUser/edit',
     exact: true,
-    component: EditAkun
+    component: DetailEditUser
   },
 ]

@@ -19,12 +19,10 @@ import CreateIcon from '@material-ui/icons/CreateRounded';
 import { StyledTableCell, StyledTableRow } from "components/Table";
 import MainTitle from "components/MainTitle";
 import Pagination from '@material-ui/lab/Pagination';
-import { getDivisiAPI, getListDaftarKaryawan, deleteKaryawanAPI, editUser } from 'api/akun';
+import { getDivisiAPI, getListDaftarKaryawan, deleteKaryawanAPI } from 'api/akun';
 import { PAGE_SIZE, ROLES } from 'utils/constant';
 import CircularProgress from 'components/Loading/CircularProgress';
 import DeleteConfirmationDialog from 'components/DialogConf';
-import SearchIcon from '@material-ui/icons/Search';
-import _, {debounce} from 'lodash';
 import Loading from 'components/Loading';
 import { setQueryParams } from 'utils/setQueryParams';
 import VisibilityIcon from '@material-ui/icons/Visibility';
@@ -45,7 +43,6 @@ const DaftarKaryawan = ({history}) => {
   const [count, setCount] = useState(0);
   const [deleteKaryawan, setDeleteKaryawan] = useState(null);
   const [fullLoading, setFullLoading] = useState(false);
-  const [editMode, setEditMode] = useState(false);
 
   // buat ngefilter
   const [update, setUpdate] = useState(0);
@@ -129,8 +126,6 @@ const DaftarKaryawan = ({history}) => {
         <Grid item xs={12} container>
 
         <Grid item xs={2} alignContent="">
-        <div style={{position: 'relative', display: 'inline-block', padding: 2}}>
-                <SearchIcon style={{position: 'absolute', right: 0, top: 10, width: 25, height: 25}}/>
                 <TextField
                     label="Search"
                     fullWidth
@@ -143,7 +138,6 @@ const DaftarKaryawan = ({history}) => {
                     size="small"
                     hintText="Search by Name"
                   />
-          </div>
         </Grid>
           <Grid item xs={2} alignContent="">
           <div style={{position: 'relative', padding: 2}}>
@@ -253,7 +247,7 @@ const DaftarKaryawan = ({history}) => {
                         </IconButton>
                       </Tooltip>
                       <Tooltip title="Edit">
-                        <IconButton size="small" onClick={()=>history.push(`/akun/edit/${row.pk}`)}>
+                        <IconButton size="small" onClick={()=>history.push(`/akun/${row.pk}/edit`)}>
                           <CreateIcon style={{ color: "green"}}/>
                         </IconButton>
                       </Tooltip>
