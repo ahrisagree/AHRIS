@@ -10,9 +10,13 @@ import {
   TableRow,
   Paper,
   Grid,
-  MenuItem
+  MenuItem,
+  Tooltip,
+  IconButton
 } from '@material-ui/core';
 import { getListLogKaryawan, getKaryawan, setujuiLogAPI } from 'api/log';
+import { getListDaftarKaryawan } from 'api/akun';
+import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 import { PAGE_SIZE, STATUS_LOG_LABEL, STATUS_LOG } from 'utils/constant';
 import { StyledTableCell, StyledTableRow } from "components/Table";
 import MainTitle from "components/MainTitle";
@@ -89,10 +93,12 @@ const DaftarLogKaryawan = (props) => {
   const {user} = props;
   const {history} = props;
   const [role, setRole] = React.useState(user.role);
+  const [karyawanOptions, setKaryawanOptions] = useState([]);
 
   const params = new URLSearchParams(history.location.search);
 
   const [searchFilter, setFilterSearch] = useState(params.get("search"));
+  const [userFilter, setFilterUser] = useState(params.get("user"));
   const [statusFilter, setFilterStatus] = useState(params.get("status"));
   const [penyetujuFilter, setFilterPenyetuju] = useState(params.get("penyetuju"));
   const [tanggalSetelahFilter, setFilterTanggalSetelah] = useState();
@@ -102,6 +108,7 @@ const DaftarLogKaryawan = (props) => {
   useEffect(()=>{
     setLoading(true)
     const search = params.get("search");
+    const user = params.get("user");
     const status = params.get("status");
     const penyetuju = params.get("penyetuju");
     const date_after = params.get("date_after");
@@ -109,7 +116,7 @@ const DaftarLogKaryawan = (props) => {
     
     
     getListLogKaryawan({
-      page, search, status, penyetuju, date_after, date_before
+      page, search, status, penyetuju, date_after, date_before, user
     }).then(res=>{
       setListItem(res.data?.results);
       setCount(Math.ceil(res.data?.count/PAGE_SIZE));
@@ -120,6 +127,16 @@ const DaftarLogKaryawan = (props) => {
     })
 
   }, [page, update]);
+
+  useEffect(()=>{
+    getListDaftarKaryawan({
+      disablepagination: true
+    }).then(res=>{
+      setKaryawanOptions(res.data);
+    }).catch(err=>{
+      console.error(err.response);
+    })
+  }, [])
 
 
   const sendDisetujui = (id) => {
@@ -151,6 +168,7 @@ const DaftarLogKaryawan = (props) => {
   const doQuery = () => {
     setQueryParams({
       search: searchFilter || "",
+      user: userFilter || "",
       status: statusFilter || "",
       penyetuju: penyetujuFilter || "",
       date_after: tanggalSetelahFilter || "",
@@ -165,6 +183,7 @@ const DaftarLogKaryawan = (props) => {
     setPage(1);
     setUpdate(update+1);
     setFilterSearch(null);
+    setFilterUser(null);
     setFilterStatus(null);
     setFilterPenyetuju(null);
     setFilterTanggalSetelah(null);
@@ -187,7 +206,7 @@ const DaftarLogKaryawan = (props) => {
           <div className="w-full md:w-1/3 my-2 md:mr-2">
 
             <CustomTextField
-              label="Nama Karyawan"
+              label="Cari Karyawan"
               variant="outlined"
               size="small"
               fullWidth
@@ -196,6 +215,24 @@ const DaftarLogKaryawan = (props) => {
               onChange={e=>setFilterSearch(e.target.value)}
               />
             
+          </div>
+
+          <div className="w-full md:w-1/3 my-2 md:mr-2">
+              <TextField
+                label="Nama Karyawan"
+                variant="outlined"
+                size="small"
+                className={classes.mb}
+                fullWidth
+                value={userFilter}
+                onChange={e=>setFilterUser(e.target.value)}
+                select
+                bordered={true}
+              >
+                {karyawanOptions.map(k=>(
+                  <MenuItem value={k.pk}>{k.username}</MenuItem>
+                ))}
+              </TextField>
           </div>
 
           <div className="w-full md:w-1/3 my-2 md:mr-2">
@@ -280,7 +317,16 @@ const DaftarLogKaryawan = (props) => {
             <button onClick={resetQuery} className="m-1">Reset</button>  
             }
           </div>
-      
+      </div>
+
+      <div>
+        <Grid item xs={1} alignContent="flex-end">
+            <Tooltip title="Download">
+                <IconButton size="medium">
+                  <CloudDownloadIcon style={{ color: "#0A3142", position:"absolute", right: 0}}/>
+                </IconButton>
+              </Tooltip>
+        </Grid>
       </div>
 
         <TableContainer component={Paper}>
