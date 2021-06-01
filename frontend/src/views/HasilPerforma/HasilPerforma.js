@@ -22,6 +22,7 @@ import TemplateButton from 'components/TemplateButton';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutlineRounded';
 import DeleteConfirmationDialog from 'components/DialogConf';
 import CreateIcon from '@material-ui/icons/CreateRounded';
+import { deleteEvaluasiDiriAPI } from 'api/hasilperforma';
 
 
 const useStyles = makeStyles({})
@@ -31,12 +32,13 @@ const HasilPerforma = ({match, history, user}) => {
 
   
 
-  // const [update, setUpdate] = useState(0);
+  const [update, setUpdate] = useState(0);
   const [success, setSuccess] = useState(false);
   const [fail, setFail] = useState(null); 
   
   const [assignment, setAssignment] = useState(null);
   const [deleteEvaluasiDiri, setDeleteEvaluasiDiri] = useState(null);
+  
   
   const { id } = match.params;
   useEffect(()=>{
@@ -54,17 +56,17 @@ const HasilPerforma = ({match, history, user}) => {
   
   }, []);
 
-  // const handleDeleteEvaluasiDiri = () => {
-  //   setLoading(true);
-  //   deleteEvaluasiDiriAPI(deleteEvaluasiDiri.id).then(()=>{
-  //    setDeleteEvaluasiDiri(null);
-  //    setUpdate(update+1);
-  //   }).catch(err=>{
-  //     // Handle ERROR
-  //     }).finally(()=>{
-  //       setLoading(false);
-  //     });
-  //   }
+  const handleDeleteEvaluasiDiri = () => {
+    setLoading(true);
+    deleteEvaluasiDiriAPI(deleteEvaluasiDiri.id).then(()=>{
+     setDeleteEvaluasiDiri(null);
+     setUpdate(update+1);
+    }).catch(err=>{
+      // Handle ERROR
+      }).finally(()=>{
+        setLoading(false);
+      });
+    }
 
 
   return (
@@ -74,7 +76,7 @@ const HasilPerforma = ({match, history, user}) => {
         <Grid item xs={12} container>
           <Grid item alignContent="flex-start">
             {/* <div className="m-12"> */}
-            <MainTitle title={`${assignment?.nama} | ${assignment?.periode} `} className={classes.title} />
+            <MainTitle title={`Hasil Performa | ${assignment?.nama} | ${assignment?.periode.substr(0,7)} `} className={classes.title} />
             {/* </div> */}
           </Grid>
         </Grid>
@@ -234,7 +236,7 @@ const HasilPerforma = ({match, history, user}) => {
                     <Grid item sm={10}>
                     <Tooltip title="Delete">
                         <IconButton size="small" 
-                        // onClick={handleDeleteEvaluasiDiri}
+                        onClick={()=>setDeleteEvaluasiDiri(row)}
                         >
                           <DeleteOutlineIcon style={{ color: "red"}}/>
                         </IconButton>
@@ -256,11 +258,11 @@ const HasilPerforma = ({match, history, user}) => {
         </div>
 
       </Grid>
-      {/* <DeleteConfirmationDialog 
+      <DeleteConfirmationDialog 
           open={!!deleteEvaluasiDiri}
-          handleCancel={()=>setDeletEvaluasiDiri(null)}
-          handleConfirm={handleDeleteKaryawan}
-        /> */}
+          handleCancel={()=>setDeleteEvaluasiDiri(null)}
+          handleConfirm={handleDeleteEvaluasiDiri}
+        />
     </div>
   );
 };

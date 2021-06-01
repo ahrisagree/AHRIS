@@ -65,7 +65,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const LogAktivitas = () => {
+const LogAktivitas = ({history}) => {
   const classes = useStyles();
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState({});
@@ -374,7 +374,7 @@ const LogAktivitas = () => {
 
         </Container>
         <Loading open={loading} />
-        <Dialog open={!!createLog} handleClose={()=>setCreateLog(false)} ></Dialog>
+        <Dialog open={!!createLog} handleClose={()=>history.push(`/log`)} ></Dialog>
         <DialogFail
           open={!!error.detail} 
           handleClose={()=>{

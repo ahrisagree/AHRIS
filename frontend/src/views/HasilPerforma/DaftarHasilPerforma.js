@@ -15,6 +15,7 @@ import MainTitle from "components/MainTitle";
 import { getListHasilPerforma } from 'api/hasilperforma';
 import CircularProgress from 'components/Loading/CircularProgress';
 import CustomTextField from 'components/CustomTextField';
+import { periodFormated } from 'utils/periodeConverter';
 
 
 
@@ -85,7 +86,7 @@ const DaftarHasilPerforma = ({history, match, user}) => {
     const [loading, setLoading] = useState(false);
     const [assignment, setAssignment] = useState(null);
     const [listHasilPerforma, setHasilPerforma] = React.useState([]);
-    const [periodeFilter, setPeriodeFilter] = useState(new Date().toISOString().substr(0,10));
+    const [periodeFilter, setPeriodeFilter] = useState(new Date().toISOString().substr(0,7));
 
 
   
@@ -94,7 +95,7 @@ const DaftarHasilPerforma = ({history, match, user}) => {
       setLoading(true)
       // const { id } = match.params;
       getListHasilPerforma( {
-        periodeAssigned: periodeFilter,
+        periode: periodFormated(periodeFilter),
         user: user.pk}).then(res=>{
         setAssignment(res.data?.results);
         setHasilPerforma(res.data?.results);
@@ -131,7 +132,7 @@ const DaftarHasilPerforma = ({history, match, user}) => {
                 size="small"
                 className={classes.mb}
                 fullWidth
-                type="date"
+                type="month"
                 bordered={true}
                 value={periodeFilter}
                 onChange={e=>setPeriodeFilter(e.target.value)}
