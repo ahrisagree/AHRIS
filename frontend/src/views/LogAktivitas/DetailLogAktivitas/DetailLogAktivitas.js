@@ -242,22 +242,15 @@ const DetailLogAktivitas = (props) => {
 
           <Grid item xs={12}>
             <TextField id="outlined-full-width"
-            select
             required="true"
             label="Tipe Log"
             style={{ margin: 10, width: "30%" }}
             margin="normal"
             className={classes.textField}
-            value={tipe}
+            value={tipe === false ? "Reguler" : "Lembur"}
             disabled={true}
             isDetail
-            >
-              {daftar_tipe.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </TextField>
+            />
 
 
             <TextField id="outlined-full-width"

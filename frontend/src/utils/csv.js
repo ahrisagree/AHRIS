@@ -9,7 +9,11 @@ function convertToCSV(objArray) {
       for (var index in array[i]) {
           if (line !== '') line += ','
 
-          line += array[i][index].split(',').join("");
+          if (isNaN(array[i][index])) {
+            line += array[i][index].split(',').join(" ");
+          } else {
+            line += array[i][index];
+          }
       }
 
       str += line + '\r\n';
@@ -77,7 +81,7 @@ export function exportLog(data, fileName) {
     notes: "Notes"
   }
   const listData = data.map(row=> ({
-    nama: row.user.pk,
+    nama: row.user.username,
     tanggal: row.tanggal,
     jam_masuk: row.jam_masuk,
     jam_keluar: row.jam_keluar,

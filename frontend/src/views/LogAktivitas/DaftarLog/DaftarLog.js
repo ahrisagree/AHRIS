@@ -286,7 +286,7 @@ const DaftarLog = (props) => {
                     <StyledTableCell align="left">{row.tanggal}</StyledTableCell>
                     <StyledTableCell align="left">{row.is_lembur ? "Lembur" : "Reguler"}</StyledTableCell>
                     <StyledTableCell align="left"><Status status={STATUS_LOG[row.status_log]} /></StyledTableCell>
-                    <StyledTableCell align="center">
+                    <StyledTableCell align="left">
                     
                     <Link to={`/log/${row.id}`}>
                     <Tooltip title="View">
@@ -296,14 +296,20 @@ const DaftarLog = (props) => {
                       </Tooltip>
                     </Link>
                     
+                    {STATUS_LOG[row.status_log] === "Disetujui" ?
+                    <IconButton size="small">
+                    
+                    </IconButton>
+                    :
                     <Link to={`/log/${row.id}/edit`}>
                     <Tooltip title="Edit">
-                        <IconButton size="small" disabled={STATUS_LOG[row.status_log] === "Disetujui" ? true : false}>
+                        <IconButton size="small">
                           <CreateIcon style={{ color: "green"}}/>
                         </IconButton>
                       </Tooltip>
                     
                     </Link>
+                    }
  
                     <Tooltip title="Delete">
                         <IconButton size="small" onClick={()=>setDeleteLog(row)}>
