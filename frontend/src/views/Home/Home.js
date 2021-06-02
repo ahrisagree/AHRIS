@@ -106,7 +106,7 @@ const Home = ({history}) => {
 
   const [searchFilter, setFilterSearch] = useState(params.get("search"));
   const [divisiFilter, setFilterDivisi] = useState(params.get("divisi"));
-  const [tanggalFilter, setFilterTanggal] = useState();
+  const [tanggalFilter, setFilterTanggal] = useState(params.get("tanggal"));
 
   const [error, setError] = React.useState({});
 
