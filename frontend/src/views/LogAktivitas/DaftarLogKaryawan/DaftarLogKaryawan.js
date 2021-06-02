@@ -88,7 +88,7 @@ const DaftarLogKaryawan = (props) => {
   const [listItem, setListItem] = useState([]);
   const [page, setPage] = useState(1);
   const [count, setCount] = useState(0);
-  const [fullLoading] = useState(false);
+  const [fullLoading, setFullLoading] = useState(false);
   const [update, setUpdate] = useState(false);
 
   const {user} = props;
@@ -102,8 +102,8 @@ const DaftarLogKaryawan = (props) => {
   const [userFilter, setFilterUser] = useState(params.get("user"));
   const [statusFilter, setFilterStatus] = useState(params.get("status"));
   const [penyetujuFilter, setFilterPenyetuju] = useState(params.get("penyetuju"));
-  const [tanggalSetelahFilter, setFilterTanggalSetelah] = useState();
-  const [tanggalSebelumFilter, setFilterTanggalSebelum] = useState();
+  const [tanggalSetelahFilter, setFilterTanggalSetelah] = useState(params.get("date_after"));
+  const [tanggalSebelumFilter, setFilterTanggalSebelum] = useState(params.get("date_before"));
 
 
   useEffect(()=>{
@@ -127,6 +127,7 @@ const DaftarLogKaryawan = (props) => {
       setLoading(false);
     })
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, update]);
 
   useEffect(()=>{
@@ -141,7 +142,7 @@ const DaftarLogKaryawan = (props) => {
 
 
   const sendDisetujui = (id) => {
-    setLoading(true);
+    setFullLoading(true);
     setujuiLogAPI(id, {
       status_log: 1,
     }).then(res => {
@@ -149,12 +150,12 @@ const DaftarLogKaryawan = (props) => {
     }).catch(err => {
 
     }).finally(() => {
-      setLoading(false);
+      setFullLoading(false);
     })
   }
 
   const sendDitolak = (id) => {
-    setLoading(true);
+    setFullLoading(true);
     setujuiLogAPI(id, {
       status_log: 2,
     }).then(res => {
@@ -162,7 +163,7 @@ const DaftarLogKaryawan = (props) => {
     }).catch(err => {
 
     }).finally(() => {
-      setLoading(false);
+      setFullLoading(false);
     })
   }
 
@@ -287,8 +288,9 @@ const DaftarLogKaryawan = (props) => {
           <div className="w-full md:w-1/3 my-2 md:mr-2">
               <CustomTextField
                 variant="outlined"
-                id="date"
+                id="date_dari"
                 label="Dari Tanggal"
+                size="small"
                 type="date"
                 InputLabelProps={{
                   shrink: true,
@@ -302,8 +304,9 @@ const DaftarLogKaryawan = (props) => {
           <div className="w-full md:w-1/3 my-2 md:mr-2">
               <CustomTextField
                 variant="outlined"
-                id="date"
+                id="date_sampai"
                 label="Sampai Tanggal"
+                size="small"
                 type="date"
                 InputLabelProps={{
                   shrink: true,
@@ -375,7 +378,7 @@ const DaftarLogKaryawan = (props) => {
                 </StyledTableRow>
                 :
                 listItem.map((row, i) => (
-                  <StyledTableRow key={row.tanggal}>
+                  <StyledTableRow key={row.id}>
                     <StyledTableCell component="th" scope="row">
                       {`${i+1}.`}
                     </StyledTableCell>
