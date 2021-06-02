@@ -121,7 +121,7 @@ const MyPresensi = (props) => {
     setQueryParams({}, history);
     setPage(1);
     setUpdate(update+1);
-    setFilterTanggal(null);
+    setFilterTanggal("");
   }
 
 
