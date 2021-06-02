@@ -16,6 +16,7 @@ import { ROLES } from 'utils/constant';
 import { getDivisiAPI, registerAkunAPI } from 'api/akun';
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
 import Loading from 'components/Loading';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -63,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
 
 const filter = createFilterOptions();
 
-const Register = props => {
+const Register = ({history}) => {
   const classes = useStyles();
 
   const [loading, setLoading] = React.useState(false);
@@ -260,7 +261,8 @@ const Register = props => {
         {/* <Dialog2 canShow={showModal} updateModalState={toggleModal}></Dialog2> */}
       </Container>
       <Loading open={loading} />
-      <Dialog open={!!regisAccount} handleClose={()=>setRegistAccount(false)} ></Dialog>
+      <Dialog open={!!regisAccount} handleClose={()=>history.push(`/akun`)} 
+      ></Dialog>
       <DialogFail
         open={!!error.detail} 
         handleClose={()=>{

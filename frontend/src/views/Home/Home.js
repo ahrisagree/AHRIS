@@ -188,7 +188,7 @@ const Home = ({history}) => {
       <Grid container spacing={2} direction="column">
       <Grid item xs={12}>
           <TextField
-          required="false"
+          required="true"
           variant="outlined"
           id="date"
           label="Tanggal"
@@ -208,7 +208,7 @@ const Home = ({history}) => {
 
       <Grid item xs={12}>
         <TextField
-          required="false"
+          required="true"
           variant="outlined"
           id="time"
           label="Jam masuk"

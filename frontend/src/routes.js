@@ -22,6 +22,9 @@ import DaftarBorangPerforma from "views/KelolaHasilPerforma/DaftarBorangPerforma
 import AssignmentManager from "views/AssignmentManager";
 import EvaluasiDiri from "views/EvaluasiDiri";
 import Pembobotan from "views/KelolaHasilPerforma/Pembobotan";
+import DaftarHasilPerforma from "views/HasilPerforma/index";
+import HasilPerforma from "views/HasilPerforma/HasilPerforma";
+
 import KelolaGaji from "views/KelolaGaji";
 
 export default [
@@ -151,7 +154,17 @@ export default [
     component: AssignmentManager
   },
   {
-    path: '/evaluasi-diri/add',
+    path: '/hasil-performa',
+    exact: true,
+    component: DaftarHasilPerforma
+  },
+  {
+    path: '/hasil-performa/:id',
+    exact: true,
+    component: HasilPerforma
+  },
+  {
+    path: '/hasil-performa/:id/add',
     exact: true,
     component: EvaluasiDiri
   },

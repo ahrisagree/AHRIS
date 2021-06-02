@@ -64,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-const EditLogAktivitas = (props) => {
+const EditLogAktivitas = ({history,match}) => {
   const classes = useStyles();
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState({});
@@ -85,7 +85,7 @@ const EditLogAktivitas = (props) => {
 
   useEffect(() => {
     setLoading(true);
-    const id = props.match.params.id;
+    const id = match.params.id;
     getLog(id).then(res => {
       const { data } = res
       setSelectedDate(data.tanggal);
@@ -109,7 +109,7 @@ const EditLogAktivitas = (props) => {
 
 
   const sendEditData = () => {
-    const { id } = props.match.params;
+    const { id } = match.params;
     setLoading(true)
     editLogAPI(id, {
       tanggal: selectedDate,
@@ -350,7 +350,7 @@ const EditLogAktivitas = (props) => {
 
         </Container>
         <Loading open={loading} />
-        <Dialog open={success} handleClose={()=>setSuccess(false)} ></Dialog>
+        <Dialog open={success} handleClose={()=>history.push(`/log`)} ></Dialog>
         <DialogFail
           open={!!error.detail} 
           handleClose={()=>{
