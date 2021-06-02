@@ -114,24 +114,19 @@ const KelolaGaji = ({history, match}) => {
   const [jam, setJam] = useState(0);
   const [penyesuaian, setPenyesuaian] = useState(0);
   const [honor, setHonor] = useState(0);
-  const [role, setRole] = React.useState("");
-  const [username, setUsername] = React.useState("");
-  const [nominal, setNominal] = React.useState("");
-  const [id, setId] = React.useState("");
-  const [divisi, setDivisi] = React.useState([]);
   const [gaji, setGaji] = React.useState("");
   const [listLog, setListLog] = useState([]);
-  const [total, setTotal] = useState(gaji+penyesuaian);
   const [detail, setDetail] = useState(null);
   const [update, setUpdate] = useState(0);
   const [periodeFilter, setPeriodeFilter] = useState(new Date().toISOString().substr(0,7));
   const [success, setSuccess] = useState(false);
   const params = new URLSearchParams(history.location.search);
-  const { idUser } = match.params;
 
   const [roleFilter, setFilterRole] = useState(params.get("role"));
   const [divisiFilter, setFilterDivisi] = useState(params.get("divisi"));
   const [searchFilter, setFilterSearch] = useState(params.get("search"));
+  const [tanggalSetelahFilter, setFilterTanggalSetelah] = useState();
+  const [tanggalSebelumFilter, setFilterTanggalSebelum] = useState();
 
   useEffect(()=>{
     setLoading(true)
@@ -202,9 +197,14 @@ const KelolaGaji = ({history, match}) => {
 
   useEffect(()=>{
     setLoading(true)
+    const date_after = params.get("date_after");
+    const date_before = params.get("date_before");
     if(detail !== null){
       getListLog({ 
         //disablepagination:true,
+        page,
+        date_after,
+        date_before,
         user: detail.user.pk,
         status: 1
       }).then(res=>{
@@ -219,7 +219,7 @@ const KelolaGaji = ({history, match}) => {
     }
     
 
-  , [detail]);
+  , [page, update, detail]);
 
   const onSubmit = () => {
     setLoading(true)
@@ -262,7 +262,16 @@ const KelolaGaji = ({history, match}) => {
     setQueryParams({
       role: roleFilter || "",
       divisi: divisiFilter || "",
-      search: searchFilter || ""
+      search: searchFilter || "",
+    }, history);
+    setPage(1);
+    setUpdate(update+1);
+  }
+
+  const doQuery2 = () => {
+    setQueryParams({
+      date_after: tanggalSetelahFilter || "",
+      date_before: tanggalSebelumFilter || ""
     }, history);
     setPage(1);
     setUpdate(update+1);
@@ -274,6 +283,14 @@ const KelolaGaji = ({history, match}) => {
     setFilterDivisi(null);
     setFilterSearch(null);
     setFilterRole(null);
+  }
+
+  const resetQuery2 = () => {
+    setQueryParams({}, history);
+    setPage(1);
+    setUpdate(update+1);
+    setFilterTanggalSetelah(null);
+    setFilterTanggalSebelum(null);
   }
 
   const detailUser = (row) => {
@@ -568,6 +585,47 @@ const KelolaGaji = ({history, match}) => {
             </div>
 
             <MainTitle title="Daftar Log" style={{marginTop:75}} className="mb-8"></MainTitle>
+            <Grid item xs={10}>
+              <TextField
+                variant="outlined"
+                id="date"
+                label="Dari Tanggal"
+                type="date"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                value={tanggalSetelahFilter}
+                onChange={e=>{setFilterTanggalSetelah(e.target.value)}}
+                disabled={loading}
+                />
+                <TextField
+                variant="outlined"
+                id="date"
+                label="Sampai Tanggal"
+                type="date"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                style={{marginLeft:'5%'}}
+                value={tanggalSebelumFilter}
+                onChange={e=>{setFilterTanggalSebelum(e.target.value)}}
+                disabled={loading}
+                />
+          </Grid>
+
+          <div className="flex items-center">
+            {!(
+              params.get("date_after") === tanggalSetelahFilter &&
+              params.get("date_before") === tanggalSebelumFilter 
+              ) &&
+              <button onClick={doQuery2} className="m-1">Apply</button>  
+            }
+            {(
+             params.get("date_after") ||
+             params.get("date_before") ) &&
+            <button onClick={resetQuery2} className="m-1">Reset</button>  
+            }
+          </div>
             <TableContainer component={Paper}>
           <MuiTable className={classes.table} aria-label="customized table">
             <TableHead>
@@ -575,7 +633,7 @@ const KelolaGaji = ({history, match}) => {
                 <StyledTableCell align="left">No </StyledTableCell>
                 <StyledTableCell align="left">Tanggal </StyledTableCell>
                 <StyledTableCell align="left">Tipe Log </StyledTableCell>
-                <StyledTableCell align="left">Waktu </StyledTableCell>
+                <StyledTableCell align="left">Durasi </StyledTableCell>
               
                
               </TableRow>
@@ -601,7 +659,7 @@ const KelolaGaji = ({history, match}) => {
                 </StyledTableCell>
                 <StyledTableCell align="left">{row.tanggal}</StyledTableCell>
                 <StyledTableCell align="left">{row.is_lembur ? "Lembur" : "Reguler"}</StyledTableCell>
-                <StyledTableCell align="left">{row.total_jam/3600}</StyledTableCell>
+                <StyledTableCell align="left">{row.total_jam/3600} jam</StyledTableCell>
                
               </StyledTableRow>
               :
