@@ -5,6 +5,7 @@ import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import List from '@material-ui/core/List';
+import { EditRounded } from '@material-ui/icons';
 // import CssBaseline from '@material-ui/core/CssBaseline';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
@@ -20,13 +21,13 @@ import { Accordion, AccordionDetails, AccordionSummary } from '@material-ui/core
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import TemplateButton from 'components/TemplateButton';
 import {
-  // ADMINISTRASI_NAVIGATION,
-  // ADMIN_NAVIGATION,
-  // KARYAWAN_NAVIGATION,
-  // MANAGER_NAVIGATION,
-  TEST_NAVIGATION 
+  ADMINISTRASI_NAVIGATION,
+  ADMIN_NAVIGATION,
+  KARYAWAN_NAVIGATION,
+  MANAGER_NAVIGATION,
+  // TEST_NAVIGATION 
 } from 'utils/navigation';
-// import { ROLE } from 'utils/constant';
+import { ROLE } from 'utils/constant';
 
 
 const drawerWidth = 240;
@@ -233,24 +234,24 @@ const NavigationDrawer = ({children, history, location, user, logoutThunk}) => {
   const {pathname} = location;
 
   // gini dulu nanti dipisahin ke constant
-  let navigationMenu = TEST_NAVIGATION
+  let navigationMenu = []
 
-  // switch (user.role) {
-  //   case ROLE.admin:
-  //     navigationMenu = ADMIN_NAVIGATION
-  //     break;
-  //   case ROLE.karyawan:
-  //     navigationMenu = KARYAWAN_NAVIGATION
-  //     break;
-  //   case ROLE.manager:
-  //     navigationMenu = MANAGER_NAVIGATION
-  //     break;
-  //   case ROLE.administrasi:
-  //     navigationMenu = ADMINISTRASI_NAVIGATION
-  //     break;
-  //   default:
-  //     break;
-  // }
+  switch (user?.role) {
+    case ROLE.admin:
+      navigationMenu = ADMIN_NAVIGATION
+      break;
+    case ROLE.karyawan:
+      navigationMenu = KARYAWAN_NAVIGATION
+      break;
+    case ROLE.manager:
+      navigationMenu = MANAGER_NAVIGATION
+      break;
+    case ROLE.administrasi:
+      navigationMenu = ADMINISTRASI_NAVIGATION
+      break;
+    default:
+      break;
+  }
 
   const handleAccordion = panel => (_e, isExpanded) => {
     setAccordion(isExpanded ? panel : -1);
@@ -330,6 +331,9 @@ const NavigationDrawer = ({children, history, location, user, logoutThunk}) => {
               textAlign: 'center', 
               color: 'white'
               }} />
+              <IconButton>
+              <EditRounded style={{color: 'white'}} />
+            </IconButton>
             <h1 style={{textAlign: 'center'}}>{user?.username}</h1>
             <h1 style={{textAlign: 'center'}}>{user?.role || "No Role"}</h1>
           </ListItem>

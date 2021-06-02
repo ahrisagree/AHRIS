@@ -6,6 +6,7 @@ import {
   Grid,
   Typography,
   MenuItem,
+  Link
 } from '@material-ui/core';
 import TextField from 'components/CustomTextField';
 import MainTitle from 'components/MainTitle';
@@ -217,7 +218,9 @@ const LogAktivitas = ({history}) => {
               value={jamMasuk}
               onChange={e=>{setJamMasuk(e.target.value); delete error.jam_masuk}}
               error={!!error.jam_masuk}
-              helperText={error.jam_masuk && error.jam_masuk[0]}
+              // helperText={error.jam_masuk && error.jam_masuk["Time has"]}
+              helperText={error.jam_masuk && "This field may not be blank. Exp. hh:mm"}
+
               disabled={loading}
             />
 
@@ -239,7 +242,7 @@ const LogAktivitas = ({history}) => {
               value={jamKeluar}
               onChange={e=>{setJamKeluar(e.target.value); delete error.jam_keluar}}
               error={!!error.jam_keluar}
-              helperText={error.jam_keluar && error.jam_keluar[0]}
+              helperText={error.jam_keluar && "This field may not be blank. Exp. hh:mm"}
               disabled={loading}
             />
 

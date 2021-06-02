@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { baseUrl } from './constant';
 
-export const getSumScoringAPI = (idDinilai, idPaket, periode) => 
-    axios.get(`${baseUrl}/evaluation/assign/score/${idDinilai}/${idPaket}/${periode}`);
+export const getSumScoringAPI = (idDinilai, idPaket, periode) =>
+axios.get(`${baseUrl}/evaluation/assign/score/${idDinilai}/${idPaket}/${periode}`);
 
 export const postHasilPerformaAPI = data => 
     axios.post(`${baseUrl}/evaluation/result/`, data)
@@ -23,3 +23,10 @@ export const postEvaluasiDiri = data =>
 
 export const deleteEvaluasiDiriAPI = id =>
     axios.delete(`${baseUrl}/evaluation/result/evaluasi-diri/${id}/`);
+    
+export const commentManager = (id, data) => 
+    axios.patch(`${baseUrl}/evaluation/result/evaluasi-diri/${id}/`, data)
+
+
+export const registerHasilPerformaAPI = data => 
+    axios.post(`${baseUrl}/evaluation/result/`, data);
