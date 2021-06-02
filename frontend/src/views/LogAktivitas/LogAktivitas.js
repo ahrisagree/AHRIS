@@ -182,24 +182,6 @@ const LogAktivitas = ({history}) => {
               disabled={loading}
               />
             
-          
-              {/* <TextField id="outlined-full-width"
-              required="true"
-              label="Jam Masuk"
-              style={{ margin: 8, width: "33%" }}
-              margin="normal"
-              variant="outlined"
-              className={classes.textField}
-              />
-              <TextField id="outlined-full-width"
-              required="true"
-              label="Jam Keluar"
-              style={{ margin: 8, width: "31%" }}
-              margin="normal"
-              variant="outlined"
-              className={classes.textField}
-              /> */}
-
             <TextField
               variant="outlined"
               id="time"

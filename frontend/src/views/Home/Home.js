@@ -153,9 +153,9 @@ const Home = ({history}) => {
     setQueryParams({}, history);
     setPage(1);
     setUpdate(update+1);
-    setFilterSearch(null);
-    setFilterDivisi(null);
-    setFilterTanggal(null);
+    setFilterSearch("");
+    setFilterDivisi("");
+    setFilterTanggal("");
   }
 
   const onSubmit = () => {
