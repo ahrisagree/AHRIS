@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { makeStyles, Paper, Grid, Button } from '@material-ui/core';
 import AHRIS from 'images/agree.png';
 import logo from 'images/logo.png';
-import Breadcrumbs from 'components/Breadcrumbs';
 import TextField from 'components/CustomTextField';
 import Loading from 'components/Loading';
 
@@ -11,17 +10,20 @@ const useStyles = makeStyles(theme => ({
         flexGrow: 1,
     },
     paper: {
-        position: "absolute",
-        paddingTop: "10%",
+        // position: "absolute",
+        paddingTop: "20%",
         fontWeight: "bold",
-        color: "#FFFF",
+        color: "#FFFFFF",
         background: "linear-gradient(180deg, #00A96F 0%, #437B74 100%)",
         boxShadow: "11px 13px 37px rgba(0, 0, 0, 0.25)",
-        width: 524,
-        height: "100%",
-        minHeight: 700,
-        left: 0,
-        top: 0,
+        // width: 524,
+        // height: "100%",
+        minHeight: "100vh",
+        // left: 0,
+        // top: 0,
+    },
+    foto: {
+
     }
 }));
 
@@ -50,20 +52,21 @@ const Login = ({
             <Loading open={loading} />
             <Grid container direction="row">
 
-            <Grid item xs={10} sm={6}>
+            <Grid item lg={4} xs={12} sm={6} >
 
                 <Paper className={classes.paper}>
                     <h1 style={{fontSize: 36, textAlign: "center" }}>Selamat datang!</h1>
                     <h1 style={{fontSize: 30, textAlign: "center"}}>Silakan login untuk</h1>
                     <h1 style={{fontSize: 30, textAlign: "center"}}>melanjutkan</h1>
 
-                    {tokenError && <p>{tokenError}</p>}
-                    {error.non_field_errors && <p>{error.non_field_errors[0]}</p>}
-                    <div className="m-7 p-2" style={{ textAlign: "left", paddingBottom: "10%", paddingLeft: 0 }}> 
+                    {tokenError && <p className="text-red-600 px-7 max-w-lg m-auto">{tokenError}</p>}
+                    {error.non_field_errors && <p className="text-red-600 px-7 max-w-lg m-auto">{error.non_field_errors[0]}</p>}
+                    <div className="px-7 max-w-lg m-auto" style={{ textAlign: "left"}}> 
                         <h1>E-mail</h1>
                         <TextField
-                            id="outlined-full-width"
-                            style={{ background: "#FFFF", borderRadius: 8, width: 456, height: 55, position: "absolute", boxShadow: "8px 4px 30px 1px rgba(0, 0, 0, 0.25)"}}
+                            id="email"
+                            style={{ background: "#FFFF", borderRadius: 8, boxShadow: "8px 4px 30px 1px rgba(0, 0, 0, 0.25)"}}
+                            fullWidth
                             placeholder="E-mail"
                             margin="normal"
                             InputLabelProps={{
@@ -77,11 +80,12 @@ const Login = ({
                         />
                     </div>
                     
-                    <div className="m-7 p-2" style={{ textAlign: "left", paddingBottom: "10%", paddingLeft: 0 }}>
+                    <div className="px-7 max-w-lg m-auto" style={{ textAlign: "left"}}>
                         <h1>Password</h1>
                         <TextField
-                            id="outlined-full-width"
-                            style={{ background: "#FFFF", borderRadius: 8, width: 456, height: 55, position: "absolute", boxShadow: "8px 4px 30px 1px rgba(0, 0, 0, 0.25)" }}
+                            id="password"
+                            style={{ background: "#FFFF", borderRadius: 8, boxShadow: "8px 4px 30px 1px rgba(0, 0, 0, 0.25)" }}
+                            fullWidth
                             placeholder="Password"
                             margin="normal"
                             InputLabelProps={{
@@ -90,6 +94,7 @@ const Login = ({
                             type="password"
                             value={password}
                             onChange={(e)=>setPassword(e.target.value)}
+                            onKeyDown={e=>e.key==='Enter' && goLogin()}
                             variant="outlined"
                             error={!!error.password}
                             helperText={error.password && error.password[0]}
@@ -97,21 +102,21 @@ const Login = ({
                     </div>
 
                     <div className="m-7 p-2" style={{ textAlign: "center" }}>
-                    <Button onClick={goLogin} variant="contained" style={{  borderRadius: 23, color: "#FFFF", background: "#0A3142", boxShadow: "3.67797px 4.20339px 8.9322px rgba(0, 0, 0, 0.25)" }}>
+                    <Button onClick={goLogin} size="large" variant="contained" style={{ paddingLeft: '2rem', paddingRight: '2rem', borderRadius: 23, color: "#FFFF", background: "#0A3142", boxShadow: "3.67797px 4.20339px 8.9322px rgba(0, 0, 0, 0.25)" }}>
                             Login
                     </Button>
                     </div>
                 </Paper>
 
             </Grid>
-
-            <Grid item xs={10} sm={6}>
-                <img src={AHRIS} alt="foto AHRIS" style={{ width: "50%", position: "absolute",left: 614, top: 100}} />
+            
+            <Grid item lg={8} sm={6} className="hidden sm:block self-center">
+                <img src={AHRIS} alt="foto AHRIS" style={{ width: "80%", maxWidth: 640, margin: 'auto'}} />
             </Grid>
 
-            <Grid item xs={10} sm={6}>
-                <img src={logo} alt="logo AHRIS" style={{ width: "10%", position: "absolute", top: 0, right: 0}} />
-            </Grid>
+            {/* <Grid item xs={10} sm={6}> */}
+                <img src={logo} alt="logo AHRIS" style={{ width: "8rem", position: "absolute", top: '0.5rem', right: '0.5rem'}} />
+            {/* </Grid> */}
 
             </Grid>
         </div>

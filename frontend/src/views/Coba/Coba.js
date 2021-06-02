@@ -1,23 +1,9 @@
 import React from "react";
-import {
-  makeStyles,
-  IconButton,
-} from '@material-ui/core';
-import ReactDOM from "react-dom";
 
 // Jangan lupa import ini kalo mau pake button yg dibikin
 import TemplateButton  from "components/TemplateButton";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    '& > *': {
-      margin: theme.spacing(1),
-    },
-  },
-}));
-
 const Coba = props => {
-  const classes = useStyles();
   return (
     <div className="App">
       <h1>Button-button</h1>

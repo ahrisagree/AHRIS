@@ -33,14 +33,21 @@ const SectionPertanyaan = ({
   isDetail
 }) => {
   const classes = useStyles()
-  const {nama, list_pertanyaan} = aspek;
+  const {nama, bobot, list_pertanyaan} = aspek;
   const size = list_pertanyaan.length;
   const onChangeNama = val => onChangeCallback({...aspek, nama: val});
+  const onChangeBobot = val => onChangeCallback({
+    ...aspek, 
+    bobot: (!!list_pertanyaan.find(x=>x.tipe===0)) ? val/1 : 0
+  })
   const onPertanyaanChange = (index, pertanyaan) => {
     const newListPertanyaan = Array.from(list_pertanyaan)
-    newListPertanyaan[index] = pertanyaan
+    newListPertanyaan[index] = pertanyaan;
+    let newBobot = bobot;
+    if (!newListPertanyaan.find(x=>x.tipe === 0)) newBobot = 0;
     onChangeCallback({
       ...aspek,
+      bobot: newBobot,
       list_pertanyaan: newListPertanyaan
     })}
   const addNewPertanyaan = index => {
@@ -74,25 +81,50 @@ const SectionPertanyaan = ({
     <Paper className={classes.paper}>
       <div className="p-4">
         <div className="flex flex-col-reverse md:flex-row md:items-start justify-between">
-          <TextField
-            required
-            placeholder="Aspek"
-            value={nama}
-            isDetail={isDetail}
-            disabled={!editable}
-            onChange={e=>onChangeNama(e.target.value)}
-            inputProps={{style: {fontWeight: 'bold'}}}
-            style={{width: '50%', minWidth: '20rem', marginBottom: '1.5rem'
-          }}
-          />
+          <div className="flex flex-row w-full md:w-9/12 justify-between">
+            <div className="flex w-full">
+              <TextField
+                required
+                placeholder="Aspek"
+                value={nama}
+                isDetail={isDetail}
+                disabled={!editable}
+                onChange={e=>onChangeNama(e.target.value)}
+                fullWidth
+                inputProps={{style: {fontWeight: 'bold'}}}
+                style={{ marginBottom: '1.5rem'
+              }}
+              />
+            </div>
+            <div className="w-3/12 pl-4 mb-1 ml-1">
+              {!!list_pertanyaan.find(x=>x.tipe===0) && 
+                <TextField
+                  label="Bobot (%)"
+                  value={bobot}
+                  isDetail={isDetail}
+                  disabled={!editable}
+                  onChange={e=>onChangeBobot(e.target.value)}
+                  size="small"
+                  variant="outlined"
+                  type="number"
+                  fullWidth
+                  // style={{width: '50%', minWidth: '20rem', marginBottom: '1.5rem'
+                // }}
+                />
+              }
+            </div>
+          </div>
           {editable && 
-            <FormActionController 
-              id="aspek"
-              onAdd={onAddCallback}
-              onDelete={onDeleteCallback}
-              onUp={onUpCallback}
-              onDown={onDownCallback}
-            />
+            // <div className="w-3/12">
+              <FormActionController 
+                id="aspek"
+                onAdd={onAddCallback}
+                onDelete={onDeleteCallback}
+                onUp={onUpCallback}
+                onDown={onDownCallback}
+                style={{marginBottom: '1rem'}}
+              />
+            // </div>
           }
         </div>
         {list_pertanyaan.map((pertanyaan, i)=>(

@@ -4,14 +4,31 @@ import Login from "./views/Login";
 import Profil from "./views/Profil";
 import Coba from "./views/Coba";
 import LogAktivitas from "./views/LogAktivitas/LogAktivitas";
-import DetailLogAktivitas from "./views/LogAktivitas/DetailLogAktivitas";
-import DaftarLog from "./views/LogAktivitas/DaftarLog";
+import DaftarLogKaryawan from "./views/LogAktivitas/DaftarLogKaryawan/";
+import DetailLogAktivitas from "./views/LogAktivitas/DetailLogAktivitas/";
+import DaftarLog from "./views/LogAktivitas/DaftarLog/";
+import MyPresensi from "./views/LogAktivitas/MyPresensi/";
 import Register from "./views/Register";
 import DaftarKaryawan from "views/DaftarKaryawan";
+// import EvaluasiPerforma from "views/EvaluasiPerforma";
 import DaftarPaketPertanyaan from "views/DaftarPakerPertanyaan";
 import DetailEditPaketPertanyaan from "views/DetailEditPaketPertanyaan";
-import DaftarBorang from "views/MengisiBorang";
+import DaftarBorang from "views/MengisiBorang/DaftarBorang";
+import DaftarKaryawanDinilai from "views/MengisiBorang/DaftarKaryawanDinilai"
+import MengisiBorang from "views/MengisiBorang/MengisiBorang";
 import EditLogAktivitas from "views/LogAktivitas/EditLogAktivitas";
+import DetailEditUser from "views/DetailEditUser";
+import DaftarKaryawanPerforma from "views/KelolaHasilPerforma/DaftarKaryawanPerforma";
+import DaftarBorangPerforma from "views/KelolaHasilPerforma/DaftarBorangPerforma";
+import AssignmentManager from "views/AssignmentManager";
+import EvaluasiDiri from "views/EvaluasiDiri";
+import Pembobotan from "views/KelolaHasilPerforma/Pembobotan";
+import DaftarHasilPerforma from "views/HasilPerforma/index";
+import HasilPerforma from "views/HasilPerforma/HasilPerforma";
+import EvaluasiPerforma from "views/EvaluasiPerforma";
+import DaftarEvaluasiPerforma from "views/DaftarEvaluasiPerforma";
+// import DaftarGaji from "views/DaftarGaji";
+import KelolaGaji from "views/KelolaGaji";
 
 export default [
   {
@@ -55,14 +72,29 @@ export default [
     component: DetailEditPaketPertanyaan,
   },
   {
+    path: '/paket-pertanyaan/:id/edit',
+    exact: true,
+    component: DetailEditPaketPertanyaan,
+  },
+  {
     path: '/akun',
     exact: true,
     component: DaftarKaryawan
   },
   {
-    path: '/daftar-borang',
+    path: '/mengisi-borang/:id',
     exact: true,
     component: DaftarBorang
+  },
+  {
+    path: '/mengisi-borang',
+    exact: true,
+    component: DaftarKaryawanDinilai
+  },
+  {
+    path: '/mengisi-borang/:id/:idPaket',
+    exact: true,
+    component: MengisiBorang
   },
   {
     path: '/log-aktivitas',
@@ -70,18 +102,93 @@ export default [
     component: LogAktivitas
   },
   {
-    path: '/daftar-log',
+    path: '/log',
     exact: true,
     component: DaftarLog
   },
   {
-    path: '/detail-log',
+    path: '/daftar-log-karyawan',
+    exact: true,
+    component: DaftarLogKaryawan
+  },
+  {
+    path: '/log/:id',
     exact: true,
     component: DetailLogAktivitas
   },
   {
-    path: '/edit-log',
+    path: '/log/:id/edit',
     exact: true,
     component: EditLogAktivitas
-  }
+  },
+  {
+    path: '/kelola-performa',
+    exact: true,
+    component: DaftarKaryawanPerforma,
+  },
+  {
+    path: '/kelola-performa/:idDinilai',
+    exact: true,
+    component: DaftarBorangPerforma,
+  },
+  {
+    path: '/daftar-karyawan-performa/:id/:id',
+    exact: true,
+    component: DaftarBorangPerforma,
+  },
+  {
+    path: '/kelola-performa/:idDinilai/:idPaket',
+    exact: true,
+    component: Pembobotan
+  },
+  {
+    path: '/akun/:idUser',
+    exact: true,
+    component: DetailEditUser
+  },
+  {
+    path: '/my-presensi',
+    exact: true,
+    component: MyPresensi
+  },
+  {
+    path: '/assign',
+    exact: true,
+    component: AssignmentManager
+  },
+  {
+    path: '/hasil-performa',
+    exact: true,
+    component: DaftarHasilPerforma
+  },
+  {
+    path: '/hasil-performa/:id',
+    exact: true,
+    component: HasilPerforma
+  },
+  {
+    path: '/hasil-performa/:id/add',
+    exact: true,
+    component: EvaluasiDiri
+  },
+  {
+    path: '/evaluasi-performa/:id',
+    exact: true,
+    component: EvaluasiPerforma
+  },
+  {
+    path: '/daftar-evaluasi-performa',
+    exact: true,
+    component: DaftarEvaluasiPerforma
+  },
+  {
+    path: '/gaji/',
+    exact: true,
+    component: KelolaGaji
+  },
+  {
+    path: '/akun/:idUser/edit',
+    exact: true,
+    component: DetailEditUser
+  },
 ]

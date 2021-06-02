@@ -59,7 +59,9 @@ INSTALLED_APPS = [
     'log',
     'jawaban',
     'assign',
+    'hasilperforma',
     'notification',
+    'gaji',
 ]
 
 MIDDLEWARE = [
@@ -122,7 +124,7 @@ AUTHENTICATION_BACKENDS = (
 # DRF-specific settings
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 2,
+    'PAGE_SIZE': 25,
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'knox.auth.TokenAuthentication',
     ),
@@ -155,7 +157,7 @@ ACCOUNT_AUTHENTICATION_METHOD = 'email'
 # Knox Token
 REST_KNOX = {
   'SECURE_HASH_ALGORITHM': 'cryptography.hazmat.primitives.hashes.SHA512',
-  'TOKEN_TTL': timedelta(hours=48), # token expiration
+  'TOKEN_TTL': timedelta(hours=168), # token expiration
   'TOKEN_LIMIT_PER_USER': 1,
 }
 

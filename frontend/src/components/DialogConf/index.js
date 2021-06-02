@@ -5,7 +5,6 @@ import Dialog from '@material-ui/core/Dialog';
 import MuiDialogContent from '@material-ui/core/DialogContent';
 import Typography from '@material-ui/core/Typography';
 import warning from 'images/warning.png';
-import TemplateButton from 'components/TemplateButton';
 
 const styles = (theme) => ({
   root: {
