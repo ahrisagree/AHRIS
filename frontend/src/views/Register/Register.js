@@ -16,7 +16,6 @@ import { ROLES } from 'utils/constant';
 import { getDivisiAPI, registerAkunAPI } from 'api/akun';
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
 import Loading from 'components/Loading';
-import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   root: {

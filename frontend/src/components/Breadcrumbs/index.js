@@ -72,9 +72,9 @@ const Breadcrumbs = ({pathname, push}) => {
                     const routeTo = `/${pathnames.slice(0, index + 1).join("/")}`;
                     const isLast = index === pathnames.length - 1;
                     return isLast ? (
-                        <Typography className={classes.typography}> {name} </Typography>
+                        <Typography key={`${name}-${index}`} className={classes.typography}> {name} </Typography>
                     ) : (
-                        <Link onClick = {() => push(routeTo)}>{name}</Link>
+                        <Link key={`${name}-${index}`} onClick = {() => push(routeTo)}>{name}</Link>
                         );
                 })}
 

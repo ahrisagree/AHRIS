@@ -8,8 +8,6 @@ import {
   TableRow,
   Paper,
   Grid,
-  Radio,
-  FormControlLabel,
   IconButton,
   Tooltip,
 } from '@material-ui/core';
@@ -21,7 +19,6 @@ import CircularProgress from 'components/Loading/CircularProgress';
 import TemplateButton from 'components/TemplateButton';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutlineRounded';
 import DeleteConfirmationDialog from 'components/DialogConf';
-import CreateIcon from '@material-ui/icons/CreateRounded';
 import { deleteEvaluasiDiriAPI } from 'api/hasilperforma';
 import FailDialog from 'components/DialogFail';
 
@@ -35,7 +32,6 @@ const HasilPerforma = ({match, history, user}) => {
   
 
   const [update, setUpdate] = useState(0);
-  const [success, setSuccess] = useState(false);
   const [fail, setFail] = useState(null); 
   
   const [assignment, setAssignment] = useState(null);
@@ -56,6 +52,7 @@ const HasilPerforma = ({match, history, user}) => {
     })
 
   
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [update]);
 
   const handleDeleteEvaluasiDiri = () => {

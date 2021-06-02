@@ -8,10 +8,6 @@ import {
   TableRow,
   Paper,
   Grid,
-  Radio,
-  FormControlLabel,
-  IconButton,
-  Tooltip,
   TextField,
   fade,
   Typography,
@@ -19,11 +15,9 @@ import {
 import Rating from '@material-ui/lab/Rating';
 import { StyledTableCell, StyledTableRow } from "components/Table";
 import MainTitle from "components/MainTitle";
-import { getDetailHasilPerforma, commentManager, registerHasilPerformaAPI} from 'api/hasilperforma';
+import { getDetailHasilPerforma, commentManager} from 'api/hasilperforma';
 import CircularProgress from 'components/Loading/CircularProgress';
 import TemplateButton from 'components/TemplateButton';
-import DeleteOutlineIcon from '@material-ui/icons/DeleteOutlineRounded';
-import CreateIcon from '@material-ui/icons/CreateRounded';
 import Dialog from 'components/Dialog';
 import DialogFail from 'components/DialogFail';
 import Loading from 'components/Loading';
@@ -58,20 +52,16 @@ const useStyles = makeStyles({})
 const EvaluasiPerforma = (props) => {
   const classes = useStyles();
   const [loading, setLoading] = useState(false);
-  const { id } = props.match.params;
+  // const { id } = props.match.params;
   const [update, setUpdate] = useState(0);
-  const [page, setPage] = useState(1);  
   
 
   // const [update, setUpdate] = useState(0);
   const [success, setSuccess] = useState(false);
   const [error, setError] = React.useState({});
   const [feedback, setFeedback] = React.useState("");
-  const [regisFeedback, setRegistFeedback] = React.useState(false);
-  const [fail, setFail] = useState(null); 
-  const [regisAccount, setRegistAccount] = React.useState(false);
+  // const [fail, setFail] = useState(null); 
   const [assignment, setAssignment] = useState(null);
-  const [paketPertanyaan, setPaketPertanyaan] = useState(null);
   
 
   useEffect(()=>{
@@ -90,36 +80,17 @@ const EvaluasiPerforma = (props) => {
     })
 
   
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [update]);
 
-  // const onSubmit = () => {
-  //   const { idUser } = props.match.params;
-  //   setLoading(true)
-  //   editUser(idUser, {
-  //     username: username,
-  //     divisi: divisi,
-  //     role: role,
-  //     gaji: gaji
-  //   }).then(res=>{
-  //     setSuccess(true);
-  //     console.log(res.data)
-  //   }).catch(err=>{
-  //     console.error(err.response);
-  //     setError(err.response && err.response.data);
-  //   }).finally(()=>{
-  //     setLoading(false);
-  //   })
-  // }
 
   const onSubmit = () => {
-    // generate password
     const { id } = props.match.params;
     setLoading(true);
     commentManager( id, {
       feedback: feedback,
     }).then(res=>{
       setFeedback("");
-      setRegistFeedback(true);
       setSuccess(true);
       setUpdate(update+1);
     }).catch(err=>{
@@ -130,12 +101,6 @@ const EvaluasiPerforma = (props) => {
     })
   }
 
-
-  // const handleChange = (indexAspek, indexPertanyaan, jawaban) => {
-  //   const newPaket =  {...paketPertanyaan};
-  //   newPaket.list_aspek[indexAspek].list_pertanyaan[indexPertanyaan].jawaban = jawaban;
-  //   setPaketPertanyaan(newPaket);
-  // }
 
   return (
     <div className={classes.root1}>
@@ -320,7 +285,7 @@ const EvaluasiPerforma = (props) => {
 
         <Grid item xs={12}>
             <Typography style={{ fontWeight: 600, marginBottom: '2%', fontFamily: 'IBM Plex Sans', fontStyle: 'normal', 
-            fontWeight: 600, fontSize: 24, lineHeight: '138%', display: 'flex', alignItems: 'center', letterSpacing: '0.0075em', color: '#0A3142' }} 
+            fontSize: 24, lineHeight: '138%', display: 'flex', alignItems: 'center', letterSpacing: '0.0075em', color: '#0A3142' }} 
             variant="subtitle1">
               Comment
             </Typography>
@@ -329,10 +294,9 @@ const EvaluasiPerforma = (props) => {
         <RedditTextField
                 label="Answer text"
                 className={classes.margin}
-                variant="filled"
+                // variant="filled"
                 fullWidth="2000"
                 style={{ margin: 8 }}
-                fullWidth
                 margin="normal"
                 variant="outlined"
                 value={feedback}

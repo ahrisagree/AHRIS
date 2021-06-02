@@ -107,6 +107,7 @@ const MyPresensi = (props) => {
       setLoading(false);
     })
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, update, user]);
 
   const doQuery = () => {

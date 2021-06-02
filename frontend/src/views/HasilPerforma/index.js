@@ -1,5 +1,4 @@
 import { connect } from "react-redux";
-import HasilPerforma from "./HasilPerforma";
 import DaftarHasilPerforma from "./DaftarHasilPerforma"
 
 const mapStateToProps = state => ({

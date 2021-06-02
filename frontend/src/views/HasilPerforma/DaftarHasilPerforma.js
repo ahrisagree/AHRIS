@@ -84,7 +84,6 @@ const useStyles = makeStyles((theme) =>({
 const DaftarHasilPerforma = ({history, match, user}) => {
     const classes = useStyles();
     const [loading, setLoading] = useState(false);
-    const [assignment, setAssignment] = useState(null);
     const [listHasilPerforma, setHasilPerforma] = React.useState([]);
     const [periodeFilter, setPeriodeFilter] = useState(new Date().toISOString().substr(0,7));
 
@@ -97,7 +96,6 @@ const DaftarHasilPerforma = ({history, match, user}) => {
       getListHasilPerforma( {
         periode: periodFormated(periodeFilter),
         user: user.pk}).then(res=>{
-        setAssignment(res.data?.results);
         setHasilPerforma(res.data?.results);
         console.log(res.data?.nama);
       }).catch(err=>{

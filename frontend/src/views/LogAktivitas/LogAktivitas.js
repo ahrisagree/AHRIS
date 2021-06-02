@@ -6,7 +6,6 @@ import {
   Grid,
   Typography,
   MenuItem,
-  Link
 } from '@material-ui/core';
 import TextField from 'components/CustomTextField';
 import MainTitle from 'components/MainTitle';

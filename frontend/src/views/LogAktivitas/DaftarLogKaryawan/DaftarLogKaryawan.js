@@ -247,7 +247,7 @@ const DaftarLogKaryawan = (props) => {
                 bordered={true}
               >
                 {karyawanOptions.map(k=>(
-                  <MenuItem value={k.pk}>{k.username}</MenuItem>
+                  <MenuItem key={k.pk} value={k.pk}>{k.username}</MenuItem>
                 ))}
               </TextField>
           </div>
@@ -265,7 +265,7 @@ const DaftarLogKaryawan = (props) => {
                 bordered={true}
               >
                 {STATUS_LOG_LABEL.map(s=>(
-                  <MenuItem value={s.value ===  0 ? '0' : s.value}>{s.label}</MenuItem>
+                  <MenuItem key={s} value={s.value ===  0 ? '0' : s.value}>{s.label}</MenuItem>
                 ))}
               </TextField>
           </div>

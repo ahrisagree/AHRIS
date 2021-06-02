@@ -28,14 +28,14 @@ const SIZES = [
     ...rest
   }) => {
 
-    const root = {
-        primary: '#39A9DB',
-        warning: '#F9DC5C',
-        danger: '#E84855',
-        success: '#ABE188',
-        white: '#fdfdfd',
-        dark: '#181717;',
-      };
+    // const root = {
+    //     primary: '#39A9DB',
+    //     warning: '#F9DC5C',
+    //     danger: '#E84855',
+    //     success: '#ABE188',
+    //     white: '#fdfdfd',
+    //     dark: '#181717;',
+    //   };
 
 
     const checkButtonStyle = STYLES.includes(buttonStyle)
