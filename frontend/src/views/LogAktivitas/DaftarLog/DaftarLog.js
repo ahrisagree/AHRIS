@@ -335,11 +335,6 @@ const DaftarLog = (props) => {
           handleCancel={()=>setDeleteLog(null)}
           handleConfirm={handleDeleteLog}
         />
-        <DeleteConfirmationDialog 
-          open={!!deleteLog}
-          handleCancel={()=>setDeleteLog(null)}
-          handleConfirm={handleDeleteLog}
-        />
         <Loading open={fullLoading} />
     </div>
   );
