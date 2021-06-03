@@ -27,6 +27,7 @@ import { getDivisiAPI } from 'api/akun';
 import { getListLog } from 'api/log';
 import { PAGE_SIZE, ROLES } from 'utils/constant';
 import CircularProgress from 'components/Loading/CircularProgress';
+import CircularProgress2 from 'components/Loading/CircularProgress';
 import { setQueryParams } from 'utils/setQueryParams';
 import { StyledTableCell, StyledTableRow } from "components/Table";
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
@@ -106,10 +107,12 @@ const useStyles = makeStyles((theme) => ({
 const KelolaGaji = ({history, match}) => {
   const classes = useStyles();
   const [loading, setLoading] = React.useState(false);
+  const [loading2, setLoading2] = React.useState(false);
   const [error, setError] = React.useState({});
   const [listItem, setListItem] = useState([]);
   const [divisiOptions, setDivisiOptions] = useState([]);
   const [page, setPage] = useState(1);
+  const [page2, setPage2] = useState(1);
   const [count, setCount] = useState(0);
   const [jam, setJam] = useState(0);
   const [penyesuaian, setPenyesuaian] = useState(0);
@@ -118,6 +121,7 @@ const KelolaGaji = ({history, match}) => {
   const [listLog, setListLog] = useState([]);
   const [detail, setDetail] = useState(null);
   const [update, setUpdate] = useState(0);
+  const [update2, setUpdate2] = useState(0);
   const [periodeFilter, setPeriodeFilter] = useState(new Date().toISOString().substr(0,7));
   const [success, setSuccess] = useState(false);
   const params = new URLSearchParams(history.location.search);
@@ -196,7 +200,7 @@ const KelolaGaji = ({history, match}) => {
   }, [])*/
 
   useEffect(()=>{
-    setLoading(true)
+    setLoading2(true)
     const date_after = params.get("date_after");
     const date_before = params.get("date_before");
     if(detail !== null){
@@ -213,13 +217,13 @@ const KelolaGaji = ({history, match}) => {
       }).catch(err=>{
       // Handle ERROR
       }).finally(()=>{
-        setLoading(false);
+        setLoading2(false);
       })
     }
     }
     
 
-  , [page, update, detail]);
+  , [page2, update2, detail]);
 
   const onSubmit = () => {
     setLoading(true)
@@ -227,6 +231,7 @@ const KelolaGaji = ({history, match}) => {
       nominal: detail.user.gaji+honor*jam+penyesuaian
     }).then(res=>{
       setUpdate(update+1);
+      setUpdate2(update2+1);
       setSuccess(true);
       console.log(res.data)
     }).catch(err=>{
@@ -273,13 +278,14 @@ const KelolaGaji = ({history, match}) => {
       date_after: tanggalSetelahFilter || "",
       date_before: tanggalSebelumFilter || ""
     }, history);
-    setPage(1);
-    setUpdate(update+1);
+    setPage2(1);
+    setUpdate2(update2+2);
   }
 
   const resetQuery = () => {
     setQueryParams({}, history);
     setPage(1);
+    setUpdate(update+1);
     setFilterDivisi(null);
     setFilterSearch(null);
     setFilterRole(null);
@@ -287,8 +293,8 @@ const KelolaGaji = ({history, match}) => {
 
   const resetQuery2 = () => {
     setQueryParams({}, history);
-    setPage(1);
-    setUpdate(update+1);
+    setPage2(1);
+    setUpdate2(update2+2);
     setFilterTanggalSetelah(null);
     setFilterTanggalSebelum(null);
   }
@@ -596,7 +602,7 @@ const KelolaGaji = ({history, match}) => {
                 }}
                 value={tanggalSetelahFilter}
                 onChange={e=>{setFilterTanggalSetelah(e.target.value)}}
-                disabled={loading}
+                disabled={loading2}
                 />
                 <TextField
                 variant="outlined"
@@ -609,7 +615,7 @@ const KelolaGaji = ({history, match}) => {
                 style={{marginLeft:'5%'}}
                 value={tanggalSebelumFilter}
                 onChange={e=>{setFilterTanggalSebelum(e.target.value)}}
-                disabled={loading}
+                disabled={loading2}
                 />
           </Grid>
 
@@ -639,10 +645,10 @@ const KelolaGaji = ({history, match}) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {loading ? 
+              {loading2 ? 
               <StyledTableRow>
                 <StyledTableCell align="center" colSpan="5">
-                  <CircularProgress />
+                  <CircularProgress2 />
                 </StyledTableCell>
               </StyledTableRow>
               : (
