@@ -11,7 +11,9 @@ import {
   Paper,
   Grid,
   Container,
-  MenuItem
+  MenuItem,
+  Tooltip,
+  IconButton
 } from '@material-ui/core';
 import { buatPresensiAPI, getListPresensiKaryawan } from 'api/log';
 import { getDivisiAPI } from 'api/akun';
@@ -26,6 +28,8 @@ import DialogFail from 'components/DialogFail';
 import { setQueryParams } from 'utils/setQueryParams';
 import Moment from 'moment';
 import CustomTextField from 'components/CustomTextField';
+import { exportPresensi } from 'utils/csv';
+import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 
 const useStyles = makeStyles((theme) =>({
   root: {
@@ -157,6 +161,18 @@ const Home = ({history}) => {
     setFilterSearch("");
     setFilterDivisi("");
     setFilterTanggal("");
+  }
+
+  const exportCSV = () => {
+    const search = params.get("search");
+    const divisi = params.get("divisi");
+    const tanggal = params.get("tanggal");
+
+    getListPresensiKaryawan({
+      search, divisi, tanggal, disablepagination: true 
+    }).then(res=>{
+      exportPresensi(res.data, "List Presensi");
+    })
   }
 
   const onSubmit = () => {
@@ -333,6 +349,15 @@ const Home = ({history}) => {
           </div>
         </div>
       
+      <div>
+        <Grid item xs={1} alignContent="flex-end">
+            <Tooltip title="Download">
+                <IconButton size="medium">
+                  <CloudDownloadIcon style={{ color: "#0A3142", position:"absolute", right: 0}} onClick={exportCSV}/>
+                </IconButton>
+              </Tooltip>
+        </Grid>
+      </div>
 
       <TableContainer component={Paper}>
           <MuiTable className={classes.table} aria-label="customized table">
