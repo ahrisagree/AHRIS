@@ -346,7 +346,7 @@ const BuatPaketPertanyaan = ({paket, isEdit, isDetail, setEditMode, history}) =>
             </TemplateButton>
           }
           {!isDetail && 
-            <Link to ={`/paket-pertanyaan/`}>
+
             <TemplateButton
               onClick={!isEdit ? sendData : sendEditData}
               type="button"
@@ -356,7 +356,7 @@ const BuatPaketPertanyaan = ({paket, isEdit, isDetail, setEditMode, history}) =>
             >
               Simpan
             </TemplateButton>
-            </Link>
+
           }
           <Loading open={loading} />
         </div>
