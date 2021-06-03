@@ -324,14 +324,18 @@ const DaftarLogKaryawan = (props) => {
               params.get("date_before") === tanggalSebelumFilter &&
               params.get("status") === statusFilter &&
               params.get("penyetuju") === penyetujuFilter) &&
-              <button onClick={doQuery} className="m-1">Apply</button>  
+              <TemplateButton type="button"
+              buttonStyle="btnBlueOutline"
+              buttonSize="btnMedium" onClick={doQuery} className="m-1">Apply</TemplateButton>  
             }
             {(params.get("search") ||
              params.get("date_after") ||
              params.get("date_before") ||
              params.get("status") ||
              params.get("penyetuju")) &&
-            <button onClick={resetQuery} className="m-1">Reset</button>  
+            <TemplateButton type="button"
+            buttonStyle="btnBlueOutline"
+            buttonSize="btnMedium" onClick={resetQuery} className="m-1">Reset</TemplateButton>  
             }
           </div>
       </div>

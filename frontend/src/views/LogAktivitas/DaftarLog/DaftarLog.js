@@ -244,11 +244,15 @@ const DaftarLog = (props) => {
           <div className="flex items-center">
             {!(params.get("tanggal") === tanggalFilter &&
               params.get("status") === statusFilter) &&
-              <button onClick={doQuery} className="m-1">Apply</button>  
+              <TemplateButton type="button"
+              buttonStyle="btnBlueOutline"
+              buttonSize="btnMedium"onClick={doQuery} className="m-1">Apply</TemplateButton>  
             }
             {(params.get("tanggal") ||
              params.get("status")) &&
-            <button onClick={resetQuery} className="m-1">Reset</button>  
+            <TemplateButton type="button"
+            buttonStyle="btnBlueOutline"
+            buttonSize="btnMedium" onClick={resetQuery} className="m-1">Reset</TemplateButton>  
             }
           </div>
         </div>

@@ -175,20 +175,20 @@ export const ADMIN_NAVIGATION = [
       }
     ]
   },
-  {
-    menu: 'Presensi',
-    icon: <CheckIcon style={{ color: 'white' }}/>,
-    children: [
-      {
-        menu: 'Buat Presensi',
-        path: '/',
-      },
-      {
-        menu: 'Presensi Saya',
-        path: '/my-presensi',
-      }
-    ]
-  },
+  // {
+  //   menu: 'Presensi',
+  //   icon: <CheckIcon style={{ color: 'white' }}/>,
+  //   children: [
+  //     {
+  //       menu: 'Buat Presensi',
+  //       path: '/',
+  //     },
+  //     {
+  //       menu: 'Presensi Saya',
+  //       path: '/my-presensi',
+  //     }
+  //   ]
+  // },
   // {
   //   menu: 'Daily Log',
   //   icon: <BookIcon style={{ color: 'white' }}/>,
@@ -233,10 +233,6 @@ export const ADMIN_NAVIGATION = [
       {
         menu: 'Isi Borang',
         path: '/mengisi-borang'
-      },
-      {
-        menu: 'Evaluasi Performa',
-        path: '/daftar-evaluasi-performa'
       },
       {
         menu: 'Hasil Performa',

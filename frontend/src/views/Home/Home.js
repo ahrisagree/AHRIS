@@ -323,12 +323,16 @@ const Home = ({history}) => {
             {!(params.get("search") === searchFilter &&
               params.get("divisi") === divisiFilter && 
               params.get("tanggal") === tanggalFilter) &&
-              <button onClick={doQuery} className="m-1">Apply</button>  
+              <TemplateButton  type="button"
+              buttonStyle="btnBlueOutline"
+              buttonSize="btnMedium" onClick={doQuery} className="m-1">Apply</TemplateButton>  
             }
             {(params.get("search") ||
              params.get("divisi") || 
              params.get("tanggal")) &&
-            <button onClick={resetQuery} className="m-1">Reset</button>  
+            <TemplateButton  type="button"
+            buttonStyle="btnBlueOutline"
+            buttonSize="btnMedium" onClick={resetQuery} className="m-1">Reset</TemplateButton>  
             }
           </div>
         </div>
