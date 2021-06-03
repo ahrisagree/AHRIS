@@ -6,6 +6,7 @@ from borang.serializers import PaketPertanyaanSerializer, PaketPertanyaanMiniSer
 from jawaban.serializers import PaketJawabanSerializer, PaketJawabanMiniSerializer
 from auth_app.serializers import UserListSerializer
 from datetime import date
+from notification.service import NotifService
 
 class AssignmentSerializer(serializers.ModelSerializer):
   user_penilai = UserListSerializer()
@@ -92,6 +93,7 @@ class AssignRespondenSerializer(serializers.Serializer):
     list_assignment = []
     """This going to take a while"""
     for penilai in list_penilai_data:
+      NotifService.newAssignmentNotif(penilai) # Notification
       for dinilai in list_dinilai_data:
         if penilai == dinilai:
           continue
