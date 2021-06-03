@@ -32,6 +32,11 @@ class PresensiViewSet(viewsets.ModelViewSet):
         request.data['tanggal'] = time_now.date().isoformat()
         return super().create(request, *args, **kwargs)
 
+    def list(self, request, *args, **kwargs):
+        if request.query_params.get('disablepagination') != None:
+            self.pagination_class = None
+        return super().list(request, *args, **kwargs)
+
 class LogAktivitasViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated, DefaultRolePermission, LogAktifitasPermission)
     queryset = LogAktivitas.objects.all().order_by('-tanggal')
