@@ -146,7 +146,7 @@ const DaftarLogKaryawan = (props) => {
     setujuiLogAPI(id, {
       status_log: 1,
     }).then(res => {
-      setUpdate(true);
+      setUpdate(update+1);
     }).catch(err => {
 
     }).finally(() => {
@@ -159,7 +159,7 @@ const DaftarLogKaryawan = (props) => {
     setujuiLogAPI(id, {
       status_log: 2,
     }).then(res => {
-      setUpdate(true);
+      setUpdate(update+1);
     }).catch(err => {
 
     }).finally(() => {
