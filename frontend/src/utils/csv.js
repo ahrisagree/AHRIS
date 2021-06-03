@@ -93,3 +93,21 @@ export function exportLog(data, fileName) {
   }))
   exportCSVFile(header, listData, fileName);
 }
+
+export function exportPresensi(data, fileName) {
+  const header = {
+    nama: "Nama", 
+    role: "Role",
+    tanggal: "Tanggal",
+    jam_masuk: "Masuk",
+    keterangan: "Keterangan",
+  }
+  const listData = data.map(row=> ({
+    nama: row.user.username,
+    role: row.user.role,
+    tanggal: row.tanggal,
+    jam_masuk: row.jam_masuk.split(".")[0],
+    keterangan: row.keterangan,
+  }))
+  exportCSVFile(header, listData, fileName);
+}
