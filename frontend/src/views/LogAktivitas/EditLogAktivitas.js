@@ -350,7 +350,7 @@ const EditLogAktivitas = ({history,match}) => {
 
         </Container>
         <Loading open={loading} />
-        <Dialog open={success} handleClose={()=>history.push(`/log`)} ></Dialog>
+        <Dialog open={success} handleClose={()=>history.push(`/log/${match.params.id}`)} ></Dialog>
         <DialogFail
           open={!!error.detail} 
           handleClose={()=>{
