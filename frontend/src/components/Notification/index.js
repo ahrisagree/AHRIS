@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
     zIndex: theme.zIndex.drawer + 100
   },
   paper: {
-    width: 250,
+    width: 300,
   },
   typography: {
     padding: theme.spacing(1.5),
@@ -54,7 +54,16 @@ function Notification({push}) {
                 <List>
                   {listNotif.map(item=>(
                     <>
-                      <ListItem button onClick={()=>push(item.link)} className={classes.typography}>{item.text}</ListItem>
+                      <ListItem button onClick={()=>push(item.link)} className={classes.typography}>
+                        <div className="flex flex-row justify-between">
+                          <span className="w-8/12">
+                            {item.text}
+                          </span>
+                          <span className="w-3/12 text-xs text-gray-500">
+                            {new Date(item.timestamp).toLocaleString()}
+                          </span>
+                        </div>
+                      </ListItem>
                       <Divider />
                     </>
                   ))}
