@@ -79,7 +79,7 @@ export function exportLog(data, fileName) {
     notes: "Notes"
   }
   const listData = data.map(row=> ({
-    nama: row.user.username,
+    nama: row.user !== null ? row.user?.username : "Tidak ada user",
     tanggal: row.tanggal,
     jam_masuk: row.jam_masuk,
     jam_keluar: row.jam_keluar,
@@ -90,6 +90,24 @@ export function exportLog(data, fileName) {
     aktivitas: row.aktivitas,
     keterangan: row.keterangan,
     notes: row.notes
+  }))
+  exportCSVFile(header, listData, fileName);
+}
+
+export function exportPresensi(data, fileName) {
+  const header = {
+    nama: "Nama", 
+    role: "Role",
+    tanggal: "Tanggal",
+    jam_masuk: "Masuk",
+    keterangan: "Keterangan",
+  }
+  const listData = data.map(row=> ({
+    nama: row.user !== null ? row.user?.username : "Tidak ada user",
+    role: row.user !== null ? row.user?.role : "Tidak ada user",
+    tanggal: row.tanggal,
+    jam_masuk: row.jam_masuk.split(".")[0],
+    keterangan: row.keterangan,
   }))
   exportCSVFile(header, listData, fileName);
 }

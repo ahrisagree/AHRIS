@@ -68,9 +68,9 @@ const useStyles = makeStyles((theme) => ({
 
 const filter = createFilterOptions();
 
-const DetailEditUser = (props) => {
+const DetailEditUser = ({history, match}) => {
   const classes = useStyles();
-  const { path } = props.match
+  const { path } = match
 
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState({});
@@ -89,7 +89,7 @@ const DetailEditUser = (props) => {
   
   useEffect(()=>{
     setLoading(true);
-    const id = props.match.params.idUser;
+    const id = match.params.idUser;
     getKaryawan(id).then(res => {
         const { data } = res;
         setNama(data.username);
@@ -118,7 +118,7 @@ const DetailEditUser = (props) => {
 
   const handleDeleteKaryawan = () => {
     setFullLoading(true);
-    const { idUser } = props.match.params;
+    const { idUser } = match.params;
     deleteKaryawanAPI(idUser).then(()=>{
      setDeleteKaryawan(null);
      setUpdate(update+1);
@@ -130,7 +130,7 @@ const DetailEditUser = (props) => {
     }
 
   const onSubmit = () => {
-    const { idUser } = props.match.params;
+    const { idUser } = match.params;
     setLoading(true)
     editUser(idUser, {
       username: username,
@@ -326,7 +326,7 @@ const DetailEditUser = (props) => {
         {/* <Dialog2 canShow={showModal} updateModalState={toggleModal}></Dialog2> */}
       </Container>
       <Loading open={loading} />
-      <Dialog open={success} handleClose={()=>setSuccess(false)} />
+      <Dialog open={success} handleClose={()=>history.push(`/akun/${match.params.idUser}`)} />
       
       <DialogFail
         open={!!error.detail} 

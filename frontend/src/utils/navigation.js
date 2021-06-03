@@ -37,7 +37,7 @@ import BookIcon from '@material-ui/icons/Book';
 //       },
 //       {
 //         menu: 'Presensi Saya',
-//         path: '/log/daftar-presensi',
+//         path: '/my-presensi',
 //       }
 //     ]
 //   },
@@ -120,7 +120,7 @@ export const KARYAWAN_NAVIGATION = [
       },
       {
         menu: 'Presensi Saya',
-        path: '/log/daftar-presensi',
+        path: '/my-presensi',
       }
     ]
   },
@@ -281,7 +281,7 @@ export const MANAGER_NAVIGATION = [
       },
       {
         menu: 'Presensi Saya',
-        path: '/log/daftar-presensi',
+        path: '/my-presensi',
       }
     ]
   },
@@ -351,7 +351,7 @@ export const ADMINISTRASI_NAVIGATION = [
       },
       {
         menu: 'Presensi Saya',
-        path: '/log/daftar-presensi',
+        path: '/my-presensi',
       }
     ]
   },

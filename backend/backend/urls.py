@@ -26,5 +26,6 @@ urlpatterns = [
     path('evaluation/jawaban/', include('jawaban.urls')),
     path('evaluation/result/', include('hasilperforma.urls')),
     path('log/', include('log.urls')),
-    path('gaji/', include('gaji.urls'))
+    path('gaji/', include('gaji.urls')),
+    path('notification/', include('notification.urls')),
 ]

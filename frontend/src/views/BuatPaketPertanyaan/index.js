@@ -346,7 +346,6 @@ const BuatPaketPertanyaan = ({paket, isEdit, isDetail, setEditMode, history}) =>
             </TemplateButton>
           }
           {!isDetail && 
-
             <TemplateButton
               onClick={!isEdit ? sendData : sendEditData}
               type="button"
@@ -356,13 +355,12 @@ const BuatPaketPertanyaan = ({paket, isEdit, isDetail, setEditMode, history}) =>
             >
               Simpan
             </TemplateButton>
-
           }
           <Loading open={loading} />
         </div>
       </Paper>
 
-      <DialogSuccess open={success} handleClose={()=>setSuccess(false)} />
+      <DialogSuccess open={success} handleClose={()=>history.push(`/paket-pertanyaan`)} />
       <DialogFail 
         open={!!errorState.detail || !!errorState.non_field_errors || !!errorState.list_aspek} 
         handleClose={()=>{

@@ -71,6 +71,7 @@ const DaftarKaryawan = ({history}) => {
     }).finally(()=>{
       setLoading(false);
     })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, update]);
 
   useEffect(()=>{

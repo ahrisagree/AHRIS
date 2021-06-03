@@ -36,12 +36,18 @@ const SectionPertanyaan = ({
   const {nama, bobot, list_pertanyaan} = aspek;
   const size = list_pertanyaan.length;
   const onChangeNama = val => onChangeCallback({...aspek, nama: val});
-  const onChangeBobot = val => onChangeCallback({...aspek, bobot: val/1})
+  const onChangeBobot = val => onChangeCallback({
+    ...aspek, 
+    bobot: (!!list_pertanyaan.find(x=>x.tipe===0)) ? val/1 : 0
+  })
   const onPertanyaanChange = (index, pertanyaan) => {
     const newListPertanyaan = Array.from(list_pertanyaan)
-    newListPertanyaan[index] = pertanyaan
+    newListPertanyaan[index] = pertanyaan;
+    let newBobot = bobot;
+    if (!newListPertanyaan.find(x=>x.tipe === 0)) newBobot = 0;
     onChangeCallback({
       ...aspek,
+      bobot: newBobot,
       list_pertanyaan: newListPertanyaan
     })}
   const addNewPertanyaan = index => {
@@ -91,19 +97,21 @@ const SectionPertanyaan = ({
               />
             </div>
             <div className="w-3/12 pl-4 mb-1 ml-1">
-              <TextField
-                label="Bobot (%)"
-                value={bobot}
-                isDetail={isDetail}
-                disabled={!editable}
-                onChange={e=>onChangeBobot(e.target.value)}
-                size="small"
-                variant="outlined"
-                type="number"
-                fullWidth
-                // style={{width: '50%', minWidth: '20rem', marginBottom: '1.5rem'
-              // }}
-              />
+              {!!list_pertanyaan.find(x=>x.tipe===0) && 
+                <TextField
+                  label="Bobot (%)"
+                  value={bobot}
+                  isDetail={isDetail}
+                  disabled={!editable}
+                  onChange={e=>onChangeBobot(e.target.value)}
+                  size="small"
+                  variant="outlined"
+                  type="number"
+                  fullWidth
+                  // style={{width: '50%', minWidth: '20rem', marginBottom: '1.5rem'
+                // }}
+                />
+              }
             </div>
           </div>
           {editable && 

@@ -13,8 +13,8 @@ import {
   TableRow,
   IconButton,
   Tooltip,
-  GridListTileBar,
-  Divider
+  Divider,
+  ListItem
 } from '@material-ui/core';
 import TextField from 'components/CustomTextField';
 import MainTitle from 'components/MainTitle';
@@ -27,6 +27,7 @@ import { getDivisiAPI } from 'api/akun';
 import { getListLog } from 'api/log';
 import { PAGE_SIZE, ROLES } from 'utils/constant';
 import CircularProgress from 'components/Loading/CircularProgress';
+import CircularProgress2 from 'components/Loading/CircularProgress';
 import { setQueryParams } from 'utils/setQueryParams';
 import { StyledTableCell, StyledTableRow } from "components/Table";
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
@@ -80,15 +81,28 @@ const useStyles = makeStyles((theme) => ({
   splitScreen: {
     display: "flex",
     flexDirection: "row",
+    position: 'relative'
   },
   topPane: {
-    width: "50%",
+    width: "calc(50% + 1.5rem)",
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    height: 'calc(100vh - 5.5rem)',
+    overflowY: 'scroll',
+  },
+  topPaneFull: {
+    width: "100%",
     marginRight:'0.5rem',
     marginTop:'1.4rem'
   },
   bottomPane: {
     width: "50%",
-    marginLeft:'0.5rem'
+    position: 'absolute',
+    right: '-1.5rem',
+    top: '-1.5rem',
+    height: 'calc(100vh - 4rem)',
+    overflowY: 'scroll',
   },
   mb: {
     marginBottom: '1rem',
@@ -100,32 +114,30 @@ const useStyles = makeStyles((theme) => ({
 const KelolaGaji = ({history, match}) => {
   const classes = useStyles();
   const [loading, setLoading] = React.useState(false);
+  const [loading2, setLoading2] = React.useState(false);
   const [error, setError] = React.useState({});
   const [listItem, setListItem] = useState([]);
   const [divisiOptions, setDivisiOptions] = useState([]);
   const [page, setPage] = useState(1);
+  const [page2, setPage2] = useState(1);
   const [count, setCount] = useState(0);
   const [jam, setJam] = useState(0);
   const [penyesuaian, setPenyesuaian] = useState(0);
   const [honor, setHonor] = useState(0);
-  const [role, setRole] = React.useState("");
-  const [username, setUsername] = React.useState("");
-  const [nominal, setNominal] = React.useState("");
-  const [id, setId] = React.useState("");
-  const [divisi, setDivisi] = React.useState([]);
-  const [gaji, setGaji] = React.useState("");
+  const [fullLoading, setFullLoading] = React.useState(false);
   const [listLog, setListLog] = useState([]);
-  const [total, setTotal] = useState(gaji+penyesuaian);
   const [detail, setDetail] = useState(null);
   const [update, setUpdate] = useState(0);
+  const [update2, setUpdate2] = useState(0);
   const [periodeFilter, setPeriodeFilter] = useState(new Date().toISOString().substr(0,7));
   const [success, setSuccess] = useState(false);
   const params = new URLSearchParams(history.location.search);
-  const { idUser } = match.params;
 
   const [roleFilter, setFilterRole] = useState(params.get("role"));
   const [divisiFilter, setFilterDivisi] = useState(params.get("divisi"));
   const [searchFilter, setFilterSearch] = useState(params.get("search"));
+  const [tanggalSetelahFilter, setFilterTanggalSetelah] = useState(params.get("date_after"));
+  const [tanggalSebelumFilter, setFilterTanggalSebelum] = useState(params.get("date_before"));
 
   useEffect(()=>{
     setLoading(true)
@@ -148,6 +160,7 @@ const KelolaGaji = ({history, match}) => {
     }).finally(()=>{
       setLoading(false);
     })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, update, periodeFilter]);
 
   useEffect(()=>{
@@ -195,10 +208,15 @@ const KelolaGaji = ({history, match}) => {
   }, [])*/
 
   useEffect(()=>{
-    setLoading(true)
+    setLoading2(true)
+    const date_after = params.get("date_after");
+    const date_before = params.get("date_before");
     if(detail !== null){
       getListLog({ 
         //disablepagination:true,
+        page,
+        date_after,
+        date_before,
         user: detail.user.pk,
         status: 1
       }).then(res=>{
@@ -207,27 +225,28 @@ const KelolaGaji = ({history, match}) => {
       }).catch(err=>{
       // Handle ERROR
       }).finally(()=>{
-        setLoading(false);
+        setLoading2(false);
       })
     }
     }
     
 
-  , [detail]);
+  , [page2, update2, detail]);
 
   const onSubmit = () => {
-    setLoading(true)
+    setFullLoading(true)
     editGaji(detail.id, {
       nominal: detail.user.gaji+honor*jam+penyesuaian
     }).then(res=>{
       setUpdate(update+1);
+      setUpdate2(update2+1);
       setSuccess(true);
       console.log(res.data)
     }).catch(err=>{
       console.error(err.response);
       setError(err.response && err.response.data);
     }).finally(()=>{
-      setLoading(false);
+      setFullLoading(false);
     })
 
     
@@ -256,18 +275,36 @@ const KelolaGaji = ({history, match}) => {
     setQueryParams({
       role: roleFilter || "",
       divisi: divisiFilter || "",
-      search: searchFilter || ""
+      search: searchFilter || "",
     }, history);
     setPage(1);
     setUpdate(update+1);
   }
 
+  const doQuery2 = () => {
+    setQueryParams({
+      date_after: tanggalSetelahFilter || "",
+      date_before: tanggalSebelumFilter || ""
+    }, history);
+    setPage2(1);
+    setUpdate2(update2+2);
+  }
+
   const resetQuery = () => {
     setQueryParams({}, history);
     setPage(1);
+    setUpdate(update+1);
     setFilterDivisi(null);
     setFilterSearch(null);
     setFilterRole(null);
+  }
+
+  const resetQuery2 = () => {
+    setQueryParams({}, history);
+    setPage2(1);
+    setUpdate2(update2+2);
+    setFilterTanggalSetelah(null);
+    setFilterTanggalSebelum(null);
   }
 
   const detailUser = (row) => {
@@ -284,7 +321,7 @@ const KelolaGaji = ({history, match}) => {
   console.log(penyesuaian)
     return (
         <div className={classes.splitScreen}>
-        <div className={classes.topPane} style={{width: 'unset'}}>
+        <div className={detail ? classes.topPane : classes.topPaneFull}>
             <MainTitle title="Daftar Gaji" className="mb-8"></MainTitle>
 
             <Grid item xs={10} alignContent="">
@@ -404,7 +441,10 @@ const KelolaGaji = ({history, match}) => {
                       {`${i+1}.`}
                     </StyledTableCell>
                     <StyledTableCell align="left">
-                      <a style={{color:"#00A96F", textDecorationLine: "underline"}} onClick={()=>detailUser(row)}>{row.user.username}</a></StyledTableCell>
+                      <ListItem button onClick={()=>detailUser(row)}>
+                        <span style={{color:"#00A96F", textDecorationLine: "underline"}}>{row.user.username}</span>
+                      </ListItem>
+                    </StyledTableCell>
                     
                     <StyledTableCell align="left">{row.nominal}</StyledTableCell>
                     <StyledTableCell align="left">{row.user.divisi.map(x=> x.nama_divisi+", ")}</StyledTableCell>
@@ -424,7 +464,7 @@ const KelolaGaji = ({history, match}) => {
         </div>
 
         </div>
-        {detail !== null ?
+        {detail !== null &&
 
          
         <div className={classes.bottomPane}>
@@ -562,6 +602,47 @@ const KelolaGaji = ({history, match}) => {
             </div>
 
             <MainTitle title="Daftar Log" style={{marginTop:75}} className="mb-8"></MainTitle>
+            <Grid item xs={10}>
+              <TextField
+                variant="outlined"
+                id="date"
+                label="Dari Tanggal"
+                type="date"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                value={tanggalSetelahFilter}
+                onChange={e=>{setFilterTanggalSetelah(e.target.value)}}
+                disabled={loading2}
+                />
+                <TextField
+                variant="outlined"
+                id="date"
+                label="Sampai Tanggal"
+                type="date"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                style={{marginLeft:'5%'}}
+                value={tanggalSebelumFilter}
+                onChange={e=>{setFilterTanggalSebelum(e.target.value)}}
+                disabled={loading2}
+                />
+          </Grid>
+
+          <div className="flex items-center">
+            {!(
+              params.get("date_after") === tanggalSetelahFilter &&
+              params.get("date_before") === tanggalSebelumFilter 
+              ) &&
+              <button onClick={doQuery2} className="m-1">Apply</button>  
+            }
+            {(
+             params.get("date_after") ||
+             params.get("date_before") ) &&
+            <button onClick={resetQuery2} className="m-1">Reset</button>  
+            }
+          </div>
             <TableContainer component={Paper}>
           <MuiTable className={classes.table} aria-label="customized table">
             <TableHead>
@@ -569,16 +650,16 @@ const KelolaGaji = ({history, match}) => {
                 <StyledTableCell align="left">No </StyledTableCell>
                 <StyledTableCell align="left">Tanggal </StyledTableCell>
                 <StyledTableCell align="left">Tipe Log </StyledTableCell>
-                <StyledTableCell align="left">Waktu </StyledTableCell>
+                <StyledTableCell align="left">Durasi </StyledTableCell>
               
                
               </TableRow>
             </TableHead>
             <TableBody>
-              {loading ? 
+              {loading2 ? 
               <StyledTableRow>
                 <StyledTableCell align="center" colSpan="5">
-                  <CircularProgress />
+                  <CircularProgress2 />
                 </StyledTableCell>
               </StyledTableRow>
               : (
@@ -595,11 +676,11 @@ const KelolaGaji = ({history, match}) => {
                 </StyledTableCell>
                 <StyledTableCell align="left">{row.tanggal}</StyledTableCell>
                 <StyledTableCell align="left">{row.is_lembur ? "Lembur" : "Reguler"}</StyledTableCell>
-                <StyledTableCell align="left">{row.total_jam/3600}</StyledTableCell>
+                <StyledTableCell align="left">{row.total_jam/3600} jam</StyledTableCell>
                
               </StyledTableRow>
               :
-              <a></a>
+              <span></span>
                   
                 )))}
             </TableBody>
@@ -607,9 +688,8 @@ const KelolaGaji = ({history, match}) => {
         </TableContainer>
             </Container>
         </div>
-        :
-        <Container></Container>
       }
+      <Loading open={fullLoading} />
       <Dialog open={success} handleClose={()=>setSuccess(false)} ></Dialog>
         <DialogFail
           open={!!error.detail} 

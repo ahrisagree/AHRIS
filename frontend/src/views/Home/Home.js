@@ -11,7 +11,9 @@ import {
   Paper,
   Grid,
   Container,
-  MenuItem
+  MenuItem,
+  Tooltip,
+  IconButton
 } from '@material-ui/core';
 import { buatPresensiAPI, getListPresensiKaryawan } from 'api/log';
 import { getDivisiAPI } from 'api/akun';
@@ -26,6 +28,8 @@ import DialogFail from 'components/DialogFail';
 import { setQueryParams } from 'utils/setQueryParams';
 import Moment from 'moment';
 import CustomTextField from 'components/CustomTextField';
+import { exportPresensi } from 'utils/csv';
+import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 
 const useStyles = makeStyles((theme) =>({
   root: {
@@ -106,7 +110,7 @@ const Home = ({history}) => {
 
   const [searchFilter, setFilterSearch] = useState(params.get("search"));
   const [divisiFilter, setFilterDivisi] = useState(params.get("divisi"));
-  const [tanggalFilter, setFilterTanggal] = useState();
+  const [tanggalFilter, setFilterTanggal] = useState(params.get("tanggal"));
 
   const [error, setError] = React.useState({});
 
@@ -129,6 +133,7 @@ const Home = ({history}) => {
     })
     
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, update]);
 
   useEffect(()=>{
@@ -153,9 +158,21 @@ const Home = ({history}) => {
     setQueryParams({}, history);
     setPage(1);
     setUpdate(update+1);
-    setFilterSearch(null);
-    setFilterDivisi(null);
-    setFilterTanggal(null);
+    setFilterSearch("");
+    setFilterDivisi("");
+    setFilterTanggal("");
+  }
+
+  const exportCSV = () => {
+    const search = params.get("search");
+    const divisi = params.get("divisi");
+    const tanggal = params.get("tanggal");
+
+    getListPresensiKaryawan({
+      search, divisi, tanggal, disablepagination: true 
+    }).then(res=>{
+      exportPresensi(res.data, `Presensi ${tanggal}` || "List Presensi");
+    })
   }
 
   const onSubmit = () => {
@@ -188,7 +205,7 @@ const Home = ({history}) => {
       <Grid container spacing={2} direction="column">
       <Grid item xs={12}>
           <TextField
-          required="false"
+          required="true"
           variant="outlined"
           id="date"
           label="Tanggal"
@@ -208,7 +225,7 @@ const Home = ({history}) => {
 
       <Grid item xs={12}>
         <TextField
-          required="false"
+          required="true"
           variant="outlined"
           id="time"
           label="Jam masuk"
@@ -332,6 +349,15 @@ const Home = ({history}) => {
           </div>
         </div>
       
+      <div>
+        <Grid item xs={1} alignContent="flex-end">
+            <Tooltip title="Download">
+                <IconButton size="medium">
+                  <CloudDownloadIcon style={{ color: "#0A3142", position:"absolute", right: 0}} onClick={exportCSV}/>
+                </IconButton>
+              </Tooltip>
+        </Grid>
+      </div>
 
       <TableContainer component={Paper}>
           <MuiTable className={classes.table} aria-label="customized table">

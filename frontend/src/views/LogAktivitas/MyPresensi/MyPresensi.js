@@ -87,7 +87,7 @@ const MyPresensi = (props) => {
   const {history} = props;
 
   const params = new URLSearchParams(history.location.search);
-  const [tanggalFilter, setFilterTanggal] = useState();
+  const [tanggalFilter, setFilterTanggal] = useState(params.get("tanggal"));
 
 
   useEffect(()=>{
@@ -107,6 +107,7 @@ const MyPresensi = (props) => {
       setLoading(false);
     })
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, update, user]);
 
   const doQuery = () => {
@@ -121,7 +122,7 @@ const MyPresensi = (props) => {
     setQueryParams({}, history);
     setPage(1);
     setUpdate(update+1);
-    setFilterTanggal(null);
+    setFilterTanggal("");
   }
 
 
@@ -137,7 +138,7 @@ const MyPresensi = (props) => {
         
       </Grid>
 
-      <Grid item container direction="row" justify="space-between">
+      {/* <Grid item container direction="row" justify="space-between">
           <Grid item xs={10}>
             <Link to={`/log-aktivitas`}>
               <TemplateButton 
@@ -150,6 +151,8 @@ const MyPresensi = (props) => {
             </Link>
           </Grid>
       </Grid>
+      Moved to list ya...
+      */}
 
       <div className="w-full md:w-1/3 my-2 md:mr-2">
         <CustomTextField
@@ -215,7 +218,18 @@ const MyPresensi = (props) => {
                     <StyledTableCell align="left">{row.tanggal}</StyledTableCell>
                     <StyledTableCell align="left">{row.jam_masuk.split(".")[0]}</StyledTableCell>
                     <StyledTableCell align="left">{row.keterangan}</StyledTableCell>
-                    <StyledTableCell align="left">{row.log !== null ? "Sudah mengisi log" : "Belum mengisi log"}</StyledTableCell>
+                    <StyledTableCell align="left">{row.log !== null ? "Sudah mengisi log" : 
+                      // "Belum mengisi log"
+                      <Link to={`/log-aktivitas?tanggal=${row.tanggal}&jam_masuk=${row.jam_masuk}`}>
+                        <TemplateButton 
+                          type="button" 
+                          buttonStyle="btnGreen" 
+                          buttonSize="btnMedium"
+                          >
+                          Buat Log
+                          </TemplateButton>
+                      </Link>
+                    }</StyledTableCell>
                   </StyledTableRow>
                 )))}
             </TableBody>

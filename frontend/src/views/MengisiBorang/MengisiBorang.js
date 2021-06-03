@@ -106,62 +106,7 @@ const DaftarPaketPertanyaan = ({match, history}) => {
           </Grid>
         </Grid>
         <div className="flex w-full flex-wrap p-2">
-          {/* <div className="w-full md:w-1/3 my-2 md:mr-2"> */}
-
-            {/* <CustomTextField
-              label="Search"
-              variant="outlined"
-              size="small"
-              fullWidth
-              bordered={true}
-              value={searchFilter}
-              onChange={e=>setFilterSearch(e.target.value)}
-              />
-          </div> */}
-          {/* <div className="w-1/4 md:w-1/6 my-2 md:mx-2">
-            <CustomTextField
-              label="Jenis"
-              variant="outlined"
-              size="small"
-              fullWidth
-              select
-              bordered={true}
-              value={jenisFilter}
-              onChange={e=>setFilterJenis(e.target.value)}
-            >
-              {JENIS_PAKET.map(j=>(
-                <MenuItem value={j.value}>{j.label}</MenuItem>
-              ))}
-            </CustomTextField>
-          </div> */}
-          {/* <div className="w-1/4 md:w-1/6 m-2">
-            <CustomTextField
-              label="Kategori"
-              variant="outlined"
-              size="small"
-              fullWidth
-              select
-              bordered={true}
-              value={kategoriFilter}
-              onChange={e=>setFilterKategori(e.target.value)}
-            >
-              {optionKategori.map(k=>(
-                <MenuItem value={k.nama}>{k.nama}</MenuItem>
-              ))}
-            </CustomTextField>
-          </div> */}
-          {/* <div className="flex items-center">
-            {!(params.get("search") === searchFilter &&
-              params.get("kategori") === kategoriFilter && 
-              params.get("jenis") === jenisFilter) &&
-              <button onClick={doQuery} className="m-1">Apply</button>  
-            }
-            {(params.get("search") ||
-              params.get("kategori") || 
-              params.get("jenis")) &&
-              <button onClick={resetQuery} className="m-1">Reset</button>  
-            }
-          </div> */}
+         
         </div>
 
       </Grid>
@@ -257,7 +202,7 @@ const DaftarPaketPertanyaan = ({match, history}) => {
         </TableContainer>
         <Loading open={fullLoading} />
         <SuccessDialog open={success} handleClose={()=>history.push(`/mengisi-borang/${id}`)} />
-        <FailDialog open={!!fail} handleClose={()=>setFail(null)} text={fail?.detail || "Harap isi seluruh pertanyaan yang ada"} />
+        <FailDialog open={!!fail} handleClose={()=>setFail(null)} text={fail?.detail} />
     </div>
   );
 };

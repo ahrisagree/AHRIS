@@ -18,6 +18,12 @@ export const getDetailHasilPerforma = (id) => {
 
 }
 
+export const postEvaluasiDiri = data => 
+    axios.post(`${baseUrl}/evaluation/result/evaluasi-diri/`, data);
+
+export const deleteEvaluasiDiriAPI = id =>
+    axios.delete(`${baseUrl}/evaluation/result/evaluasi-diri/${id}/`);
+    
 export const commentManager = (id, data) => 
     axios.patch(`${baseUrl}/evaluation/result/evaluasi-diri/${id}/`, data)
 

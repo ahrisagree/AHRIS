@@ -63,7 +63,7 @@ const useStyles = makeStyles((theme) => ({
 
 const filter = createFilterOptions();
 
-const Register = props => {
+const Register = ({history}) => {
   const classes = useStyles();
 
   const [loading, setLoading] = React.useState(false);
@@ -175,18 +175,6 @@ const Register = props => {
       </div>  
 
         <Grid item xs={12}>
-          {/* <TextField id="outlined-full-width"
-            required="true"
-            label="Divisi"
-            style={{ margin: 8 }}
-            fullWidth
-            select
-            margin="normal"
-            variant="outlined"
-            value={role}
-            onChange={e=>setRole(e.target.value)}
-            >
-          </TextField> */}
             <Autocomplete
               style={{ margin: 8 }}
               margin="normal"
@@ -260,7 +248,8 @@ const Register = props => {
         {/* <Dialog2 canShow={showModal} updateModalState={toggleModal}></Dialog2> */}
       </Container>
       <Loading open={loading} />
-      <Dialog open={!!regisAccount} handleClose={()=>setRegistAccount(false)} ></Dialog>
+      <Dialog open={!!regisAccount} handleClose={()=>history.push(`/akun`)} 
+      ></Dialog>
       <DialogFail
         open={!!error.detail} 
         handleClose={()=>{

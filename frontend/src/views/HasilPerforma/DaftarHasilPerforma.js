@@ -14,8 +14,8 @@ import { StyledTableCell, StyledTableRow } from "components/Table";
 import MainTitle from "components/MainTitle";
 import { getListHasilPerforma } from 'api/hasilperforma';
 import CircularProgress from 'components/Loading/CircularProgress';
-import { periodFormated } from 'utils/periodeConverter';
 import CustomTextField from 'components/CustomTextField';
+import { periodFormated } from 'utils/periodeConverter';
 
 
 
@@ -81,23 +81,23 @@ const useStyles = makeStyles((theme) =>({
       },
 }));
 
-const DaftarEvaluasiPerforma = ({history, match, user}) => {
+const DaftarHasilPerforma = ({history, match, user}) => {
     const classes = useStyles();
     const [loading, setLoading] = useState(false);
     const [listHasilPerforma, setHasilPerforma] = React.useState([]);
     const [periodeFilter, setPeriodeFilter] = useState(new Date().toISOString().substr(0,7));
+
 
   
 
     useEffect(()=>{
       setLoading(true)
       // const { id } = match.params;
-      getListHasilPerforma({
-        periode: periodFormated(periodeFilter)
-      }).then(res=>{
+      getListHasilPerforma( {
+        periode: periodFormated(periodeFilter),
+        user: user.pk}).then(res=>{
         setHasilPerforma(res.data?.results);
         console.log(res.data?.nama);
-        
       }).catch(err=>{
       // Handle ERROR
       }).finally(()=>{
@@ -114,14 +114,14 @@ const DaftarEvaluasiPerforma = ({history, match, user}) => {
       <Grid container spacing={2} direction="column">
       <Grid item xs={12} container>
           <Grid item xs={4} alignContent="flex-start">
-            <MainTitle title={`Daftar Borang`} className={classes.title} />
+            {/* <div className="m-12"> */}
+            <MainTitle title={`Daftar Hasil Performa`} className={classes.title} />
+            {/* </div> */}
           </Grid>
           <Grid item xs={8}/>
-      </Grid>
+          </Grid>
 
-      <Grid item xs={12} container>
-
-      <Grid item xs={12} justify="flex-end" container>
+          <Grid item xs={12} justify="flex-end" container>
           <Grid item xs={4} md={3} >
             <div style={{position: 'relative', padding: 2}}>
                 <CustomTextField
@@ -138,7 +138,26 @@ const DaftarEvaluasiPerforma = ({history, match, user}) => {
             </div>
           </Grid>
         </Grid>
-        
+
+        <Grid item xs={12} container>
+        {/* <Grid item xs={2} alignContent="">
+        <TextField
+          label="Periode"
+          variant="outlined"
+          size="small"
+          className={classes.mb}
+          fullWidth
+          value={divisiFilter}
+          onChange={e=>setFilterDivisi(e.target.value)}
+          // multiple
+          select
+          bordered={true}
+        >
+          {divisiOptions.map(d=>(
+            <MenuItem value={d.nama_divisi}>{d.nama_divisi}</MenuItem>
+          ))}
+        </TextField>
+        </Grid> */}
         </Grid>
       </Grid>
 
@@ -147,9 +166,8 @@ const DaftarEvaluasiPerforma = ({history, match, user}) => {
             <TableHead>
               <TableRow>
                 <StyledTableCell align="left">No </StyledTableCell>
-                <StyledTableCell align="left">Nama</StyledTableCell>
-                <StyledTableCell align="left">Role </StyledTableCell>
-                <StyledTableCell align="left">Action</StyledTableCell>
+                <StyledTableCell align="left">Nama Borang </StyledTableCell>
+                <StyledTableCell align="left"></StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -163,7 +181,7 @@ const DaftarEvaluasiPerforma = ({history, match, user}) => {
                 listHasilPerforma?.length === 0 ? 
                 <StyledTableRow>
                   <StyledTableCell align="center" colSpan="5">
-                    Belum ada penilaian performa yang perlu dievaluasi
+                    Belum ada hasil penilaian performa
                   </StyledTableCell>
                 </StyledTableRow>
                 :
@@ -172,20 +190,19 @@ const DaftarEvaluasiPerforma = ({history, match, user}) => {
                     <StyledTableCell component="th" scope="row">
                       {`${i+1}.`}
                     </StyledTableCell>
-                    <StyledTableCell align="left">{row.user.username}</StyledTableCell>
-                    <StyledTableCell align="left">{row.user.role}</StyledTableCell>                    
+                    <StyledTableCell align="left">{row.nama}</StyledTableCell>
                     <StyledTableCell align="left">
                     <Grid item sm={10}>
                     {/* ini ganti */}
                     {/* {assignment.list_paket_jawaban.find(x=>x.paket_pertanyaan===row.id) ? 
                     "Sudah Diisi": */}
                       <TemplateButton
-                          onClick={()=>history.push(`/evaluasi-performa/${row.id}/?periode=${periodeFilter}`)}
+                          onClick={()=>history.push(`/hasil-performa/${row.id}/?periode=${periodeFilter}`)}
                           type="button"
                           buttonStyle="btnGreen"
                           buttonSize="btnLong"
                       >
-                          Evaluasi
+                          Lihat Hasil Penilaian
                       </TemplateButton>
                     {/* } */}
                     </Grid>
@@ -199,4 +216,5 @@ const DaftarEvaluasiPerforma = ({history, match, user}) => {
     </div>
   );
 }
-export default DaftarEvaluasiPerforma;
+
+export default DaftarHasilPerforma;
