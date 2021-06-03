@@ -10,6 +10,7 @@ import DaftarLog from "./views/LogAktivitas/DaftarLog/";
 import MyPresensi from "./views/LogAktivitas/MyPresensi/";
 import Register from "./views/Register";
 import DaftarKaryawan from "views/DaftarKaryawan";
+// import EvaluasiPerforma from "views/EvaluasiPerforma";
 import DaftarPaketPertanyaan from "views/DaftarPakerPertanyaan";
 import DetailEditPaketPertanyaan from "views/DetailEditPaketPertanyaan";
 import DaftarBorang from "views/MengisiBorang/DaftarBorang";
@@ -22,6 +23,11 @@ import DaftarBorangPerforma from "views/KelolaHasilPerforma/DaftarBorangPerforma
 import AssignmentManager from "views/AssignmentManager";
 import EvaluasiDiri from "views/EvaluasiDiri";
 import Pembobotan from "views/KelolaHasilPerforma/Pembobotan";
+import DaftarHasilPerforma from "views/HasilPerforma/index";
+import HasilPerforma from "views/HasilPerforma/HasilPerforma";
+import EvaluasiPerforma from "views/EvaluasiPerforma";
+import DaftarEvaluasiPerforma from "views/DaftarEvaluasiPerforma";
+// import DaftarGaji from "views/DaftarGaji";
 import KelolaGaji from "views/KelolaGaji";
 
 export default [
@@ -151,9 +157,29 @@ export default [
     component: AssignmentManager
   },
   {
-    path: '/evaluasi-diri/add',
+    path: '/hasil-performa',
+    exact: true,
+    component: DaftarHasilPerforma
+  },
+  {
+    path: '/hasil-performa/:id',
+    exact: true,
+    component: HasilPerforma
+  },
+  {
+    path: '/hasil-performa/:id/add',
     exact: true,
     component: EvaluasiDiri
+  },
+  {
+    path: '/evaluasi-performa/:id',
+    exact: true,
+    component: EvaluasiPerforma
+  },
+  {
+    path: '/daftar-evaluasi-performa',
+    exact: true,
+    component: DaftarEvaluasiPerforma
   },
   {
     path: '/gaji/',

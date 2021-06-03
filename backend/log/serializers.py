@@ -5,6 +5,7 @@ from auth_app.serializers import UserListSerializer
 import datetime
 from django.utils.timezone import now
 from backend.utils import get_or_none
+from notification.service import NotifService
 
 """
 in this file Serializer:
@@ -50,6 +51,16 @@ class LogAktivitasSerializer(serializers.ModelSerializer):
         presensi.log = log
         presensi.save()
         return log
+
+    def update(self, instance, validated_data):
+        status = validated_data.get('status_log')
+        res = super().update(instance, validated_data)
+        if status != None:
+            if status == 1:
+                NotifService.logApprovedNotif(res)
+            elif status == 2:
+                NotifService.logRejectedNotif(res)
+        return res
 
     class Meta:
         model = LogAktivitas

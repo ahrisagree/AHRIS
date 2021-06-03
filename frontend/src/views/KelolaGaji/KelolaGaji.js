@@ -13,8 +13,8 @@ import {
   TableRow,
   IconButton,
   Tooltip,
-  GridListTileBar,
-  Divider
+  Divider,
+  ListItem
 } from '@material-ui/core';
 import TextField from 'components/CustomTextField';
 import MainTitle from 'components/MainTitle';
@@ -34,7 +34,6 @@ import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 import { editGaji, getListGaji } from 'api/gaji';
 import { exportGaji } from 'utils/csv';
 import { periodFormated } from 'utils/periodeConverter';
-import { MicNone } from '@material-ui/icons';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -117,7 +116,7 @@ const KelolaGaji = ({history, match}) => {
   const [jam, setJam] = useState(0);
   const [penyesuaian, setPenyesuaian] = useState(0);
   const [honor, setHonor] = useState(0);
-  const [gaji, setGaji] = React.useState("");
+  const [fullLoading, setFullLoading] = React.useState(false);
   const [listLog, setListLog] = useState([]);
   const [detail, setDetail] = useState(null);
   const [update, setUpdate] = useState(0);
@@ -129,8 +128,8 @@ const KelolaGaji = ({history, match}) => {
   const [roleFilter, setFilterRole] = useState(params.get("role"));
   const [divisiFilter, setFilterDivisi] = useState(params.get("divisi"));
   const [searchFilter, setFilterSearch] = useState(params.get("search"));
-  const [tanggalSetelahFilter, setFilterTanggalSetelah] = useState();
-  const [tanggalSebelumFilter, setFilterTanggalSebelum] = useState();
+  const [tanggalSetelahFilter, setFilterTanggalSetelah] = useState(params.get("date_after"));
+  const [tanggalSebelumFilter, setFilterTanggalSebelum] = useState(params.get("date_before"));
 
   useEffect(()=>{
     setLoading(true)
@@ -153,6 +152,7 @@ const KelolaGaji = ({history, match}) => {
     }).finally(()=>{
       setLoading(false);
     })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, update, periodeFilter]);
 
   useEffect(()=>{
@@ -226,7 +226,7 @@ const KelolaGaji = ({history, match}) => {
   , [page2, update2, detail]);
 
   const onSubmit = () => {
-    setLoading(true)
+    setFullLoading(true)
     editGaji(detail.id, {
       nominal: detail.user.gaji+honor*jam+penyesuaian
     }).then(res=>{
@@ -238,7 +238,7 @@ const KelolaGaji = ({history, match}) => {
       console.error(err.response);
       setError(err.response && err.response.data);
     }).finally(()=>{
-      setLoading(false);
+      setFullLoading(false);
     })
 
     
@@ -433,7 +433,10 @@ const KelolaGaji = ({history, match}) => {
                       {`${i+1}.`}
                     </StyledTableCell>
                     <StyledTableCell align="left">
-                      <a style={{color:"#00A96F", textDecorationLine: "underline"}} onClick={()=>detailUser(row)}>{row.user.username}</a></StyledTableCell>
+                      <ListItem button onClick={()=>detailUser(row)}>
+                        <span style={{color:"#00A96F", textDecorationLine: "underline"}}>{row.user.username}</span>
+                      </ListItem>
+                    </StyledTableCell>
                     
                     <StyledTableCell align="left">{row.nominal}</StyledTableCell>
                     <StyledTableCell align="left">{row.user.divisi.map(x=> x.nama_divisi+", ")}</StyledTableCell>
@@ -669,7 +672,7 @@ const KelolaGaji = ({history, match}) => {
                
               </StyledTableRow>
               :
-              <a></a>
+              <span></span>
                   
                 )))}
             </TableBody>
@@ -678,6 +681,7 @@ const KelolaGaji = ({history, match}) => {
             </Container>
         </div>
       }
+      <Loading open={fullLoading} />
       <Dialog open={success} handleClose={()=>setSuccess(false)} ></Dialog>
         <DialogFail
           open={!!error.detail} 

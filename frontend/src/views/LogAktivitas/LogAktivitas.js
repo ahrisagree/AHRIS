@@ -65,14 +65,15 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const LogAktivitas = () => {
+const LogAktivitas = ({history}) => {
   const classes = useStyles();
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState({});
+  const params = new URLSearchParams(history.location.search);
   const date = new Date();
   const new_date = Moment(date).format('YYYY-MM-DD');
-  const [selectedDate, setSelectedDate] = React.useState(new_date);
-  const [jamMasuk, setJamMasuk] = React.useState("");
+  const [selectedDate, setSelectedDate] = React.useState(params.get("tanggal") || new_date);
+  const [jamMasuk, setJamMasuk] = React.useState(params.get("jam_masuk")?.substr(0,5) || "");
   const [jamKeluar, setJamKeluar] = React.useState("");
   const [tipe, setTipe] = React.useState(false);
   const [keterangan, setKeterangan] = React.useState("");
@@ -182,24 +183,6 @@ const LogAktivitas = () => {
               disabled={loading}
               />
             
-          
-              {/* <TextField id="outlined-full-width"
-              required="true"
-              label="Jam Masuk"
-              style={{ margin: 8, width: "33%" }}
-              margin="normal"
-              variant="outlined"
-              className={classes.textField}
-              />
-              <TextField id="outlined-full-width"
-              required="true"
-              label="Jam Keluar"
-              style={{ margin: 8, width: "31%" }}
-              margin="normal"
-              variant="outlined"
-              className={classes.textField}
-              /> */}
-
             <TextField
               variant="outlined"
               id="time"
@@ -217,7 +200,9 @@ const LogAktivitas = () => {
               value={jamMasuk}
               onChange={e=>{setJamMasuk(e.target.value); delete error.jam_masuk}}
               error={!!error.jam_masuk}
-              helperText={error.jam_masuk && error.jam_masuk[0]}
+              // helperText={error.jam_masuk && error.jam_masuk["Time has"]}
+              helperText={error.jam_masuk && "This field may not be blank. Exp. hh:mm"}
+
               disabled={loading}
             />
 
@@ -239,7 +224,7 @@ const LogAktivitas = () => {
               value={jamKeluar}
               onChange={e=>{setJamKeluar(e.target.value); delete error.jam_keluar}}
               error={!!error.jam_keluar}
-              helperText={error.jam_keluar && error.jam_keluar[0]}
+              helperText={error.jam_keluar && "This field may not be blank. Exp. hh:mm"}
               disabled={loading}
             />
 
@@ -374,7 +359,7 @@ const LogAktivitas = () => {
 
         </Container>
         <Loading open={loading} />
-        <Dialog open={!!createLog} handleClose={()=>setCreateLog(false)} ></Dialog>
+        <Dialog open={!!createLog} handleClose={()=>history.push(`/log`)} ></Dialog>
         <DialogFail
           open={!!error.detail} 
           handleClose={()=>{

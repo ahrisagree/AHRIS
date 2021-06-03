@@ -24,7 +24,7 @@ import {
 } from 'api/borang';
 import Loading from 'components/Loading';
 import { EditRounded } from '@material-ui/icons';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutlineRounded';
 import DeleteConfirmationDialog from 'components/DialogConf';
 
@@ -360,7 +360,7 @@ const BuatPaketPertanyaan = ({paket, isEdit, isDetail, setEditMode, history}) =>
         </div>
       </Paper>
 
-      <DialogSuccess open={success} handleClose={()=>setSuccess(false)} />
+      <DialogSuccess open={success} handleClose={()=>history.push(`/paket-pertanyaan`)} />
       <DialogFail 
         open={!!errorState.detail || !!errorState.non_field_errors || !!errorState.list_aspek} 
         handleClose={()=>{

@@ -129,6 +129,7 @@ const DaftarLog = (props) => {
       setLoading(false);
     })
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, update]);
 
 
@@ -330,11 +331,6 @@ const DaftarLog = (props) => {
             onChange={(_e,val)=>setPage(val)}
             />
         </div>
-        <DeleteConfirmationDialog 
-          open={!!deleteLog}
-          handleCancel={()=>setDeleteLog(null)}
-          handleConfirm={handleDeleteLog}
-        />
         <DeleteConfirmationDialog 
           open={!!deleteLog}
           handleCancel={()=>setDeleteLog(null)}
