@@ -60,7 +60,7 @@ function Notification({push}) {
                             {item.text}
                           </span>
                           <span className="w-3/12 text-xs text-gray-500">
-                            {new Date(item.timestamp).toLocaleString()}
+                            {new Date(item.timestamp).toLocaleString("en-GB")}
                           </span>
                         </div>
                       </ListItem>

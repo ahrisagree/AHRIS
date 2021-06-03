@@ -149,6 +149,10 @@ const NavigationDrawer = ({children, history, location, user, logoutThunk}) => {
   const {pathname} = location;
 
   let navigationMenu = []
+  if (!user && pathname !== "/login") {
+    history.push("/login");
+    return <></>;
+  }
 
   switch (user?.role) {
     case ROLE.admin:
