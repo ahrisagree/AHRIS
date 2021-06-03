@@ -171,7 +171,7 @@ const Home = ({history}) => {
     getListPresensiKaryawan({
       search, divisi, tanggal, disablepagination: true 
     }).then(res=>{
-      exportPresensi(res.data, "List Presensi");
+      exportPresensi(res.data, `Presensi ${tanggal}` || "List Presensi");
     })
   }
 

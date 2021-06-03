@@ -320,6 +320,7 @@ const DaftarLogKaryawan = (props) => {
 
           <div className="flex items-center">
             {!(params.get("search") === searchFilter &&
+              params.get("user") === userFilter &&
               params.get("date_after") === tanggalSetelahFilter &&
               params.get("date_before") === tanggalSebelumFilter &&
               params.get("status") === statusFilter &&
@@ -327,6 +328,7 @@ const DaftarLogKaryawan = (props) => {
               <button onClick={doQuery} className="m-1">Apply</button>  
             }
             {(params.get("search") ||
+             params.get("user") ||
              params.get("date_after") ||
              params.get("date_before") ||
              params.get("status") ||
