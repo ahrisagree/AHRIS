@@ -81,11 +81,15 @@ const useStyles = makeStyles((theme) => ({
   splitScreen: {
     display: "flex",
     flexDirection: "row",
+    position: 'relative'
   },
   topPane: {
-    width: "50%",
-    marginRight:'0.5rem',
-    marginTop:'1.4rem'
+    width: "calc(50% + 1.5rem)",
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    height: 'calc(100vh - 5.5rem)',
+    overflowY: 'scroll',
   },
   topPaneFull: {
     width: "100%",
@@ -94,7 +98,11 @@ const useStyles = makeStyles((theme) => ({
   },
   bottomPane: {
     width: "50%",
-    marginLeft:'0.5rem'
+    position: 'absolute',
+    right: '-1.5rem',
+    top: '-1.5rem',
+    height: 'calc(100vh - 4rem)',
+    overflowY: 'scroll',
   },
   mb: {
     marginBottom: '1rem',
