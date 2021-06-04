@@ -85,9 +85,9 @@ const EvaluasiPerforma = (props) => {
 
 
   const onSubmit = () => {
-    const { id } = props.match.params;
+    const { id} = props.match.params;
     setLoading(true);
-    commentManager( id, {
+    commentManager( assignment.evaluasi_diri[0].id, {
       feedback: feedback,
     }).then(res=>{
       setFeedback("");
@@ -258,6 +258,7 @@ const EvaluasiPerforma = (props) => {
                   <CircularProgress />
                 </StyledTableCell>
               </StyledTableRow>
+              
               : (
                 assignment?.evaluasi_diri.length === 0 ? 
                 <StyledTableRow>
@@ -282,14 +283,25 @@ const EvaluasiPerforma = (props) => {
         </TableContainer>
 
         <br></br>
+        <Grid container spacing={2} direction="column">
 
-        <Grid item xs={12}>
+        <Grid item xs={12} container>
+              {
+                assignment?.evaluasi_diri.length === 0 ?
+                
+                <Typography style={{ fontWeight: 600, marginBottom: '2%', fontFamily: 'IBM Plex Sans', fontStyle: 'normal', 
+                fontSize: 24, lineHeight: '138%', display: 'flex', alignItems: 'center', letterSpacing: '0.0075em', color: '#0A3142' }} 
+                variant="subtitle1">
+                </Typography>
+          
+                :
+          <Grid container>
             <Typography style={{ fontWeight: 600, marginBottom: '2%', fontFamily: 'IBM Plex Sans', fontStyle: 'normal', 
             fontSize: 24, lineHeight: '138%', display: 'flex', alignItems: 'center', letterSpacing: '0.0075em', color: '#0A3142' }} 
             variant="subtitle1">
               Comment
             </Typography>
-          </Grid>
+        
 
         <RedditTextField
                 label="Answer text"
@@ -318,6 +330,10 @@ const EvaluasiPerforma = (props) => {
               Simpan
             </TemplateButton>
         </div>
+        </Grid>
+        }
+        </Grid>
+        </Grid>
         {/* </Paper> */}
         <Loading open={loading} />
         <Dialog open={success} handleClose={()=>setSuccess(false)} ></Dialog>
