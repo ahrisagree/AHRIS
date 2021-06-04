@@ -82,4 +82,6 @@ class RegisterSerializer(RestRegisterSerializer):
 		setattr(user, 'role', role)
 		divisi = self.validated_data.get('divisi')
 		user.divisi.set(divisi)
+		gaji = self.validated_data.get('gaji')
+		setattr(user, 'gaji', gaji)
 		user.save()
