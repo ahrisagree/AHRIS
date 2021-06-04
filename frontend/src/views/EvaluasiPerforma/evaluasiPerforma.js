@@ -52,15 +52,10 @@ const useStyles = makeStyles({})
 const EvaluasiPerforma = (props) => {
   const classes = useStyles();
   const [loading, setLoading] = useState(false);
-  // const { id } = props.match.params;
   const [update, setUpdate] = useState(0);
-  
-
-  // const [update, setUpdate] = useState(0);
   const [success, setSuccess] = useState(false);
   const [error, setError] = React.useState({});
   const [feedback, setFeedback] = React.useState("");
-  // const [fail, setFail] = useState(null); 
   const [assignment, setAssignment] = useState(null);
   
 
@@ -104,13 +99,10 @@ const EvaluasiPerforma = (props) => {
 
   return (
     <div className={classes.root1}>
-      {/* <Paper className={classes.page}> */}
       <Grid container spacing={2} direction="column">
         <Grid item xs={12} container>
           <Grid item alignContent="flex-start">
-            {/* <div className="m-12"> */}
             <MainTitle title={`Hasil Performa | ${assignment?.user?.username} | ${assignment?.nama} | ${assignment?.periode.substr(0,7)} `} className={classes.title} />
-            {/* </div> */}
           </Grid>
         </Grid>
         <div className="flex w-full flex-wrap p-2">
@@ -206,17 +198,6 @@ const EvaluasiPerforma = (props) => {
                             }
 
                              </div>
-                                {/* <TextField
-                                  required
-                                  // value={pertanyaan.jawaban}
-                                  // onChange={e=>handleChange(indexAspek, indexPertanyaan, e.target.value)}
-                                  label="Jawaban"
-                                  margin="normal"
-                                  fullWidth
-                                  multiline
-                            
-                                > Test </TextField> */}
-                         
                             </Grid>
                           </Grid>
                         </StyledTableCell>
@@ -232,9 +213,7 @@ const EvaluasiPerforma = (props) => {
         <Grid container spacing={2} direction="column">
       <Grid item xs={12} container>
           <Grid item xs={4} alignContent="flex-start">
-            {/* <div className="m-12"> */}
             <MainTitle title="Evaluasi Diri" className={classes.title} />
-            {/* </div> */}
           </Grid>
           <Grid item xs={8}/>
         </Grid>
@@ -306,7 +285,6 @@ const EvaluasiPerforma = (props) => {
         <RedditTextField
                 label="Answer text"
                 className={classes.margin}
-                // variant="filled"
                 fullWidth="2000"
                 style={{ margin: 8 }}
                 margin="normal"

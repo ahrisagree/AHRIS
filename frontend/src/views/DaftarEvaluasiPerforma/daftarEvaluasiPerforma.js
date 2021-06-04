@@ -180,7 +180,7 @@ const DaftarEvaluasiPerforma = ({history, match, user}) => {
                     {/* {assignment.list_paket_jawaban.find(x=>x.paket_pertanyaan===row.id) ? 
                     "Sudah Diisi": */}
                       <TemplateButton
-                          onClick={()=>history.push(`/evaluasi-performa/${row.id}/?periode=${periodeFilter}`)}
+                          onClick={()=>history.push(`/daftar-evaluasi-performa/${row.id}/?periode=${periodeFilter}`)}
                           type="button"
                           buttonStyle="btnGreen"
                           buttonSize="btnLong"
