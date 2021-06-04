@@ -314,56 +314,8 @@ export const MANAGER_NAVIGATION = [
 
 export const ADMINISTRASI_NAVIGATION = [
   {
-    menu: 'Home',
-    icon: <HomeIcon style={{ color: 'white' }}/>,
-    path: '/'
-  },
-  {
-    menu: 'Presensi',
-    icon: <CheckIcon style={{ color: 'white' }}/>,
-    children: [
-      {
-        menu: 'Buat Presensi',
-        path: '/',
-      },
-      {
-        menu: 'Presensi Saya',
-        path: '/my-presensi',
-      }
-    ]
-  },
-  {
-    menu: 'Daily Log',
-    icon: <BookIcon style={{ color: 'white' }}/>,
-    children: [
-      {
-        menu: 'List Daily Log',
-        path: '/log',
-      },
-      {
-        menu: 'Buat Log',
-        path: '/log-aktivitas',
-        icon: <AddRounded />
-      }
-    ]
-  },
-  {
-    menu: 'Performa',
-    icon: <InsertDriveFileOutlinedIcon style={{ color: 'white' }}/>,
-    children: [
-      {
-        menu: 'Isi Borang',
-        path: '/mengisi-borang'
-      },
-      {
-        menu: 'Hasil Performa',
-        path: '/hasil-performa'
-      },
-    ]
-  },
-  {
     menu: 'Gaji',
-    path: '/',
+    path: '/gaji',
     icon: <LocalAtmRoundedIcon style={{ color: 'white' }}/>,
   }
 ]
