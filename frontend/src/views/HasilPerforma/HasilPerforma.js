@@ -195,7 +195,7 @@ const HasilPerforma = ({match, history, user}) => {
             <MainTitle title={`Evaluasi Diri`} className={classes.title} />
             {/* </div> */}
           </Grid>
-         </Grid>
+        </Grid>
          <Grid item xs={12} container>
               {
                 assignment?.evaluasi_diri.length === 0 ? 
