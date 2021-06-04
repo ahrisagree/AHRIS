@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Button  from "components/TemplateButton";
+import TemplateButton from 'components/TemplateButton';
 import {
   makeStyles,
   Table as MuiTable,
@@ -186,12 +187,16 @@ const DaftarKaryawan = ({history}) => {
           {!(params.get("search") === searchFilter &&
             params.get("role") === roleFilter && 
             params.get("divisi") === divisiFilter) &&
-            <button onClick={doQuery}>Apply</button>  
+            <TemplateButton  type="button"
+            buttonStyle="btnBlueOutline"
+            buttonSize="btnMedium" onClick={doQuery}>Apply</TemplateButton>  
           }
           {(params.get("search") ||
             params.get("role") || 
             params.get("divisi")) &&
-            <button onClick={resetQuery}>Reset</button>  
+            <TemplateButton  type="button"
+            buttonStyle="btnBlueOutline"
+            buttonSize="btnMedium" onClick={resetQuery}>Reset</TemplateButton>  
           }
         </Grid>
 

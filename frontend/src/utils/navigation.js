@@ -175,35 +175,35 @@ export const ADMIN_NAVIGATION = [
       }
     ]
   },
-  {
-    menu: 'Presensi',
-    icon: <CheckIcon style={{ color: 'white' }}/>,
-    children: [
-      {
-        menu: 'Buat Presensi',
-        path: '/',
-      },
-      {
-        menu: 'Presensi Saya',
-        path: '/my-presensi',
-      }
-    ]
-  },
-  {
-    menu: 'Daily Log',
-    icon: <BookIcon style={{ color: 'white' }}/>,
-    children: [
-      {
-        menu: 'List Daily Log',
-        path: '/log',
-      },
-      {
-        menu: 'Buat Log',
-        path: '/log-aktivitas',
-        icon: <AddRounded />
-      }
-    ]
-  },
+  // {
+  //   menu: 'Presensi',
+  //   icon: <CheckIcon style={{ color: 'white' }}/>,
+  //   children: [
+  //     {
+  //       menu: 'Buat Presensi',
+  //       path: '/',
+  //     },
+  //     {
+  //       menu: 'Presensi Saya',
+  //       path: '/my-presensi',
+  //     }
+  //   ]
+  // },
+  // {
+  //   menu: 'Daily Log',
+  //   icon: <BookIcon style={{ color: 'white' }}/>,
+  //   children: [
+  //     {
+  //       menu: 'List Daily Log',
+  //       path: '/log',
+  //     },
+  //     {
+  //       menu: 'Buat Log',
+  //       path: '/log-aktivitas',
+  //       icon: <AddRounded />
+  //     }
+  //   ]
+  // },
   {
     menu: 'Paket Borang',
     icon: <InsertDriveFileOutlinedIcon style={{ color: 'white' }}/>,
@@ -235,10 +235,6 @@ export const ADMIN_NAVIGATION = [
         path: '/mengisi-borang'
       },
       {
-        menu: 'Evaluasi Performa',
-        path: '/daftar-evaluasi-performa'
-      },
-      {
         menu: 'Hasil Performa',
         path: '/hasil-performa'
       },
@@ -256,20 +252,6 @@ export const MANAGER_NAVIGATION = [
     menu: 'Home',
     icon: <HomeIcon style={{ color: 'white' }}/>,
     path: '/'
-  },
-  {
-    menu: 'Kelola Akun',
-    icon: <PeopleAltIcon style={{ color: 'white' }}/>,
-    children: [
-      {
-        menu: 'List Akun',
-        path: '/akun',
-      },
-      {
-        menu: 'Buat Akun',
-        path: '/akun/register',
-      }
-    ]
   },
   {
     menu: 'Presensi',
@@ -327,11 +309,6 @@ export const MANAGER_NAVIGATION = [
         path: '/hasil-performa'
       },
     ]
-  },
-  {
-    menu: 'Gaji',
-    path: '/gaji',
-    icon: <LocalAtmRoundedIcon style={{ color: 'white' }}/>,
   },
 ]
 
