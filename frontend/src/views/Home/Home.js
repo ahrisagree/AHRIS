@@ -287,8 +287,11 @@ const Home = ({history}) => {
           <Grid item xs={8}/>
       </Grid>
 
-      <div className="flex w-full flex-wrap p-2">
-          <div className="w-full md:w-1/3 my-2 md:mr-2">
+      <Grid item xs={12} container>
+
+      <Grid item xs={2} alignContent="">
+    
+          <div style={{position: 'relative', padding: 2}}>
 
             <CustomTextField
               label="Search"
@@ -301,8 +304,12 @@ const Home = ({history}) => {
               />
             
           </div>
+      
+      </Grid>
 
-          <div className="w-full md:w-1/3 my-2 md:mr-2">
+      <Grid item xs={2} alignContent="">
+
+          <div style={{position: 'relative', padding: 2}}>
               <TextField
                 label="Divisi"
                 variant="outlined"
@@ -320,7 +327,11 @@ const Home = ({history}) => {
               </TextField>
           </div>
 
-          <div className="w-full md:w-1/3 my-2 md:mr-2">
+      </Grid>
+
+      <Grid item xs={2} alignContent="">
+
+          <div style={{position: 'relative', padding: 2}}>
               <CustomTextField
                 variant="outlined"
                 id="date"
@@ -334,20 +345,27 @@ const Home = ({history}) => {
                 disabled={loading}
                 />
           </div>
+
+      </Grid>
+
+      <Grid item xs={8} alignContent="">
           
-          <div className="flex items-center">
+          <div style={{position: 'relative', padding: 5}}>
             {!(params.get("search") === searchFilter &&
               params.get("divisi") === divisiFilter && 
               params.get("tanggal") === tanggalFilter) &&
-              <button onClick={doQuery} className="m-1">Apply</button>  
+              <button onClick={doQuery}>Apply</button>  
             }
             {(params.get("search") ||
              params.get("divisi") || 
              params.get("tanggal")) &&
-            <button onClick={resetQuery} className="m-1">Reset</button>  
+            <button onClick={resetQuery}>Reset</button>  
             }
           </div>
-        </div>
+      
+      </Grid>
+
+      </Grid>
       
       <div>
         <Grid item xs={1} alignContent="flex-end">
