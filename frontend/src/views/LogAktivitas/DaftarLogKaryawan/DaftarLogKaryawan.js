@@ -396,7 +396,7 @@ const DaftarLogKaryawan = (props) => {
                     <StyledTableCell align="left">{row.manajer_penyetuju !== null ? row.manajer_penyetuju.username : "" }</StyledTableCell>
                     <StyledTableCell align="center">
                     
-                    <Link to={`/log/${row.id}`}>
+                    <Link to={`/log/daftar-log-karyawan/${row.id}`}>
                     <TemplateButton 
                       type="button" 
                       buttonStyle="btnGreen" 
