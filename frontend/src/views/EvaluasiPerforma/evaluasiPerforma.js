@@ -236,8 +236,8 @@ const EvaluasiPerforma = (props) => {
             {/* </div> */}
           </Grid>
           <Grid item xs={8}/>
-        </Grid>
-        </Grid>
+          </Grid>
+      </Grid>
         <br></br>
 
         <TableContainer component={Paper}>
@@ -333,6 +333,7 @@ const EvaluasiPerforma = (props) => {
         }
         </Grid>
         </Grid>
+
         {/* </Paper> */}
         <Loading open={loading} />
         <Dialog open={success} handleClose={()=>setSuccess(false)} ></Dialog>
