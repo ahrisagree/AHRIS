@@ -202,7 +202,7 @@ const DaftarPaketPertanyaan = ({match, history}) => {
         </TableContainer>
         <Loading open={fullLoading} />
         <SuccessDialog open={success} handleClose={()=>history.push(`/mengisi-borang/${id}`)} />
-        <FailDialog open={!!fail} handleClose={()=>setFail(null)} text={fail?.detail} />
+        <FailDialog open={!!fail} handleClose={()=>setFail(null)} text='Masih ada field yang belum terisi' />
     </div>
   );
 };

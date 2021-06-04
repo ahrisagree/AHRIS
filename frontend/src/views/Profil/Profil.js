@@ -117,7 +117,7 @@ const Profil = ({logoutThunk}) => {
     <Grid container direction='row'>
       <Grid item xs={12} container>
         {/* yg warna biru */}
-        <Grid item xs={3}>
+        <Grid item xs={4}>
           <Paper className={classes.paper1}>
           <Grid container spacing={2} margin='auto' display='flex' justify="space-between" direction='row' style={{height: '100%'}}>
             <Grid item xs={12}>
@@ -128,7 +128,8 @@ const Profil = ({logoutThunk}) => {
                       {email}
             </Typography>
             </Grid>
-               <Grid item container xs={12} alignItems="flex-end">
+            <Grid item container xs={2}></Grid>
+               <Grid item container xs={8}  justify-content = "center" alignItems="flex-end">
                <TemplateButton 
                     onClick={logoutThunk}
                     type="button"
@@ -137,13 +138,14 @@ const Profil = ({logoutThunk}) => {
                   >
                     Logout
                   </TemplateButton>                 
-                  </Grid>
+                </Grid>
+            <Grid item container xs={2}></Grid>
           </Grid>
           </Paper>
         </Grid>
 
         {/* yg putih */}
-        <Grid item xs={9}>
+        <Grid item xs={8}>
           <Paper className={classes.paper2}>
           <Grid container spacing={1} direction='row'>
             <Grid item xs={12} container>
