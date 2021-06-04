@@ -400,12 +400,16 @@ const KelolaGaji = ({history, match}) => {
           {!(params.get("search") === searchFilter &&
             params.get("role") === roleFilter && 
             params.get("divisi") === divisiFilter) &&
-            <button onClick={doQuery}>Apply</button>  
+            <TemplateButton type="button"
+            buttonStyle="btnBlueOutline"
+            buttonSize="btnMedium" onClick={doQuery}>Apply</TemplateButton>  
           }
           {(params.get("search") ||
             params.get("role") || 
             params.get("divisi")) &&
-            <button onClick={resetQuery}>Reset</button>  
+            <TemplateButton type="button"
+            buttonStyle="btnBlueOutline"
+            buttonSize="btnMedium"  onClick={resetQuery}>Reset</TemplateButton>  
           }
         </Grid>
 
@@ -547,13 +551,13 @@ const KelolaGaji = ({history, match}) => {
             variant="subtitle1">
               Penyesuaian Gaji
               <Typography style={{ fontWeight: 400,  fontFamily: 'IBM Plex Sans', fontStyle: 'normal', 
-            fontSize: 18, lineHeight: '138%', position:'absolute', right:120, letterSpacing: '0.0075em', color: '#0A3142' }} 
+            fontSize: 18, lineHeight: '138%', position:'absolute', right:210, letterSpacing: '0.0075em', color: '#0A3142' }} 
             variant="subtitle1">
               Rp.
             </Typography>
             <TextField
             required
-            style={{ width: "5%", position:'absolute', right:50 }}
+            style={{ width: "20%", position:'absolute', right:50 }}
             margin="normal"
             variant="outlined"
             type="number"

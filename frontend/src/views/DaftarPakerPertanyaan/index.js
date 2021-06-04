@@ -27,6 +27,8 @@ import Loading from 'components/Loading';
 import { setQueryParams } from 'utils/setQueryParams';
 import CustomTextField from 'components/CustomTextField';
 import VisibilityIcon from '@material-ui/icons/Visibility';
+import TemplateButton from 'components/TemplateButton';
+
 
 const useStyles = makeStyles({})
 const DaftarPaketPertanyaan = ({history}) => {
@@ -177,12 +179,16 @@ const DaftarPaketPertanyaan = ({history}) => {
             {!(params.get("search") === searchFilter &&
               params.get("kategori") === kategoriFilter && 
               params.get("jenis") === jenisFilter) &&
-              <button onClick={doQuery} className="m-1">Apply</button>  
+              <TemplateButton type="button"
+              buttonStyle="btnBlueOutline"
+              buttonSize="btnMedium" onClick={doQuery} className="m-1">Apply</TemplateButton>  
             }
             {(params.get("search") ||
               params.get("kategori") || 
               params.get("jenis")) &&
-              <button onClick={resetQuery} className="m-1">Reset</button>  
+              <TemplateButton type="button"
+              buttonStyle="btnBlueOutline"
+              buttonSize="btnMedium" onClick={resetQuery} className="m-1">Reset</TemplateButton>  
             }
           </div>
           </Grid>

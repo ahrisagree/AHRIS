@@ -81,7 +81,12 @@ const DetailLogAktivitas = ({history,match,user}) => {
   const [notes, setNotes] = React.useState("");
   const [statusLog, setStatusLog] = React.useState("");
 
+  const [userPemilik, setUserPemilik] = React.useState("");
+
   const [role] = React.useState(user.role);
+
+  const [userPelihat] = React.useState(user.pk);
+
   const [deleteConfirm, setDeleteConfirm] = useState(false);
 
  
@@ -105,6 +110,7 @@ const DetailLogAktivitas = ({history,match,user}) => {
       setAlasanLembur(data.alasan_lembur);
       setKomentar(data.komentar);
       setStatusLog(STATUS_LOG[data.status_log]);
+      setUserPemilik(data.user?.pk);
     }).catch(err => {
       // HANDLE ERROR
     }).finally(() => {
@@ -143,21 +149,40 @@ const DetailLogAktivitas = ({history,match,user}) => {
     return (
       <div className="m-10">
          <Grid item xs={12}>
-     
+
+          
+        { userPelihat === userPemilik ?
+        
+        <>
          <Tooltip title="Delete">
-        <IconButton size="small" style={{float: 'right'}} onClick={()=>setDeleteConfirm(true)}>
-          <DeleteOutlineIcon />
-        </IconButton>
-      </Tooltip>
+            <IconButton size="small" style={{float: 'right'}} onClick={()=>setDeleteConfirm(true)}>
+              <DeleteOutlineIcon />
+            </IconButton>
+        </Tooltip>
+
+
+        {statusLog !== "Disetujui" ?  
 
          <Link to={`/log/${id}/edit`} style={{float: 'right'}}>
           <Tooltip title="Edit">
             <IconButton size="small" >
                <EditRounded />
             </IconButton>
-          </Tooltip>
-                    
+          </Tooltip>          
          </Link>
+        :
+        <>
+
+        </>
+        }
+
+         </>
+
+         :
+          <>
+          </>
+        }
+
     
       
       </Grid>

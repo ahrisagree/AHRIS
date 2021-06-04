@@ -188,7 +188,7 @@ const DaftarLog = (props) => {
 
           {role === "Manager" ?
           <Grid item xs={2}>
-            <Link to={`/daftar-log-karyawan`}>
+            <Link to={`/log/daftar-log-karyawan`}>
               <TemplateButton size="small"
                   type="button"
                   buttonStyle="btnGreenOutline"
@@ -207,7 +207,7 @@ const DaftarLog = (props) => {
         </Grid>
       </Grid>
 
-      <div className="flex w-full flex-wrap p-2">
+      <div className="flex w-full flex-wrap p-1">
         <div className="w-full md:w-1/3 my-2 md:mr-2">
                 <CustomTextField
                   variant="outlined"
@@ -244,14 +244,19 @@ const DaftarLog = (props) => {
           <div className="flex items-center">
             {!(params.get("tanggal") === tanggalFilter &&
               params.get("status") === statusFilter) &&
-              <button onClick={doQuery} className="m-1">Apply</button>  
+              <TemplateButton type="button"
+              buttonStyle="btnBlueOutline"
+              buttonSize="btnMedium"onClick={doQuery} className="m-1">Apply</TemplateButton>  
             }
             {(params.get("tanggal") ||
              params.get("status")) &&
-            <button onClick={resetQuery} className="m-1">Reset</button>  
+            <TemplateButton type="button"
+            buttonStyle="btnBlueOutline"
+            buttonSize="btnMedium" onClick={resetQuery} className="m-1">Reset</TemplateButton>  
             }
           </div>
         </div>
+        
 
         <TableContainer component={Paper}>
           <MuiTable className={classes.table} aria-label="customized table">

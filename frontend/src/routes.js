@@ -107,9 +107,14 @@ export default [
     component: DaftarLog
   },
   {
-    path: '/daftar-log-karyawan',
+    path: '/log/daftar-log-karyawan',
     exact: true,
     component: DaftarLogKaryawan
+  },
+  {
+    path: '/log/daftar-log-karyawan/:id',
+    exact: true,
+    component: DetailLogAktivitas
   },
   {
     path: '/log/:id',
