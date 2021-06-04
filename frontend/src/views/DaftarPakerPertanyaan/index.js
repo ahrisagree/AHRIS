@@ -109,29 +109,18 @@ const DaftarPaketPertanyaan = ({history}) => {
 
   return (
     <div className={classes.root1}>
-      {/* <Paper className={classes.page}> */}
+
       <Grid container spacing={2} direction="column">
         <Grid item xs={12} container>
           <Grid item alignContent="flex-start">
-            {/* <div className="m-12"> */}
             <MainTitle title="Kelola Paket Pertanyaan" className={classes.title} />
-            {/* </div> */}
+
           </Grid>
         </Grid>
-        <Grid item xs={12} container justify="flex-end">
-            <Button
-              variant="outlined"
-              color="primary" 
-              size="small"
-              onClick={()=>history.push('/paket-pertanyaan/add')}
-              >
-              + Buat Paket
-            </Button>
-          </Grid>
-        <div className="flex w-full flex-wrap p-2">
-          <div className="w-full md:w-1/3 my-2 md:mr-2">
-
-            <CustomTextField
+        <Grid item xs={12} container >
+          <Grid item xs={2} alignContent=""> 
+          <div style={{position: 'relative', padding: 2}}>
+          <CustomTextField
               label="Search"
               variant="outlined"
               size="small"
@@ -142,8 +131,12 @@ const DaftarPaketPertanyaan = ({history}) => {
               onChange={e=>setFilterSearch(e.target.value)}
               />
           </div>
-          <div className="w-1/4 md:w-1/6 my-2 md:mx-2">
-            <CustomTextField
+              </Grid>
+
+
+          <Grid item xs={2} alignContent="">
+          <div style={{position: 'relative', padding: 2}}>
+          <CustomTextField
               label="Jenis"
               variant="outlined"
               size="small"
@@ -157,9 +150,12 @@ const DaftarPaketPertanyaan = ({history}) => {
                 <MenuItem value={j.value}>{j.label}</MenuItem>
               ))}
             </CustomTextField>
-          </div>
-          <div className="w-1/4 md:w-1/6 m-2">
-            <CustomTextField
+            </div>
+          </Grid>
+
+          <Grid item xs={2} alignContent="">
+          <div style={{position: 'relative', padding: 2}}>
+          <CustomTextField
               label="Kategori"
               variant="outlined"
               size="small"
@@ -173,7 +169,10 @@ const DaftarPaketPertanyaan = ({history}) => {
                 <MenuItem value={k.nama}>{k.nama}</MenuItem>
               ))}
             </CustomTextField>
-          </div>
+            </div>
+          </Grid>
+
+          <Grid item xs={4}>
           <div className="flex items-center">
             {!(params.get("search") === searchFilter &&
               params.get("kategori") === kategoriFilter && 
@@ -186,7 +185,19 @@ const DaftarPaketPertanyaan = ({history}) => {
               <button onClick={resetQuery} className="m-1">Reset</button>  
             }
           </div>
-        </div>
+          </Grid>
+
+        <Grid item xs={2} alignContent="">            
+              <Button
+              variant="outlined"
+              color="primary" 
+              size="small"
+              onClick={()=>history.push('/paket-pertanyaan/add')}
+              >
+              + Buat Paket
+            </Button>
+            </Grid>
+        </Grid>
 
       </Grid>
         <TableContainer component={Paper}>
