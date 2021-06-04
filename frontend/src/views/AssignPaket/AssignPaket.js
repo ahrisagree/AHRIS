@@ -143,10 +143,10 @@ const AssignPaket = ({
             {/* </div> */}
           </Grid>
         </Grid>
-        
-        <div className="flex w-full flex-wrap p-2">
-          <div className="w-full md:w-1/3 my-2 md:mr-2">
 
+        <Grid item xs={12} container >
+          <Grid item xs={2} alignContent=""> 
+          <div style={{position: 'relative', padding: 2}}>
             <CustomTextField
               label="Search"
               variant="outlined"
@@ -157,8 +157,11 @@ const AssignPaket = ({
               value={searchFilter}
               onChange={e=>setFilterSearch(e.target.value)}
               />
-          </div>
-          <div className="w-1/4 md:w-1/6 my-2 md:mx-2">
+            </div>
+          </Grid>
+
+          <Grid item xs={2} alignContent=""> 
+          <div style={{position: 'relative', padding: 2}}>
             <CustomTextField
               label="Jenis"
               variant="outlined"
@@ -173,8 +176,11 @@ const AssignPaket = ({
                 <MenuItem value={j.value}>{j.label}</MenuItem>
               ))}
             </CustomTextField>
-          </div>
-          <div className="w-1/4 md:w-1/6 m-2">
+            </div>
+            </Grid>
+
+            <Grid item xs={2} alignContent=""> 
+             <div style={{position: 'relative', padding: 2}}>
             <CustomTextField
               label="Kategori"
               variant="outlined"
@@ -189,8 +195,10 @@ const AssignPaket = ({
                 <MenuItem value={k.nama}>{k.nama}</MenuItem>
               ))}
             </CustomTextField>
-          </div>
-          <div className="flex items-center">
+            </div>
+            </Grid>
+
+
             {!(params.get("searchPaket") === searchFilter &&
               params.get("kategori") === kategoriFilter && 
               params.get("jenis") === jenisFilter) &&
@@ -201,8 +209,8 @@ const AssignPaket = ({
               params.get("jenis")) &&
               <button onClick={resetQuery} className="m-1">Reset</button>  
             }
-          </div>
-        </div>
+            </Grid>
+
 
       </Grid>
         <TableContainer component={Paper}>

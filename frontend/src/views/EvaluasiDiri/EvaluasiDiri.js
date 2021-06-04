@@ -178,4 +178,4 @@ const EvaluasiDiri = ({match, history}) => {
       </div>
     )
 };
-export default EvaluasiDiri;     
+export default EvaluasiDiri; 

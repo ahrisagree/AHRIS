@@ -85,9 +85,9 @@ const EvaluasiPerforma = (props) => {
 
 
   const onSubmit = () => {
-    const { id } = props.match.params;
+    const { id} = props.match.params;
     setLoading(true);
-    commentManager( id, {
+    commentManager( assignment.evaluasi_diri[0].id, {
       feedback: feedback,
     }).then(res=>{
       setFeedback("");
@@ -258,6 +258,7 @@ const EvaluasiPerforma = (props) => {
                   <CircularProgress />
                 </StyledTableCell>
               </StyledTableRow>
+              
               : (
                 assignment?.evaluasi_diri.length === 0 ? 
                 <StyledTableRow>

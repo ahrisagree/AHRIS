@@ -320,6 +320,7 @@ const DaftarLogKaryawan = (props) => {
 
           <div className="flex items-center">
             {!(params.get("search") === searchFilter &&
+              params.get("user") === userFilter &&
               params.get("date_after") === tanggalSetelahFilter &&
               params.get("date_before") === tanggalSebelumFilter &&
               params.get("status") === statusFilter &&
@@ -329,6 +330,7 @@ const DaftarLogKaryawan = (props) => {
               buttonSize="btnMedium" onClick={doQuery} className="m-1">Apply</TemplateButton>  
             }
             {(params.get("search") ||
+             params.get("user") ||
              params.get("date_after") ||
              params.get("date_before") ||
              params.get("status") ||
@@ -394,7 +396,7 @@ const DaftarLogKaryawan = (props) => {
                     <StyledTableCell align="left">{row.manajer_penyetuju !== null ? row.manajer_penyetuju.username : "" }</StyledTableCell>
                     <StyledTableCell align="center">
                     
-                    <Link to={`/log/${row.id}`}>
+                    <Link to={`/log/daftar-log-karyawan/${row.id}`}>
                     <TemplateButton 
                       type="button" 
                       buttonStyle="btnGreen" 
