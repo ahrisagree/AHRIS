@@ -27,7 +27,6 @@ import { getDivisiAPI } from 'api/akun';
 import { getListLog } from 'api/log';
 import { PAGE_SIZE, ROLES } from 'utils/constant';
 import CircularProgress from 'components/Loading/CircularProgress';
-import CircularProgress2 from 'components/Loading/CircularProgress';
 import { setQueryParams } from 'utils/setQueryParams';
 import { StyledTableCell, StyledTableRow } from "components/Table";
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
@@ -119,7 +118,6 @@ const KelolaGaji = ({history, match}) => {
   const [listItem, setListItem] = useState([]);
   const [divisiOptions, setDivisiOptions] = useState([]);
   const [page, setPage] = useState(1);
-  const [page2, setPage2] = useState(1);
   const [count, setCount] = useState(0);
   const [jam, setJam] = useState(0);
   const [penyesuaian, setPenyesuaian] = useState(0);
@@ -213,15 +211,13 @@ const KelolaGaji = ({history, match}) => {
     const date_before = params.get("date_before");
     if(detail !== null){
       getListLog({ 
-        //disablepagination:true,
-        page,
+        disablepagination:true,
         date_after,
         date_before,
         user: detail.user.pk,
         status: 1
       }).then(res=>{
-        setListLog(res.data?.results);
-        //setCount(Math.ceil(res.data?.count/PAGE_SIZE));
+        setListLog(res.data);
       }).catch(err=>{
       // Handle ERROR
       }).finally(()=>{
@@ -231,7 +227,8 @@ const KelolaGaji = ({history, match}) => {
     }
     
 
-  , [page2, update2, detail]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  , [update2, detail]);
 
   const onSubmit = () => {
     setFullLoading(true)
@@ -276,6 +273,8 @@ const KelolaGaji = ({history, match}) => {
       role: roleFilter || "",
       divisi: divisiFilter || "",
       search: searchFilter || "",
+      date_after: tanggalSetelahFilter || "",
+      date_before: tanggalSebelumFilter || ""
     }, history);
     setPage(1);
     setUpdate(update+1);
@@ -283,28 +282,36 @@ const KelolaGaji = ({history, match}) => {
 
   const doQuery2 = () => {
     setQueryParams({
+      role: roleFilter || "",
+      divisi: divisiFilter || "",
+      search: searchFilter || "",
       date_after: tanggalSetelahFilter || "",
       date_before: tanggalSebelumFilter || ""
     }, history);
-    setPage2(1);
-    setUpdate2(update2+2);
+    setUpdate2(update2+1);
   }
 
   const resetQuery = () => {
-    setQueryParams({}, history);
+    setQueryParams({
+      date_after: tanggalSetelahFilter || "",
+      date_before: tanggalSebelumFilter || ""
+    }, history);
     setPage(1);
     setUpdate(update+1);
-    setFilterDivisi(null);
-    setFilterSearch(null);
-    setFilterRole(null);
+    setFilterDivisi("");
+    setFilterSearch("");
+    setFilterRole("");
   }
 
   const resetQuery2 = () => {
-    setQueryParams({}, history);
-    setPage2(1);
+    setQueryParams({
+      role: roleFilter || "",
+      divisi: divisiFilter || "",
+      search: searchFilter || "",
+    }, history);
     setUpdate2(update2+2);
-    setFilterTanggalSetelah(null);
-    setFilterTanggalSebelum(null);
+    setFilterTanggalSetelah("");
+    setFilterTanggalSebelum("");
   }
 
   const detailUser = (row) => {
@@ -663,7 +670,7 @@ const KelolaGaji = ({history, match}) => {
               {loading2 ? 
               <StyledTableRow>
                 <StyledTableCell align="center" colSpan="5">
-                  <CircularProgress2 />
+                  <CircularProgress />
                 </StyledTableCell>
               </StyledTableRow>
               : (
@@ -680,7 +687,7 @@ const KelolaGaji = ({history, match}) => {
                 </StyledTableCell>
                 <StyledTableCell align="left">{row.tanggal}</StyledTableCell>
                 <StyledTableCell align="left">{row.is_lembur ? "Lembur" : "Reguler"}</StyledTableCell>
-                <StyledTableCell align="left">{row.total_jam/3600} jam</StyledTableCell>
+                <StyledTableCell align="left">{Math.round(row.total_jam/360)/10} jam</StyledTableCell>
                
               </StyledTableRow>
               :
