@@ -85,7 +85,7 @@ const useStyles = makeStyles((theme) =>({
       },
 }));
 
-const DaftarKaryawanDinilai = ({history}) => {
+const DaftarKaryawanDinilai = ({history, user}) => {
     const classes = useStyles();
     const [loading, setLoading] = useState(false);
     const [listItem, setListItem] = useState([]);
@@ -103,6 +103,7 @@ const DaftarKaryawanDinilai = ({history}) => {
       const periode = periodeFilter
       // const id = params.idUser;
       getListAssignment({
+        user_penilai: user.pk,
         page, 
         periode: periodFormated(periode)
         // search, 
@@ -114,6 +115,7 @@ const DaftarKaryawanDinilai = ({history}) => {
       }).finally(()=>{
         setLoading(false);
       })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [page, periodeFilter]);
 
 
