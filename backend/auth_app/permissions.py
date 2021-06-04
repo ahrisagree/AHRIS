@@ -14,7 +14,7 @@ class IsOwner(BasePermission):
 class DefaultRolePermission(BasePermission):
 
     def has_permission(self, request, view):
-        return request.user.has_role('Admin', 'Manager', 'Karyawan')
+        return request.user.has_role('Admin', 'Manager', 'Karyawan', 'Administrasi')
 
 class AdminEditPermission(BasePermission):
 
