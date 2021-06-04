@@ -298,9 +298,9 @@ const KelolaGaji = ({history, match}) => {
     }, history);
     setPage(1);
     setUpdate(update+1);
-    setFilterDivisi(null);
-    setFilterSearch(null);
-    setFilterRole(null);
+    setFilterDivisi("");
+    setFilterSearch("");
+    setFilterRole("");
   }
 
   const resetQuery2 = () => {
@@ -310,8 +310,8 @@ const KelolaGaji = ({history, match}) => {
       search: searchFilter || "",
     }, history);
     setUpdate2(update2+2);
-    setFilterTanggalSetelah(null);
-    setFilterTanggalSebelum(null);
+    setFilterTanggalSetelah("");
+    setFilterTanggalSebelum("");
   }
 
   const detailUser = (row) => {
@@ -687,7 +687,7 @@ const KelolaGaji = ({history, match}) => {
                 </StyledTableCell>
                 <StyledTableCell align="left">{row.tanggal}</StyledTableCell>
                 <StyledTableCell align="left">{row.is_lembur ? "Lembur" : "Reguler"}</StyledTableCell>
-                <StyledTableCell align="left">{row.total_jam/3600} jam</StyledTableCell>
+                <StyledTableCell align="left">{Math.round(row.total_jam/360)/10} jam</StyledTableCell>
                
               </StyledTableRow>
               :
