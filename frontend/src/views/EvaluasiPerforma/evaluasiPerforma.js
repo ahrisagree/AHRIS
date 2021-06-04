@@ -85,7 +85,6 @@ const EvaluasiPerforma = (props) => {
 
 
   const onSubmit = () => {
-    const { id} = props.match.params;
     setLoading(true);
     commentManager( assignment.evaluasi_diri[0].id, {
       feedback: feedback,

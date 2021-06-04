@@ -63,7 +63,7 @@ const DaftarPemberi = ({classes, history, match, selectJawaban, yangBelum}) => {
         <div style={{position: 'relative', padding: 2}}>
             <TextField
             label="Periode"
-            variant="outlined"
+            // variant="outlined"
             size="small"
             className={classes.mb}
             fullWidth

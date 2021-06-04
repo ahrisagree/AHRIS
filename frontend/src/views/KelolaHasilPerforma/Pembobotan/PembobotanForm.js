@@ -40,9 +40,12 @@ const PembobotanForm = ({classes, match, history, setYangBelum, yangBelum}) => {
     setHasilPerformaExist(false);
     getSumScoringAPI(idDinilai, idPaket, periodFormated(periode)).then(res=>{
       setNamaPaket(res.data?.nama);
-      setListAspek(res.data?.list_aspek.map(asp=>({...asp, deskripsi: ""})))
-      if (res.data?.list_aspek?.length > 0) 
-        setSkorKumulatif(res.data.list_aspek.reduce((x,y)=>x.skor*x.bobot+y.skor*y.bobot)/100)
+      setListAspek(res.data?.list_aspek.map(asp=>({...asp, deskripsi: ""})));
+      let cumulative = 0;
+      res.data?.list_aspek && res.data.list_aspek.forEach(asp=>{
+        cumulative += asp.skor*asp.bobot;
+      });
+      setSkorKumulatif(cumulative/100);
       setHasilPerformaExist(res.data?.hasil_performa_exist)
       setYangBelum(res.data?.list_not_answered || []);
     }).catch(err=>{
