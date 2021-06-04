@@ -407,7 +407,7 @@ const DetailLogAktivitas = ({history,match,user}) => {
 
         </Container>
         <Loading open={loading} />
-        <Dialog open={success} handleClose={()=>history.push(`/daftar-log-karyawan`)} ></Dialog>
+        <Dialog open={success} handleClose={()=>history.push(`/log/daftar-log-karyawan`)} ></Dialog>
         <DialogFail
           open={!!error.detail} 
           handleClose={()=>{
