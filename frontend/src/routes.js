@@ -14,7 +14,7 @@ import DaftarKaryawan from "views/DaftarKaryawan";
 import DaftarPaketPertanyaan from "views/DaftarPakerPertanyaan";
 import DetailEditPaketPertanyaan from "views/DetailEditPaketPertanyaan";
 import DaftarBorang from "views/MengisiBorang/DaftarBorang";
-import DaftarKaryawanDinilai from "views/MengisiBorang/DaftarKaryawanDinilai/DaftarKaryawanDinilai"
+import DaftarKaryawanDinilai from "views/MengisiBorang/DaftarKaryawanDinilai"
 import MengisiBorang from "views/MengisiBorang/MengisiBorang";
 import EditLogAktivitas from "views/LogAktivitas/EditLogAktivitas";
 import DetailEditUser from "views/DetailEditUser";
