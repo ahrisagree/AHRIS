@@ -25,11 +25,11 @@ class LogAktivitasSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         user = attrs.get('user')
         tanggal = attrs.get('tanggal')
-        is_lembur = attrs.get('is_lembur')
+        # is_lembur = attrs.get('is_lembur')
         presensi = get_or_none(Presensi, user=user, tanggal=tanggal)
-        # checking presensi in tanggal is exist
-        if presensi == None and not is_lembur:
-            raise serializers.ValidationError({'tanggal':['Anda tidak memiliki Presensi pada tanggal ini']})
+        # # checking presensi in tanggal is exist
+        # if presensi == None and not is_lembur:
+        #     raise serializers.ValidationError({'tanggal':['Anda tidak memiliki Presensi pada tanggal ini']})
 
         # checking time validity
         jam_masuk = attrs.get('jam_masuk')
@@ -45,17 +45,28 @@ class LogAktivitasSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         presensi = validated_data.pop('presensi')
-        if presensi.log != None:
-            raise serializers.ValidationError({'detail': 'Sudah ada Log di Presensi tanggal yang sama'})
+        is_lembur = validated_data.get('is_lembur')
+        # if presensi.log != None:
+        #     raise serializers.ValidationError({'detail': 'Sudah ada Log di Presensi tanggal yang sama'})
         log = super().create(validated_data)
-        presensi.log = log
-        presensi.save()
+        if presensi != None and not is_lembur:
+            presensi.log = log
+            presensi.save()
         return log
 
     def update(self, instance, validated_data):
+        # Status != none means it must be requested from manager (approving/reject)
+        # else it must be requested by the employee update the content
         status = validated_data.get('status_log')
+        if status == None:
+            if instance.status_log == 1:
+                raise serializers.ValidationError({'detail': 'Log sudah disetujui'})
+            else:
+                # Reset to
+                validated_data['status_log'] = 0
+        # Updating  
         res = super().update(instance, validated_data)
-        if status != None:
+        if status != None: # create notifications
             if status == 1:
                 NotifService.logApprovedNotif(res)
             elif status == 2:
