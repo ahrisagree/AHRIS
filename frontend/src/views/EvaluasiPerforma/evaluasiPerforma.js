@@ -8,10 +8,6 @@ import {
   TableRow,
   Paper,
   Grid,
-  Radio,
-  FormControlLabel,
-  IconButton,
-  Tooltip,
   TextField,
   fade,
   Typography,
@@ -19,11 +15,9 @@ import {
 import Rating from '@material-ui/lab/Rating';
 import { StyledTableCell, StyledTableRow } from "components/Table";
 import MainTitle from "components/MainTitle";
-import { getDetailHasilPerforma, commentManager, registerHasilPerformaAPI} from 'api/hasilperforma';
+import { getDetailHasilPerforma, commentManager} from 'api/hasilperforma';
 import CircularProgress from 'components/Loading/CircularProgress';
 import TemplateButton from 'components/TemplateButton';
-import DeleteOutlineIcon from '@material-ui/icons/DeleteOutlineRounded';
-import CreateIcon from '@material-ui/icons/CreateRounded';
 import Dialog from 'components/Dialog';
 import DialogFail from 'components/DialogFail';
 import Loading from 'components/Loading';
@@ -58,20 +52,11 @@ const useStyles = makeStyles({})
 const EvaluasiPerforma = (props) => {
   const classes = useStyles();
   const [loading, setLoading] = useState(false);
-  const { id } = props.match.params;
   const [update, setUpdate] = useState(0);
-  const [page, setPage] = useState(1);  
-  
-
-  // const [update, setUpdate] = useState(0);
   const [success, setSuccess] = useState(false);
   const [error, setError] = React.useState({});
   const [feedback, setFeedback] = React.useState("");
-  const [regisFeedback, setRegistFeedback] = React.useState(false);
-  const [fail, setFail] = useState(null); 
-  const [regisAccount, setRegistAccount] = React.useState(false);
   const [assignment, setAssignment] = useState(null);
-  const [paketPertanyaan, setPaketPertanyaan] = useState(null);
   
 
   useEffect(()=>{
@@ -90,36 +75,16 @@ const EvaluasiPerforma = (props) => {
     })
 
   
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [update]);
 
-  // const onSubmit = () => {
-  //   const { idUser } = props.match.params;
-  //   setLoading(true)
-  //   editUser(idUser, {
-  //     username: username,
-  //     divisi: divisi,
-  //     role: role,
-  //     gaji: gaji
-  //   }).then(res=>{
-  //     setSuccess(true);
-  //     console.log(res.data)
-  //   }).catch(err=>{
-  //     console.error(err.response);
-  //     setError(err.response && err.response.data);
-  //   }).finally(()=>{
-  //     setLoading(false);
-  //   })
-  // }
 
   const onSubmit = () => {
-    // generate password
-    const { id } = props.match.params;
     setLoading(true);
-    commentManager( id, {
+    commentManager( assignment.evaluasi_diri[0].id, {
       feedback: feedback,
     }).then(res=>{
       setFeedback("");
-      setRegistFeedback(true);
       setSuccess(true);
       setUpdate(update+1);
     }).catch(err=>{
@@ -131,21 +96,12 @@ const EvaluasiPerforma = (props) => {
   }
 
 
-  // const handleChange = (indexAspek, indexPertanyaan, jawaban) => {
-  //   const newPaket =  {...paketPertanyaan};
-  //   newPaket.list_aspek[indexAspek].list_pertanyaan[indexPertanyaan].jawaban = jawaban;
-  //   setPaketPertanyaan(newPaket);
-  // }
-
   return (
     <div className={classes.root1}>
-      {/* <Paper className={classes.page}> */}
       <Grid container spacing={2} direction="column">
         <Grid item xs={12} container>
           <Grid item alignContent="flex-start">
-            {/* <div className="m-12"> */}
             <MainTitle title={`Hasil Performa | ${assignment?.user?.username} | ${assignment?.nama} | ${assignment?.periode.substr(0,7)} `} className={classes.title} />
-            {/* </div> */}
           </Grid>
         </Grid>
         <div className="flex w-full flex-wrap p-2">
@@ -241,17 +197,6 @@ const EvaluasiPerforma = (props) => {
                             }
 
                              </div>
-                                {/* <TextField
-                                  required
-                                  // value={pertanyaan.jawaban}
-                                  // onChange={e=>handleChange(indexAspek, indexPertanyaan, e.target.value)}
-                                  label="Jawaban"
-                                  margin="normal"
-                                  fullWidth
-                                  multiline
-                            
-                                > Test </TextField> */}
-                         
                             </Grid>
                           </Grid>
                         </StyledTableCell>
@@ -267,13 +212,11 @@ const EvaluasiPerforma = (props) => {
         <Grid container spacing={2} direction="column">
       <Grid item xs={12} container>
           <Grid item xs={4} alignContent="flex-start">
-            {/* <div className="m-12"> */}
             <MainTitle title="Evaluasi Diri" className={classes.title} />
-            {/* </div> */}
           </Grid>
           <Grid item xs={8}/>
-        </Grid>
-        </Grid>
+          </Grid>
+      </Grid>
         <br></br>
 
         <TableContainer component={Paper}>
@@ -293,6 +236,7 @@ const EvaluasiPerforma = (props) => {
                   <CircularProgress />
                 </StyledTableCell>
               </StyledTableRow>
+              
               : (
                 assignment?.evaluasi_diri.length === 0 ? 
                 <StyledTableRow>
@@ -317,22 +261,31 @@ const EvaluasiPerforma = (props) => {
         </TableContainer>
 
         <br></br>
+        <Grid container spacing={2} direction="column">
 
-        <Grid item xs={12}>
+        <Grid item xs={12} container>
+              {
+                assignment?.evaluasi_diri.length === 0 ?
+                
+                <Typography style={{ fontWeight: 600, marginBottom: '2%', fontFamily: 'IBM Plex Sans', fontStyle: 'normal', 
+                fontSize: 24, lineHeight: '138%', display: 'flex', alignItems: 'center', letterSpacing: '0.0075em', color: '#0A3142' }} 
+                variant="subtitle1">
+                </Typography>
+          
+                :
+          <Grid container>
             <Typography style={{ fontWeight: 600, marginBottom: '2%', fontFamily: 'IBM Plex Sans', fontStyle: 'normal', 
-            fontWeight: 600, fontSize: 24, lineHeight: '138%', display: 'flex', alignItems: 'center', letterSpacing: '0.0075em', color: '#0A3142' }} 
+            fontSize: 24, lineHeight: '138%', display: 'flex', alignItems: 'center', letterSpacing: '0.0075em', color: '#0A3142' }} 
             variant="subtitle1">
               Comment
             </Typography>
-          </Grid>
+        
 
         <RedditTextField
                 label="Answer text"
                 className={classes.margin}
-                variant="filled"
                 fullWidth="2000"
                 style={{ margin: 8 }}
-                fullWidth
                 margin="normal"
                 variant="outlined"
                 value={feedback}
@@ -354,6 +307,11 @@ const EvaluasiPerforma = (props) => {
               Simpan
             </TemplateButton>
         </div>
+        </Grid>
+        }
+        </Grid>
+        </Grid>
+
         {/* </Paper> */}
         <Loading open={loading} />
         <Dialog open={success} handleClose={()=>setSuccess(false)} ></Dialog>

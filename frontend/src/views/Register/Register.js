@@ -16,7 +16,6 @@ import { ROLES } from 'utils/constant';
 import { getDivisiAPI, registerAkunAPI } from 'api/akun';
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
 import Loading from 'components/Loading';
-import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -176,18 +175,6 @@ const Register = ({history}) => {
       </div>  
 
         <Grid item xs={12}>
-          {/* <TextField id="outlined-full-width"
-            required="true"
-            label="Divisi"
-            style={{ margin: 8 }}
-            fullWidth
-            select
-            margin="normal"
-            variant="outlined"
-            value={role}
-            onChange={e=>setRole(e.target.value)}
-            >
-          </TextField> */}
             <Autocomplete
               style={{ margin: 8 }}
               margin="normal"

@@ -6,7 +6,6 @@ import {
   Grid,
   Typography,
   MenuItem,
-  Link
 } from '@material-ui/core';
 import TextField from 'components/CustomTextField';
 import MainTitle from 'components/MainTitle';
@@ -70,10 +69,11 @@ const LogAktivitas = ({history}) => {
   const classes = useStyles();
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState({});
+  const params = new URLSearchParams(history.location.search);
   const date = new Date();
   const new_date = Moment(date).format('YYYY-MM-DD');
-  const [selectedDate, setSelectedDate] = React.useState(new_date);
-  const [jamMasuk, setJamMasuk] = React.useState("");
+  const [selectedDate, setSelectedDate] = React.useState(params.get("tanggal") || new_date);
+  const [jamMasuk, setJamMasuk] = React.useState(params.get("jam_masuk")?.substr(0,5) || "");
   const [jamKeluar, setJamKeluar] = React.useState("");
   const [tipe, setTipe] = React.useState(false);
   const [keterangan, setKeterangan] = React.useState("");

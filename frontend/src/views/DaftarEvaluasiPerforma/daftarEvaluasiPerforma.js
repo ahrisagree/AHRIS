@@ -84,7 +84,6 @@ const useStyles = makeStyles((theme) =>({
 const DaftarEvaluasiPerforma = ({history, match, user}) => {
     const classes = useStyles();
     const [loading, setLoading] = useState(false);
-    const [assignment, setAssignment] = useState(null);
     const [listHasilPerforma, setHasilPerforma] = React.useState([]);
     const [periodeFilter, setPeriodeFilter] = useState(new Date().toISOString().substr(0,7));
 
@@ -96,7 +95,6 @@ const DaftarEvaluasiPerforma = ({history, match, user}) => {
       getListHasilPerforma({
         periode: periodFormated(periodeFilter)
       }).then(res=>{
-        setAssignment(res.data?.results);
         setHasilPerforma(res.data?.results);
         console.log(res.data?.nama);
         
@@ -182,7 +180,7 @@ const DaftarEvaluasiPerforma = ({history, match, user}) => {
                     {/* {assignment.list_paket_jawaban.find(x=>x.paket_pertanyaan===row.id) ? 
                     "Sudah Diisi": */}
                       <TemplateButton
-                          onClick={()=>history.push(`/evaluasi-performa/${row.id}/?periode=${periodeFilter}`)}
+                          onClick={()=>history.push(`/daftar-evaluasi-performa/${row.id}/?periode=${periodeFilter}`)}
                           type="button"
                           buttonStyle="btnGreen"
                           buttonSize="btnLong"

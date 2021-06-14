@@ -57,6 +57,7 @@ class UserEditSerializer(serializers.ModelSerializer):
 class RegisterSerializer(RestRegisterSerializer):
 	role = serializers.CharField(max_length=20, required=True)
 	divisi = DivisionSerializer(many=True)
+	gaji = serializers.IntegerField()
 
 	def validate_role(self, role):
 		if role not in roles:
@@ -77,9 +78,11 @@ class RegisterSerializer(RestRegisterSerializer):
 		return divisi_list
 
 	def custom_signup(self, request, user):
-		print("duluan salah")
+		print(self.validated_data)
 		role = self.validated_data.get('role', '')
 		setattr(user, 'role', role)
 		divisi = self.validated_data.get('divisi')
 		user.divisi.set(divisi)
+		gaji = self.validated_data.get('gaji')
+		setattr(user, 'gaji', gaji)
 		user.save()

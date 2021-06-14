@@ -11,6 +11,7 @@ from backend.filters import UserFilter
 from .models import AppUser, Division
 from .serializers import *
 from .permissions import *
+from notification.service import NotifService
 
 class LoginView(RestAuthLoginView):
 
@@ -30,7 +31,7 @@ class RegisterView(RestAuthRegisterView):
     def perform_create(self, serializer):
         user = serializer.save(self.request)
         self.token = create_knox_token(None, user, None)
-        # complete_signup(self.request._request, user, allauth_settings.EMAIL_VERIFICATION, None)
+        NotifService.newAkunCreated(user) # Notification
         return user
 
 

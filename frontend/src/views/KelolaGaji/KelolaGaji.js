@@ -13,8 +13,8 @@ import {
   TableRow,
   IconButton,
   Tooltip,
-  GridListTileBar,
-  Divider
+  Divider,
+  ListItem
 } from '@material-ui/core';
 import TextField from 'components/CustomTextField';
 import MainTitle from 'components/MainTitle';
@@ -33,7 +33,6 @@ import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 import { editGaji, getListGaji } from 'api/gaji';
 import { exportGaji } from 'utils/csv';
 import { periodFormated } from 'utils/periodeConverter';
-import { MicNone } from '@material-ui/icons';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -81,11 +80,15 @@ const useStyles = makeStyles((theme) => ({
   splitScreen: {
     display: "flex",
     flexDirection: "row",
+    position: 'relative'
   },
   topPane: {
-    width: "50%",
-    marginRight:'0.5rem',
-    marginTop:'1.4rem'
+    width: "calc(50% + 1.5rem)",
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    height: 'calc(100vh - 5.5rem)',
+    overflowY: 'scroll',
   },
   topPaneFull: {
     width: "100%",
@@ -94,7 +97,11 @@ const useStyles = makeStyles((theme) => ({
   },
   bottomPane: {
     width: "50%",
-    marginLeft:'0.5rem'
+    position: 'absolute',
+    right: '-1.5rem',
+    top: '-1.5rem',
+    height: 'calc(100vh - 4rem)',
+    overflowY: 'scroll',
   },
   mb: {
     marginBottom: '1rem',
@@ -106,6 +113,7 @@ const useStyles = makeStyles((theme) => ({
 const KelolaGaji = ({history, match}) => {
   const classes = useStyles();
   const [loading, setLoading] = React.useState(false);
+  const [loading2, setLoading2] = React.useState(false);
   const [error, setError] = React.useState({});
   const [listItem, setListItem] = useState([]);
   const [divisiOptions, setDivisiOptions] = useState([]);
@@ -114,10 +122,11 @@ const KelolaGaji = ({history, match}) => {
   const [jam, setJam] = useState(0);
   const [penyesuaian, setPenyesuaian] = useState(0);
   const [honor, setHonor] = useState(0);
-  const [gaji, setGaji] = React.useState("");
+  const [fullLoading, setFullLoading] = React.useState(false);
   const [listLog, setListLog] = useState([]);
   const [detail, setDetail] = useState(null);
   const [update, setUpdate] = useState(0);
+  const [update2, setUpdate2] = useState(0);
   const [periodeFilter, setPeriodeFilter] = useState(new Date().toISOString().substr(0,7));
   const [success, setSuccess] = useState(false);
   const params = new URLSearchParams(history.location.search);
@@ -125,8 +134,8 @@ const KelolaGaji = ({history, match}) => {
   const [roleFilter, setFilterRole] = useState(params.get("role"));
   const [divisiFilter, setFilterDivisi] = useState(params.get("divisi"));
   const [searchFilter, setFilterSearch] = useState(params.get("search"));
-  const [tanggalSetelahFilter, setFilterTanggalSetelah] = useState();
-  const [tanggalSebelumFilter, setFilterTanggalSebelum] = useState();
+  const [tanggalSetelahFilter, setFilterTanggalSetelah] = useState(params.get("date_after"));
+  const [tanggalSebelumFilter, setFilterTanggalSebelum] = useState(params.get("date_before"));
 
   useEffect(()=>{
     setLoading(true)
@@ -149,6 +158,7 @@ const KelolaGaji = ({history, match}) => {
     }).finally(()=>{
       setLoading(false);
     })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, update, periodeFilter]);
 
   useEffect(()=>{
@@ -196,44 +206,44 @@ const KelolaGaji = ({history, match}) => {
   }, [])*/
 
   useEffect(()=>{
-    setLoading(true)
+    setLoading2(true)
     const date_after = params.get("date_after");
     const date_before = params.get("date_before");
     if(detail !== null){
       getListLog({ 
-        //disablepagination:true,
-        page,
+        disablepagination:true,
         date_after,
         date_before,
         user: detail.user.pk,
         status: 1
       }).then(res=>{
-        setListLog(res.data?.results);
-        //setCount(Math.ceil(res.data?.count/PAGE_SIZE));
+        setListLog(res.data);
       }).catch(err=>{
       // Handle ERROR
       }).finally(()=>{
-        setLoading(false);
+        setLoading2(false);
       })
     }
     }
     
 
-  , [page, update, detail]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  , [update2, detail]);
 
   const onSubmit = () => {
-    setLoading(true)
+    setFullLoading(true)
     editGaji(detail.id, {
       nominal: detail.user.gaji+honor*jam+penyesuaian
     }).then(res=>{
       setUpdate(update+1);
+      setUpdate2(update2+1);
       setSuccess(true);
       console.log(res.data)
     }).catch(err=>{
       console.error(err.response);
       setError(err.response && err.response.data);
     }).finally(()=>{
-      setLoading(false);
+      setFullLoading(false);
     })
 
     
@@ -263,13 +273,6 @@ const KelolaGaji = ({history, match}) => {
       role: roleFilter || "",
       divisi: divisiFilter || "",
       search: searchFilter || "",
-    }, history);
-    setPage(1);
-    setUpdate(update+1);
-  }
-
-  const doQuery2 = () => {
-    setQueryParams({
       date_after: tanggalSetelahFilter || "",
       date_before: tanggalSebelumFilter || ""
     }, history);
@@ -277,20 +280,38 @@ const KelolaGaji = ({history, match}) => {
     setUpdate(update+1);
   }
 
+  const doQuery2 = () => {
+    setQueryParams({
+      role: roleFilter || "",
+      divisi: divisiFilter || "",
+      search: searchFilter || "",
+      date_after: tanggalSetelahFilter || "",
+      date_before: tanggalSebelumFilter || ""
+    }, history);
+    setUpdate2(update2+1);
+  }
+
   const resetQuery = () => {
-    setQueryParams({}, history);
+    setQueryParams({
+      date_after: tanggalSetelahFilter || "",
+      date_before: tanggalSebelumFilter || ""
+    }, history);
     setPage(1);
-    setFilterDivisi(null);
-    setFilterSearch(null);
-    setFilterRole(null);
+    setUpdate(update+1);
+    setFilterDivisi("");
+    setFilterSearch("");
+    setFilterRole("");
   }
 
   const resetQuery2 = () => {
-    setQueryParams({}, history);
-    setPage(1);
-    setUpdate(update+1);
-    setFilterTanggalSetelah(null);
-    setFilterTanggalSebelum(null);
+    setQueryParams({
+      role: roleFilter || "",
+      divisi: divisiFilter || "",
+      search: searchFilter || "",
+    }, history);
+    setUpdate2(update2+2);
+    setFilterTanggalSetelah("");
+    setFilterTanggalSebelum("");
   }
 
   const detailUser = (row) => {
@@ -386,12 +407,16 @@ const KelolaGaji = ({history, match}) => {
           {!(params.get("search") === searchFilter &&
             params.get("role") === roleFilter && 
             params.get("divisi") === divisiFilter) &&
-            <button onClick={doQuery}>Apply</button>  
+            <TemplateButton type="button"
+            buttonStyle="btnBlueOutline"
+            buttonSize="btnMedium" onClick={doQuery}>Apply</TemplateButton>  
           }
           {(params.get("search") ||
             params.get("role") || 
             params.get("divisi")) &&
-            <button onClick={resetQuery}>Reset</button>  
+            <TemplateButton type="button"
+            buttonStyle="btnBlueOutline"
+            buttonSize="btnMedium"  onClick={resetQuery}>Reset</TemplateButton>  
           }
         </Grid>
 
@@ -427,7 +452,10 @@ const KelolaGaji = ({history, match}) => {
                       {`${i+1}.`}
                     </StyledTableCell>
                     <StyledTableCell align="left">
-                      <a style={{color:"#00A96F", textDecorationLine: "underline"}} onClick={()=>detailUser(row)}>{row.user.username}</a></StyledTableCell>
+                      <ListItem button onClick={()=>detailUser(row)}>
+                        <span style={{color:"#00A96F", textDecorationLine: "underline"}}>{row.user.username}</span>
+                      </ListItem>
+                    </StyledTableCell>
                     
                     <StyledTableCell align="left">{row.nominal}</StyledTableCell>
                     <StyledTableCell align="left">{row.user.divisi.map(x=> x.nama_divisi+", ")}</StyledTableCell>
@@ -530,13 +558,13 @@ const KelolaGaji = ({history, match}) => {
             variant="subtitle1">
               Penyesuaian Gaji
               <Typography style={{ fontWeight: 400,  fontFamily: 'IBM Plex Sans', fontStyle: 'normal', 
-            fontSize: 18, lineHeight: '138%', position:'absolute', right:120, letterSpacing: '0.0075em', color: '#0A3142' }} 
+            fontSize: 18, lineHeight: '138%', position:'absolute', right:210, letterSpacing: '0.0075em', color: '#0A3142' }} 
             variant="subtitle1">
               Rp.
             </Typography>
             <TextField
             required
-            style={{ width: "5%", position:'absolute', right:50 }}
+            style={{ width: "20%", position:'absolute', right:50 }}
             margin="normal"
             variant="outlined"
             type="number"
@@ -596,7 +624,7 @@ const KelolaGaji = ({history, match}) => {
                 }}
                 value={tanggalSetelahFilter}
                 onChange={e=>{setFilterTanggalSetelah(e.target.value)}}
-                disabled={loading}
+                disabled={loading2}
                 />
                 <TextField
                 variant="outlined"
@@ -609,7 +637,7 @@ const KelolaGaji = ({history, match}) => {
                 style={{marginLeft:'5%'}}
                 value={tanggalSebelumFilter}
                 onChange={e=>{setFilterTanggalSebelum(e.target.value)}}
-                disabled={loading}
+                disabled={loading2}
                 />
           </Grid>
 
@@ -639,7 +667,7 @@ const KelolaGaji = ({history, match}) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {loading ? 
+              {loading2 ? 
               <StyledTableRow>
                 <StyledTableCell align="center" colSpan="5">
                   <CircularProgress />
@@ -659,11 +687,11 @@ const KelolaGaji = ({history, match}) => {
                 </StyledTableCell>
                 <StyledTableCell align="left">{row.tanggal}</StyledTableCell>
                 <StyledTableCell align="left">{row.is_lembur ? "Lembur" : "Reguler"}</StyledTableCell>
-                <StyledTableCell align="left">{row.total_jam/3600} jam</StyledTableCell>
+                <StyledTableCell align="left">{Math.round(row.total_jam/360)/10} jam</StyledTableCell>
                
               </StyledTableRow>
               :
-              <a></a>
+              <span></span>
                   
                 )))}
             </TableBody>
@@ -672,6 +700,7 @@ const KelolaGaji = ({history, match}) => {
             </Container>
         </div>
       }
+      <Loading open={fullLoading} />
       <Dialog open={success} handleClose={()=>setSuccess(false)} ></Dialog>
         <DialogFail
           open={!!error.detail} 

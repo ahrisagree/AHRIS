@@ -61,7 +61,7 @@ const useStyles = makeStyles((theme) => ({
 
 
 
-const DetailLogAktivitas = (props) => {
+const DetailLogAktivitas = ({history,match,user}) => {
   const classes = useStyles();
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState({});
@@ -80,16 +80,21 @@ const DetailLogAktivitas = (props) => {
   const [komentar, setKomentar] = React.useState("");
   const [notes, setNotes] = React.useState("");
   const [statusLog, setStatusLog] = React.useState("");
-  const {user} = props;
+
+  const [userPemilik, setUserPemilik] = React.useState("");
+
   const [role] = React.useState(user.role);
+
+  const [userPelihat] = React.useState(user.pk);
+
   const [deleteConfirm, setDeleteConfirm] = useState(false);
 
  
-  const { id } = props.match.params;
+  const { id } = match.params;
 
   useEffect(() => {
     setLoading(true);
-    const id = props.match.params.id;
+    const id = match.params.id;
  
     getLog(id).then(res => {
       const { data } = res
@@ -105,6 +110,7 @@ const DetailLogAktivitas = (props) => {
       setAlasanLembur(data.alasan_lembur);
       setKomentar(data.komentar);
       setStatusLog(STATUS_LOG[data.status_log]);
+      setUserPemilik(data.user?.pk);
     }).catch(err => {
       // HANDLE ERROR
     }).finally(() => {
@@ -112,10 +118,11 @@ const DetailLogAktivitas = (props) => {
     })
 
     
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const sendKomentar = () => {
-    const { id } = props.match.params;
+    const { id } = match.params;
     setLoading(true);
     komentarLogAPI(id, {
       komentar: komentar,
@@ -129,10 +136,9 @@ const DetailLogAktivitas = (props) => {
   }
 
   const deleteLog = () => {
-    const { id } = props.match.params;
+    const { id } = match.params;
     setLoading(true);
-    deleteLogAPI(id).then(()=>{
-      props.history.push('/log');
+    deleteLogAPI(id).then(()=>{history.push('/log');
     }).catch(err=>{
       setError(err.response && err.response.data);
     }).finally(()=>{
@@ -143,21 +149,40 @@ const DetailLogAktivitas = (props) => {
     return (
       <div className="m-10">
          <Grid item xs={12}>
-     
+
+          
+        { userPelihat === userPemilik ?
+        
+        <>
          <Tooltip title="Delete">
-        <IconButton size="small" style={{float: 'right'}} onClick={()=>setDeleteConfirm(true)}>
-          <DeleteOutlineIcon />
-        </IconButton>
-      </Tooltip>
+            <IconButton size="small" style={{float: 'right'}} onClick={()=>setDeleteConfirm(true)}>
+              <DeleteOutlineIcon />
+            </IconButton>
+        </Tooltip>
+
+
+        {statusLog !== "Disetujui" ?  
 
          <Link to={`/log/${id}/edit`} style={{float: 'right'}}>
           <Tooltip title="Edit">
             <IconButton size="small" >
                <EditRounded />
             </IconButton>
-          </Tooltip>
-                    
+          </Tooltip>          
          </Link>
+        :
+        <>
+
+        </>
+        }
+
+         </>
+
+         :
+          <>
+          </>
+        }
+
     
       
       </Grid>
@@ -382,7 +407,7 @@ const DetailLogAktivitas = (props) => {
 
         </Container>
         <Loading open={loading} />
-        <Dialog open={success} handleClose={()=>setSuccess(false)} ></Dialog>
+        <Dialog open={success} handleClose={()=>history.push(`/log/daftar-log-karyawan`)} ></Dialog>
         <DialogFail
           open={!!error.detail} 
           handleClose={()=>{

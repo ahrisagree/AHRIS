@@ -141,91 +141,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-// // gini dulu nanti dipisahin ke constant
-// const navigationMenu = [
-//   {
-//     menu: 'Kelola Akun',
-//     icon: <PeopleAltIcon style={{ color: 'white' }}/>,
-//     children: [
-//       {
-//         menu: 'List Akun',
-//         path: '/akun',
-//       },
-//       {
-//         menu: 'Buat Akun',
-//         path: '/akun/register',
-//       }
-//     ]
-//   },
-//   {
-//     menu: 'Presensi',
-//     icon: <CheckIcon style={{ color: 'white' }}/>,
-//     children: [
-//       {
-//         menu: 'Buat Presensi',
-//         path: '/',
-//       },
-//       {
-//         menu: 'My Presensi',
-//         path: '/log/daftar-presensi',
-//       }
-//     ]
-//   },
-//   {
-//     menu: 'Daily Log',
-//     icon: <BookIcon style={{ color: 'white' }}/>,
-//     children: [
-//       {
-//         menu: 'List Daily Log',
-//         path: '/daftar-log',
-//       },
-//       {
-//         menu: 'Submit Log',
-//         path: '/log-aktivitas',
-//         icon: <AddRounded />
-//       }
-//     ]
-//   },
-//   {
-//     menu: 'Paket Pertanyaan',
-//     icon: <InsertDriveFileOutlinedIcon style={{ color: 'white' }}/>,
-//     children: [
-//       {
-//         menu: 'List Paket Pertanyaan',
-//         path: '/paket-pertanyaan'
-//       },
-//       {
-//         menu: 'Buat Paket Pertanyaan',
-//         path: '/paket-pertanyaan/add',
-//       }
-//     ]
-//   },
-//   {
-//     menu: 'Assign Borang',
-//     icon: <InsertDriveFileOutlinedIcon style={{ color: 'white' }}/>,
-//     path: '/assign'
-//   },
-//   {
-//     menu: 'Performa',
-//     icon: <InsertDriveFileOutlinedIcon style={{ color: 'white' }}/>,
-//     children: [
-//       {
-//         menu: 'Kelola Hasil Performa',
-//         path: '/kelola-performa'
-//       },
-//       {
-//         menu: 'Isi Borang',
-//         path: '/mengisi-borang'
-//       },
-//     ]
-//   },
-//   {
-//     menu: 'Gaji',
-//     path: '/',
-//     icon: <LocalAtmRoundedIcon style={{ color: 'white' }}/>,
-//   }
-// ]
-
 const NavigationDrawer = ({children, history, location, user, logoutThunk}) => {
   const classes = useStyles();
   const theme = useTheme();
@@ -233,8 +148,11 @@ const NavigationDrawer = ({children, history, location, user, logoutThunk}) => {
   const [accordion, setAccordion] = React.useState(-1);
   const {pathname} = location;
 
-  // gini dulu nanti dipisahin ke constant
   let navigationMenu = []
+  if (!user && pathname !== "/login") {
+    history.push("/login");
+    return <></>;
+  }
 
   switch (user?.role) {
     case ROLE.admin:
@@ -373,7 +291,7 @@ const NavigationDrawer = ({children, history, location, user, logoutThunk}) => {
           ))}
 
         </div>
-        <div className={`text-center mt-8 ${open ? '' : 'hidden'}`}>
+        <div className={`text-center mt-8 mb-4 ${open ? '' : 'hidden'}`}>
           <TemplateButton
             onClick={logoutThunk}
             type="button"

@@ -7,10 +7,14 @@ import { Breadcrumbs as MUIBreadcrumbs,
  } from '@material-ui/core';
 import React from 'react';
 import logo from 'images/logo.png';
+import Notification from 'components/Notification';
 
 const useStyles = makeStyles(theme => ({
     root: {
         flexGrow: 1,
+        display: 'flex',
+        flexDirection: 'row',
+        // position: relative
         '& a': {
             cursor: 'pointer'
         }
@@ -72,18 +76,18 @@ const Breadcrumbs = ({pathname, push}) => {
                     const routeTo = `/${pathnames.slice(0, index + 1).join("/")}`;
                     const isLast = index === pathnames.length - 1;
                     return isLast ? (
-                        <Typography className={classes.typography}> {name} </Typography>
+                        <Typography key={`${name}-${index}`} className={classes.typography}> {name} </Typography>
                     ) : (
-                        <Link onClick = {() => push(routeTo)}>{name}</Link>
+                        <Link key={`${name}-${index}`} onClick = {() => push(routeTo)}>{name}</Link>
                         );
                 })}
-
-                <img 
-                    src={logo} 
-                    alt="logo AHRIS" 
-                    style={{ position: "absolute", top: 0, right: 0, height: '100%'}} 
-                />
             </MUIBreadcrumbs>
+            <Notification push={push} />
+            <img 
+                src={logo} 
+                alt="logo AHRIS" 
+                style={{ height: '40px'}} 
+            />
         </div>
     );
 };

@@ -28,7 +28,12 @@ DEPLOYMENT = os.getenv("DEPLOYMENT", False)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", True)
 
-ALLOWED_HOSTS = ['ahris-staging.herokuapp.com', 'localhost']
+ALLOWED_HOSTS = [
+    'ahris-staging.herokuapp.com', 
+    'localhost',
+    'ahris-propensi.herokuapp.com',
+    'ahris-api.herokuapp.com'
+    ]
 
 
 # Application definition

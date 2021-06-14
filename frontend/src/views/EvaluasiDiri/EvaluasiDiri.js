@@ -1,19 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {
   makeStyles,
   Paper,
   Container,
   Grid,
   Typography,
-  MenuItem,
 } from '@material-ui/core';
 import TextField from 'components/CustomTextField';
 import MainTitle from 'components/MainTitle';
-import Dialog from 'components/Dialog';
+// import Dialog from 'components/Dialog';
 import DialogFail from 'components/DialogFail';
 import TemplateButton from 'components/TemplateButton';
 import { postEvaluasiDiri } from 'api/hasilperforma';
-import Loading from 'components/Loading';
+// import Loading from 'components/Loading';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -62,7 +61,7 @@ const EvaluasiDiri = ({match, history}) => {
   const [current_performance, setCurrent_Performance] = React.useState("");
   const [to_do, setTo_do] = React.useState("");
   const [parameter, setParameter] = React.useState("");
-  const [feedback, setFeedback] = React.useState("");
+  // const [feedback, setFeedback] = React.useState("");  // INI
   // const [createEvaluasi, setCreateEvaluasi] = React.useState(false);
   const [update, setUpdate] = React.useState(0);
 
@@ -77,7 +76,7 @@ const EvaluasiDiri = ({match, history}) => {
       current_performance,
       to_do,
       parameter,
-      feedback,
+      // feedback,  pantes kmrn gabisa, harusnya null tp diatas diisi "" strng kosong
       hasil_performa : id,
     }).then(()=>history.push(`/hasil-performa/${id}`)
     ).catch(err=>{
@@ -96,7 +95,7 @@ const EvaluasiDiri = ({match, history}) => {
 
           <Grid item xs={12}>
             <Typography style={{ fontWeight: 600, marginLeft: '1%', marginBottom: '3%', fontFamily: 'IBM Plex Sans', fontStyle: 'normal', 
-            fontWeight: 600, fontSize: 24, lineHeight: '138%', display: 'flex', alignItems: 'center', letterSpacing: '0.0075em', color: '#0A3142' }} 
+            fontSize: 24, lineHeight: '138%', display: 'flex', alignItems: 'center', letterSpacing: '0.0075em', color: '#0A3142' }} 
             variant="subtitle1">
               Evaluasi Diri
             </Typography>
@@ -130,7 +129,6 @@ const EvaluasiDiri = ({match, history}) => {
             style={{ margin: 8, width: "98%" }}
             error={!!error.to_do}
             margin="normal"
-            error={!!error.to_do}
             helperText={error.to_do && error.to_do[0]}
             disabled={loading}
             />
@@ -180,4 +178,4 @@ const EvaluasiDiri = ({match, history}) => {
       </div>
     )
 };
-export default EvaluasiDiri;     
+export default EvaluasiDiri; 

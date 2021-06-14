@@ -3,6 +3,7 @@ from .models import *
 from auth_app.models import AppUser
 from auth_app.serializers import UserListSerializer
 from backend.utils import get_or_none
+from notification.service import NotifService
 
 class EvaluasiDiriSerializer(serializers.ModelSerializer):
   manager_feedbacker = UserListSerializer(required=False)
@@ -14,6 +15,12 @@ class EvaluasiDiriSerializer(serializers.ModelSerializer):
 
 # Used for updating
 class EvaluasiDiriPlainSerializer(serializers.ModelSerializer):
+  def update(self, instance, validated_data):
+    is_feedback = validated_data.get('feedback') != None
+    res = super().update(instance, validated_data)
+    if is_feedback:
+      NotifService.evaluasiDiriFeedbacked(res)
+    return res
   class Meta: 
     model = EvaluasiDiri
     fields = '__all__'
@@ -49,6 +56,7 @@ class HasilPerformaMiniSerializer(serializers.ModelSerializer):
       aspek = AspekHasilPerformaSerializer(data = aspek_data)
       if aspek.is_valid(raise_exception=True):
         aspek.save(hasil_performa=new_hasil_performa)
+    NotifService.hasilPerformaCreated(new_hasil_performa)
     return new_hasil_performa
 
   class Meta:

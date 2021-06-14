@@ -326,7 +326,7 @@ const DetailEditUser = ({history, match}) => {
         {/* <Dialog2 canShow={showModal} updateModalState={toggleModal}></Dialog2> */}
       </Container>
       <Loading open={loading} />
-      <Dialog open={success} handleClose={()=>history.push(`/akun`)} />
+      <Dialog open={success} handleClose={()=>history.push(`/akun/${match.params.idUser}`)} />
       
       <DialogFail
         open={!!error.detail} 

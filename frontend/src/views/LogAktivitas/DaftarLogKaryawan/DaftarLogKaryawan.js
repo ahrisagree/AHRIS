@@ -88,7 +88,7 @@ const DaftarLogKaryawan = (props) => {
   const [listItem, setListItem] = useState([]);
   const [page, setPage] = useState(1);
   const [count, setCount] = useState(0);
-  const [fullLoading] = useState(false);
+  const [fullLoading, setFullLoading] = useState(false);
   const [update, setUpdate] = useState(false);
 
   const {user} = props;
@@ -102,8 +102,8 @@ const DaftarLogKaryawan = (props) => {
   const [userFilter, setFilterUser] = useState(params.get("user"));
   const [statusFilter, setFilterStatus] = useState(params.get("status"));
   const [penyetujuFilter, setFilterPenyetuju] = useState(params.get("penyetuju"));
-  const [tanggalSetelahFilter, setFilterTanggalSetelah] = useState();
-  const [tanggalSebelumFilter, setFilterTanggalSebelum] = useState();
+  const [tanggalSetelahFilter, setFilterTanggalSetelah] = useState(params.get("date_after"));
+  const [tanggalSebelumFilter, setFilterTanggalSebelum] = useState(params.get("date_before"));
 
 
   useEffect(()=>{
@@ -127,6 +127,7 @@ const DaftarLogKaryawan = (props) => {
       setLoading(false);
     })
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, update]);
 
   useEffect(()=>{
@@ -141,28 +142,28 @@ const DaftarLogKaryawan = (props) => {
 
 
   const sendDisetujui = (id) => {
-    setLoading(true);
+    setFullLoading(true);
     setujuiLogAPI(id, {
       status_log: 1,
     }).then(res => {
-      setUpdate(true);
+      setUpdate(update+1);
     }).catch(err => {
 
     }).finally(() => {
-      setLoading(false);
+      setFullLoading(false);
     })
   }
 
   const sendDitolak = (id) => {
-    setLoading(true);
+    setFullLoading(true);
     setujuiLogAPI(id, {
       status_log: 2,
     }).then(res => {
-      setUpdate(true);
+      setUpdate(update+1);
     }).catch(err => {
 
     }).finally(() => {
-      setLoading(false);
+      setFullLoading(false);
     })
   }
 
@@ -246,7 +247,7 @@ const DaftarLogKaryawan = (props) => {
                 bordered={true}
               >
                 {karyawanOptions.map(k=>(
-                  <MenuItem value={k.pk}>{k.username}</MenuItem>
+                  <MenuItem key={k.pk} value={k.pk}>{k.username}</MenuItem>
                 ))}
               </TextField>
           </div>
@@ -264,7 +265,7 @@ const DaftarLogKaryawan = (props) => {
                 bordered={true}
               >
                 {STATUS_LOG_LABEL.map(s=>(
-                  <MenuItem value={s.value ===  0 ? '0' : s.value}>{s.label}</MenuItem>
+                  <MenuItem key={s} value={s.value ===  0 ? '0' : s.value}>{s.label}</MenuItem>
                 ))}
               </TextField>
           </div>
@@ -287,8 +288,9 @@ const DaftarLogKaryawan = (props) => {
           <div className="w-full md:w-1/3 my-2 md:mr-2">
               <CustomTextField
                 variant="outlined"
-                id="date"
+                id="date_dari"
                 label="Dari Tanggal"
+                size="small"
                 type="date"
                 InputLabelProps={{
                   shrink: true,
@@ -302,8 +304,9 @@ const DaftarLogKaryawan = (props) => {
           <div className="w-full md:w-1/3 my-2 md:mr-2">
               <CustomTextField
                 variant="outlined"
-                id="date"
+                id="date_sampai"
                 label="Sampai Tanggal"
+                size="small"
                 type="date"
                 InputLabelProps={{
                   shrink: true,
@@ -317,18 +320,24 @@ const DaftarLogKaryawan = (props) => {
 
           <div className="flex items-center">
             {!(params.get("search") === searchFilter &&
+              params.get("user") === userFilter &&
               params.get("date_after") === tanggalSetelahFilter &&
               params.get("date_before") === tanggalSebelumFilter &&
               params.get("status") === statusFilter &&
               params.get("penyetuju") === penyetujuFilter) &&
-              <button onClick={doQuery} className="m-1">Apply</button>  
+              <TemplateButton type="button"
+              buttonStyle="btnBlueOutline"
+              buttonSize="btnMedium" onClick={doQuery} className="m-1">Apply</TemplateButton>  
             }
             {(params.get("search") ||
+             params.get("user") ||
              params.get("date_after") ||
              params.get("date_before") ||
              params.get("status") ||
              params.get("penyetuju")) &&
-            <button onClick={resetQuery} className="m-1">Reset</button>  
+            <TemplateButton type="button"
+            buttonStyle="btnBlueOutline"
+            buttonSize="btnMedium" onClick={resetQuery} className="m-1">Reset</TemplateButton>  
             }
           </div>
       </div>
@@ -375,7 +384,7 @@ const DaftarLogKaryawan = (props) => {
                 </StyledTableRow>
                 :
                 listItem.map((row, i) => (
-                  <StyledTableRow key={row.tanggal}>
+                  <StyledTableRow key={row.id}>
                     <StyledTableCell component="th" scope="row">
                       {`${i+1}.`}
                     </StyledTableCell>
@@ -387,7 +396,7 @@ const DaftarLogKaryawan = (props) => {
                     <StyledTableCell align="left">{row.manajer_penyetuju !== null ? row.manajer_penyetuju.username : "" }</StyledTableCell>
                     <StyledTableCell align="center">
                     
-                    <Link to={`/log/${row.id}`}>
+                    <Link to={`/log/daftar-log-karyawan/${row.id}`}>
                     <TemplateButton 
                       type="button" 
                       buttonStyle="btnGreen" 
