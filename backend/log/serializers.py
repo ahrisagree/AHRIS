@@ -58,7 +58,8 @@ class LogAktivitasSerializer(serializers.ModelSerializer):
         # Status != none means it must be requested from manager (approving/reject)
         # else it must be requested by the employee update the content
         status = validated_data.get('status_log')
-        if status == None:
+        komentar = validated_data.get('komentar')
+        if status == None and komentar == None:
             if instance.status_log == 1:
                 raise serializers.ValidationError({'detail': 'Log sudah disetujui'})
             else:
