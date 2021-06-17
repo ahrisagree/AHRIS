@@ -29,6 +29,17 @@ import TextField from 'components/CustomTextField';
 import Status from 'components/Status';
 import { exportLog } from 'utils/csv';
 
+const daftar_tipe = [
+  {
+    value: false,
+    label: 'Reguler',
+  },
+  {
+    value: true,
+    label: 'Lembur',
+  },
+];
+
 const useStyles = makeStyles((theme) =>({
   root: {
     '& > *': {
@@ -104,6 +115,7 @@ const DaftarLogKaryawan = (props) => {
   const [penyetujuFilter, setFilterPenyetuju] = useState(params.get("penyetuju"));
   const [tanggalSetelahFilter, setFilterTanggalSetelah] = useState(params.get("date_after"));
   const [tanggalSebelumFilter, setFilterTanggalSebelum] = useState(params.get("date_before"));
+  const [isLemburFilter, setFilterIsLembur] = useState(params.get("is_lembur"));
 
 
   useEffect(()=>{
@@ -114,10 +126,11 @@ const DaftarLogKaryawan = (props) => {
     const penyetuju = params.get("penyetuju");
     const date_after = params.get("date_after");
     const date_before = params.get("date_before");
+    const is_lembur = params.get("is_lembur");
     
     
     getListLogKaryawan({
-      page, search, status, penyetuju, date_after, date_before, user
+      page, search, status, penyetuju, date_after, date_before, user, is_lembur
     }).then(res=>{
       setListItem(res.data?.results);
       setCount(Math.ceil(res.data?.count/PAGE_SIZE));
@@ -174,7 +187,8 @@ const DaftarLogKaryawan = (props) => {
       status: statusFilter || "",
       penyetuju: penyetujuFilter || "",
       date_after: tanggalSetelahFilter || "",
-      date_before: tanggalSebelumFilter || ""
+      date_before: tanggalSebelumFilter || "",
+      is_lembur: `${isLemburFilter}` || ""
     }, history);
     setPage(1);
     setUpdate(update+1);
@@ -190,6 +204,7 @@ const DaftarLogKaryawan = (props) => {
     setFilterPenyetuju("");
     setFilterTanggalSetelah("");
     setFilterTanggalSebelum("");
+    setFilterIsLembur("");
   }
 
   const exportCSV = () => {
@@ -199,9 +214,10 @@ const DaftarLogKaryawan = (props) => {
     const penyetuju = params.get("penyetuju");
     const date_after = params.get("date_after");
     const date_before = params.get("date_before");
+    const is_lembur = params.get("is_lembur");
 
     getListLogKaryawan({
-      search, user, status, penyetuju, date_after, date_before, disablepagination: true 
+      search, user, status, penyetuju, date_after, date_before, is_lembur, disablepagination: true 
     }).then(res=>{
       exportLog(res.data, karyawanOptions.find(x => x.pk === user/1)?.username || "List Log");
     })
@@ -283,8 +299,30 @@ const DaftarLogKaryawan = (props) => {
               />
             
           </div>
-            
           
+          <div className="w-full md:w-1/3 my-2 md:mr-2">
+
+            <CustomTextField
+                label="Tipe Log"
+                variant="outlined"
+                size="small"
+                className={classes.mb}
+                fullWidth
+                value={isLemburFilter}
+                onChange={e=>setFilterIsLembur(e.target.value)}
+                select
+                bordered={true}
+              >
+              {daftar_tipe.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </CustomTextField>
+            
+          </div>
+          <div className="w-full md:w-1/3 my-2 md:mr-2" ></div>
+
           <div className="w-full md:w-1/3 my-2 md:mr-2">
               <CustomTextField
                 variant="outlined"
@@ -324,7 +362,8 @@ const DaftarLogKaryawan = (props) => {
               params.get("date_after") === tanggalSetelahFilter &&
               params.get("date_before") === tanggalSebelumFilter &&
               params.get("status") === statusFilter &&
-              params.get("penyetuju") === penyetujuFilter) &&
+              params.get("penyetuju") === penyetujuFilter &&
+              params.get("is_lembur") === isLemburFilter) &&
               <TemplateButton type="button"
               buttonStyle="btnBlueOutline"
               buttonSize="btnMedium" onClick={doQuery} className="m-1">Apply</TemplateButton>  
@@ -334,7 +373,9 @@ const DaftarLogKaryawan = (props) => {
              params.get("date_after") ||
              params.get("date_before") ||
              params.get("status") ||
-             params.get("penyetuju")) &&
+             params.get("penyetuju") ||
+             params.get("is_lembur")
+             ) &&
             <TemplateButton type="button"
             buttonStyle="btnBlueOutline"
             buttonSize="btnMedium" onClick={resetQuery} className="m-1">Reset</TemplateButton>  

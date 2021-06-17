@@ -18,21 +18,18 @@ class GajiViewSet(viewsets.ReadOnlyModelViewSet, mixins.UpdateModelMixin):
 
   def perform_generate_gaji(self, period):
     for user in AppUser.objects.all():
-      Gaji.objects.create(
-        periode=period,
-        user=user,
-        nominal=user.gaji
-      )
+      if (not Gaji.objects.filter(user=user, periode=period).exists()):
+        Gaji.objects.create(
+          periode=period,
+          user=user,
+          nominal=user.gaji
+        )
 
   def list(self, request, *args, **kwargs):
     today = datetime.date.today()
     # Always Normalize period into 1
     period = today.replace(day=1)
-    if (not Gaji.objects.filter(periode=period).exists()): 
-      self.perform_generate_gaji(period)
+    self.perform_generate_gaji(period)
     if request.query_params.get('disablepagination') != None:
-            self.pagination_class = None
+      self.pagination_class = None
     return super().list(request, *args, **kwargs)
-
-
-  

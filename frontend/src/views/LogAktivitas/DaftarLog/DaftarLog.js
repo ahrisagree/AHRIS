@@ -168,7 +168,7 @@ const DaftarLog = (props) => {
       <Grid container spacing={2} direction="column">
       <Grid item xs={12} container>
           <Grid item xs={4} alignContent="flex-start">
-            <MainTitle title="Daftar Log" className={classes.title} />
+            <MainTitle title="Daftar Log Saya" className={classes.title} />
           </Grid>
           <Grid item xs={8}/>
         </Grid>
