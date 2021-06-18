@@ -1,8 +1,5 @@
 import React from 'react';
-import {
-  Switch,
-  Route,
-} from "react-router-dom";
+import { Switch } from "react-router-dom";
 import { Provider } from 'react-redux';
 import store, { history, persistor } from './store';
 import routes from './routes';
@@ -10,6 +7,7 @@ import './App.css';
 import { ConnectedRouter } from 'connected-react-router';
 import { PersistGate } from 'redux-persist/integration/react';
 import NavigationDrawer from 'components/NavigationDrawer';
+import PrivateRoute from 'components/PrivateRoute';
 // import { setupAuthToken } from 'api/setup';
 
 function App() {
@@ -23,7 +21,7 @@ function App() {
           <NavigationDrawer>
             <Switch>
               {routes.map(routeProps => (
-                <Route {...routeProps} key={routeProps.path} />
+                <PrivateRoute {...routeProps} key={routeProps.path} />
               ))}
             </Switch>
           </NavigationDrawer>
