@@ -1,8 +1,8 @@
+import { ROLE } from "utils/constant";
 import BuatPaketPertanyaan from "views/BuatPaketPertanyaan";
 import Home from "./views/Home";
 import Login from "./views/Login";
 import Profil from "./views/Profil";
-import Coba from "./views/Coba";
 import LogAktivitas from "./views/LogAktivitas/LogAktivitas";
 import DaftarLogKaryawan from "./views/LogAktivitas/DaftarLogKaryawan/";
 import DetailLogAktivitas from "./views/LogAktivitas/DetailLogAktivitas/";
@@ -10,7 +10,6 @@ import DaftarLog from "./views/LogAktivitas/DaftarLog/";
 import MyPresensi from "./views/LogAktivitas/MyPresensi/";
 import Register from "./views/Register";
 import DaftarKaryawan from "views/DaftarKaryawan";
-// import EvaluasiPerforma from "views/EvaluasiPerforma";
 import DaftarPaketPertanyaan from "views/DaftarPakerPertanyaan";
 import DetailEditPaketPertanyaan from "views/DetailEditPaketPertanyaan";
 import DaftarBorang from "views/MengisiBorang/DaftarBorang";
@@ -27,19 +26,14 @@ import DaftarHasilPerforma from "views/HasilPerforma/index";
 import HasilPerforma from "views/HasilPerforma/HasilPerforma";
 import EvaluasiPerforma from "views/EvaluasiPerforma";
 import DaftarEvaluasiPerforma from "views/DaftarEvaluasiPerforma";
-// import DaftarGaji from "views/DaftarGaji";
 import KelolaGaji from "views/KelolaGaji";
+import NoPage from "views/NoPage";
 
 export default [
   {
     path: '/',
     exact: true,
     component: Home,
-  },
-  {
-    path: '/coba',
-    exact: true,
-    component: Coba,
   },
   {
     path: '/login',
@@ -55,101 +49,115 @@ export default [
     path: "/akun/register",
     exact: true,
     component: Register,
+    access: [ROLE.admin]
   },
   {
     path: '/paket-pertanyaan',
     exact: true,
     component: DaftarPaketPertanyaan,
+    access: [ROLE.admin, ROLE.manager]
   },
   {
     path: '/paket-pertanyaan/add',
     exact: true,
     component: BuatPaketPertanyaan,
+    access: [ROLE.admin]
   },
   {
     path: '/paket-pertanyaan/:id',
     exact: true,
     component: DetailEditPaketPertanyaan,
+    access: [ROLE.admin, ROLE.manager]
   },
   {
     path: '/paket-pertanyaan/:id/edit',
     exact: true,
     component: DetailEditPaketPertanyaan,
+    access: [ROLE.admin]
   },
   {
     path: '/akun',
     exact: true,
-    component: DaftarKaryawan
+    component: DaftarKaryawan,
+    access: [ROLE.admin]
   },
   {
     path: '/mengisi-borang/:id',
     exact: true,
-    component: DaftarBorang
+    component: DaftarBorang,
+    access: [ROLE.admin, ROLE.manager, ROLE.karyawan]
   },
   {
     path: '/mengisi-borang',
     exact: true,
-    component: DaftarKaryawanDinilai
+    component: DaftarKaryawanDinilai,
+    access: [ROLE.admin, ROLE.manager, ROLE.karyawan]
   },
   {
     path: '/mengisi-borang/:id/:idPaket',
     exact: true,
-    component: MengisiBorang
+    component: MengisiBorang,
+    access: [ROLE.admin, ROLE.manager, ROLE.karyawan]
   },
   {
     path: '/log-aktivitas',
     exact: true,
-    component: LogAktivitas
+    component: LogAktivitas,
+    access: [ROLE.manager, ROLE.karyawan]
   },
   {
     path: '/log',
     exact: true,
-    component: DaftarLog
+    component: DaftarLog,
+    access: [ROLE.manager, ROLE.karyawan]
   },
   {
     path: '/log/daftar-log-karyawan',
     exact: true,
-    component: DaftarLogKaryawan
+    component: DaftarLogKaryawan,
+    access: [ROLE.manager]
   },
   {
     path: '/log/daftar-log-karyawan/:id',
     exact: true,
-    component: DetailLogAktivitas
+    component: DetailLogAktivitas,
+    access: [ROLE.manager]
   },
   {
     path: '/log/:id',
     exact: true,
-    component: DetailLogAktivitas
+    component: DetailLogAktivitas,
+    access: [ROLE.manager, ROLE.karyawan]
   },
   {
     path: '/log/:id/edit',
     exact: true,
-    component: EditLogAktivitas
+    component: EditLogAktivitas,
+    access: [ROLE.manager, ROLE.karyawan]
   },
   {
     path: '/kelola-performa',
     exact: true,
     component: DaftarKaryawanPerforma,
+    access: [ROLE.admin]
   },
   {
     path: '/kelola-performa/:idDinilai',
     exact: true,
     component: DaftarBorangPerforma,
-  },
-  {
-    path: '/daftar-karyawan-performa/:id/:id',
-    exact: true,
-    component: DaftarBorangPerforma,
+    access: [ROLE.admin]
   },
   {
     path: '/kelola-performa/:idDinilai/:idPaket',
     exact: true,
-    component: Pembobotan
+    component: Pembobotan,
+    access: [ROLE.admin]
   },
   {
     path: '/akun/:idUser',
     exact: true,
-    component: DetailEditUser
+    component: DetailEditUser,
+    access: [ROLE.admin]
   },
   {
     path: '/my-presensi',
@@ -159,41 +167,52 @@ export default [
   {
     path: '/assign',
     exact: true,
-    component: AssignmentManager
+    component: AssignmentManager,
+    access: [ROLE.admin]
   },
   {
     path: '/hasil-performa',
     exact: true,
-    component: DaftarHasilPerforma
+    component: DaftarHasilPerforma,
+    access: [ROLE.admin, ROLE.karyawan, ROLE.manager]
   },
   {
     path: '/hasil-performa/:id',
     exact: true,
-    component: HasilPerforma
+    component: HasilPerforma,
+    access: [ROLE.admin, ROLE.karyawan, ROLE.manager]
   },
   {
     path: '/hasil-performa/:id/add',
     exact: true,
-    component: EvaluasiDiri
+    component: EvaluasiDiri,
+    access: [ROLE.admin, ROLE.karyawan, ROLE.manager]
   },
   {
     path: '/daftar-evaluasi-performa/:id',
     exact: true,
-    component: EvaluasiPerforma
+    component: EvaluasiPerforma,
+    access: [ROLE.manager]
   },
   {
     path: '/daftar-evaluasi-performa',
     exact: true,
-    component: DaftarEvaluasiPerforma
+    component: DaftarEvaluasiPerforma,
+    access: [ROLE.manager]
   },
   {
     path: '/gaji/',
     exact: true,
-    component: KelolaGaji
+    component: KelolaGaji,
+    access: [ROLE.admin, ROLE.administrasi]
   },
   {
     path: '/akun/:idUser/edit',
     exact: true,
-    component: DetailEditUser
+    component: DetailEditUser,
+    access: [ROLE.admin]
   },
+  {
+    component: NoPage
+  }
 ]
