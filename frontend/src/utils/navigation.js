@@ -151,7 +151,7 @@ export const MANAGER_NAVIGATION = [
         path: '/log',
       },
       {
-        menu: 'Daftar Log Karayawan',
+        menu: 'Daftar Log Karyawan',
         path: '/log/daftar-log-karyawan'
       },
       {
